@@ -1,0 +1,6 @@
+__pycache__/
+*.sqlite
+xchange.sqlite
+.env
+.DS_Store
+
