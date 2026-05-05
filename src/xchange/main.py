@@ -1,18 +1,24 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import math
 import os
+import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from threading import Lock
 from typing import Any
 from urllib.parse import urlparse
 
+from xchange.glass_adapter import map_glass_bridge_to_ingest
 from xchange.nudge import suggest_path_semantics
 from xchange.storage import (
   FailureSnapshot,
   acknowledge_reward,
   create_nudge,
   create_reward_draft,
+  get_outcome_summary,
   get_reward_state,
   ingest_glass_session,
   insert_support_signal,
@@ -25,11 +31,23 @@ from xchange.storage import (
 from xchange.stripe_sig import verify_stripe_signature
 
 
-def _json_response(handler: BaseHTTPRequestHandler, *, status: int, payload: dict[str, Any]) -> None:
+_RATE_LIMIT_BUCKETS: dict[tuple[str, str], list[float]] = {}
+_RATE_LIMIT_LOCK = Lock()
+
+
+def _json_response(
+  handler: BaseHTTPRequestHandler,
+  *,
+  status: int,
+  payload: dict[str, Any],
+  headers: dict[str, str] | None = None,
+) -> None:
   body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
   handler.send_response(status)
   handler.send_header("Content-Type", "application/json; charset=utf-8")
   handler.send_header("Content-Length", str(len(body)))
+  for name, value in (headers or {}).items():
+    handler.send_header(name, value)
   handler.end_headers()
   handler.wfile.write(body)
 
@@ -57,6 +75,68 @@ def _require_ingest_token(handler: BaseHTTPRequestHandler) -> bool:
   return False
 
 
+def _rate_limit_settings() -> tuple[int, float]:
+  try:
+    limit = int(os.environ.get("XCHANGE_RATE_LIMIT_REQUESTS", "60"))
+  except ValueError:
+    limit = 60
+  try:
+    window_seconds = float(os.environ.get("XCHANGE_RATE_LIMIT_WINDOW_SECONDS", "60"))
+  except ValueError:
+    window_seconds = 60
+  return limit, window_seconds
+
+
+def _operator_rate_limit_key() -> str:
+  token = os.environ.get("XCHANGE_INGEST_TOKEN", "")
+  return hashlib.sha256(token.encode("utf-8")).hexdigest()[:16]
+
+
+def _check_rate_limit(*, route_class: str, key: str) -> tuple[bool, int]:
+  limit, window_seconds = _rate_limit_settings()
+  if limit <= 0 or window_seconds <= 0:
+    return True, 0
+
+  now = time.monotonic()
+  bucket_key = (route_class, key)
+  with _RATE_LIMIT_LOCK:
+    bucket = _RATE_LIMIT_BUCKETS.setdefault(bucket_key, [])
+    bucket[:] = [seen_at for seen_at in bucket if now - seen_at < window_seconds]
+    if len(bucket) >= limit:
+      retry_after = max(1, math.ceil(window_seconds - (now - bucket[0])))
+      return False, retry_after
+    bucket.append(now)
+  return True, 0
+
+
+def _enforce_operator_rate_limit(handler: BaseHTTPRequestHandler) -> bool:
+  allowed, retry_after = _check_rate_limit(
+    route_class="operator",
+    key=_operator_rate_limit_key(),
+  )
+  if allowed:
+    return True
+  _json_response(
+    handler,
+    status=HTTPStatus.TOO_MANY_REQUESTS,
+    payload={"error": "rate_limited", "retry_after_seconds": retry_after},
+    headers={"Retry-After": str(retry_after)},
+  )
+  return False
+
+
+def _require_operator_access(handler: BaseHTTPRequestHandler) -> bool:
+  if not _require_ingest_token(handler):
+    _json_response(handler, status=HTTPStatus.UNAUTHORIZED, payload={"error": "unauthorized"})
+    return False
+  return _enforce_operator_rate_limit(handler)
+
+
+def _reset_rate_limit_for_tests() -> None:
+  with _RATE_LIMIT_LOCK:
+    _RATE_LIMIT_BUCKETS.clear()
+
+
 def _get_db_path() -> str:
   return os.environ.get("XCHANGE_DB_PATH", "xchange.sqlite")
 
@@ -67,6 +147,8 @@ class AppHandler(BaseHTTPRequestHandler):
   def do_GET(self) -> None:  # noqa: N802
     parsed = urlparse(self.path)
     if parsed.path.startswith("/v0/state/reward/"):
+      if not _require_operator_access(self):
+        return
       reward_id = parsed.path.split("/v0/state/reward/")[1]
       reward_id = reward_id.split("?")[0].strip() or reward_id
       with open_db(_get_db_path()) as conn:
@@ -81,12 +163,19 @@ class AppHandler(BaseHTTPRequestHandler):
       self._handle_list_support_signals()
       return
 
+    if parsed.path == "/v0/outcomes/summary":
+      self._handle_outcome_summary()
+      return
+
     _json_response(self, status=HTTPStatus.NOT_FOUND, payload={"error": "not_found"})
 
   def do_POST(self) -> None:  # noqa: N802
     parsed = urlparse(self.path)
     if parsed.path == "/v0/ingest/glass-session":
       self._handle_ingest_glass_session()
+      return
+    if parsed.path == "/v0/ingest/glass-bridge":
+      self._handle_ingest_glass_bridge()
       return
     if parsed.path == "/v0/stripe/webhook":
       self._handle_stripe_webhook()
@@ -104,8 +193,7 @@ class AppHandler(BaseHTTPRequestHandler):
 
   def _handle_list_support_signals(self) -> None:
     """GET /v0/support-signals - list support signals with filters."""
-    if not _require_ingest_token(self):
-      _json_response(self, status=HTTPStatus.UNAUTHORIZED, payload={"error": "unauthorized"})
+    if not _require_operator_access(self):
       return
     
     parsed = urlparse(self.path)
@@ -130,10 +218,23 @@ class AppHandler(BaseHTTPRequestHandler):
     
     _json_response(self, status=HTTPStatus.OK, payload={"signals": signals, "count": len(signals)})
 
+  def _handle_outcome_summary(self) -> None:
+    if not _require_operator_access(self):
+      return
+
+    parsed = urlparse(self.path)
+    from urllib.parse import parse_qs
+    qs = parse_qs(parsed.query)
+    student_id = qs.get("student_id", [None])[0]
+
+    with open_db(_get_db_path()) as conn:
+      summary = get_outcome_summary(conn, student_id=student_id)
+
+    _json_response(self, status=HTTPStatus.OK, payload=summary)
+
   def _handle_resolve_support_signal(self) -> None:
     """POST /v0/support-signals/<id>/resolve - mark signal as resolved."""
-    if not _require_ingest_token(self):
-      _json_response(self, status=HTTPStatus.UNAUTHORIZED, payload={"error": "unauthorized"})
+    if not _require_operator_access(self):
       return
     
     parsed = urlparse(self.path)
@@ -168,8 +269,7 @@ class AppHandler(BaseHTTPRequestHandler):
 
   def _handle_acknowledge_reward(self) -> None:
     """POST /v0/rewards/<reward_id>/acknowledge - student confirmation after payment."""
-    if not _require_ingest_token(self):
-      _json_response(self, status=HTTPStatus.UNAUTHORIZED, payload={"error": "unauthorized"})
+    if not _require_operator_access(self):
       return
     
     parsed = urlparse(self.path)
@@ -211,8 +311,7 @@ class AppHandler(BaseHTTPRequestHandler):
     _json_response(self, status=HTTPStatus.OK, payload=result)
 
   def _handle_reward_draft(self) -> None:
-    if not _require_ingest_token(self):
-      _json_response(self, status=HTTPStatus.UNAUTHORIZED, payload={"error": "unauthorized"})
+    if not _require_operator_access(self):
       return
     try:
       payload = _read_json_body(self)
@@ -246,8 +345,7 @@ class AppHandler(BaseHTTPRequestHandler):
     _json_response(self, status=HTTPStatus.OK, payload={"ok": True, "reward_id": str(reward_id)})
 
   def _handle_ingest_glass_session(self) -> None:
-    if not _require_ingest_token(self):
-      _json_response(self, status=HTTPStatus.UNAUTHORIZED, payload={"error": "unauthorized"})
+    if not _require_operator_access(self):
       return
 
     try:
@@ -272,6 +370,54 @@ class AppHandler(BaseHTTPRequestHandler):
         session_id=str(session_id),
         student_id=str(student_id),
         payload=payload,
+      )
+    _json_response(self, status=HTTPStatus.OK, payload=summary)
+
+  def _handle_ingest_glass_bridge(self) -> None:
+    if not _require_operator_access(self):
+      return
+
+    try:
+      payload = _read_json_body(self)
+    except ValueError as e:
+      _json_response(self, status=HTTPStatus.BAD_REQUEST, payload={"error": str(e)})
+      return
+
+    bridge = payload.get("bridge")
+    if not isinstance(bridge, dict):
+      _json_response(self, status=HTTPStatus.BAD_REQUEST, payload={"error": "missing_or_invalid_bridge"})
+      return
+
+    student_id = payload.get("student_id")
+    if not student_id:
+      _json_response(
+        self,
+        status=HTTPStatus.BAD_REQUEST,
+        payload={"error": "missing_required_fields", "need": ["student_id"]},
+      )
+      return
+
+    try:
+      mapped = map_glass_bridge_to_ingest(
+        bridge,
+        student_id=str(student_id),
+        reward_id=str(payload["reward_id"]) if payload.get("reward_id") else None,
+        contract_satisfied=bool(payload.get("contract_satisfied")),
+        ready_for_payment=bool(payload.get("ready_for_payment")),
+        student_ack=bool(payload.get("student_ack")),
+        request_review=bool(payload.get("request_review")),
+        failure=payload.get("failure") if isinstance(payload.get("failure"), dict) else None,
+      )
+    except ValueError as e:
+      _json_response(self, status=HTTPStatus.BAD_REQUEST, payload={"error": str(e)})
+      return
+
+    with open_db(_get_db_path()) as conn:
+      summary = ingest_glass_session(
+        conn=conn,
+        session_id=mapped["session_id"],
+        student_id=mapped["student_id"],
+        payload=mapped,
       )
     _json_response(self, status=HTTPStatus.OK, payload=summary)
 

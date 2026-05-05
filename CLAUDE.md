@@ -13,17 +13,17 @@ A reward-delivery service that accepts session telemetry (Glass sessions with fa
 export XCHANGE_DB_PATH="$PWD/xchange.sqlite"
 export XCHANGE_INGEST_TOKEN="dev-secret"
 export STRIPE_WEBHOOK_SECRET="whsec_..."
-PYTHONPATH="$PWD/src" python3 -m xchange
+PYTHONPATH="$PWD/src" uv run python -m xchange
 # Listens on 0.0.0.0:8788 by default (override: XCHANGE_HOST, XCHANGE_PORT)
 
 # Run tests
-PYTHONPATH="$PWD/src" python3 -m pytest tests/ -v
+PYTHONPATH="$PWD/src" uv run python -m unittest discover -s tests -v
 
 # Run a single test
-PYTHONPATH="$PWD/src" python3 -m pytest tests/test_stripe_signature.py -v
+PYTHONPATH="$PWD/src" uv run python -m unittest tests.test_stripe_signature -v
 ```
 
-No build step. No linter configured yet. No `pyproject.toml` — PYTHONPATH must include `src/`.
+No build step. No linter configured yet. `pyproject.toml` + `uv.lock` are intentional for reproducible local execution; PYTHONPATH must include `src/` for direct module runs.
 
 ## Architecture
 
@@ -32,12 +32,13 @@ src/xchange/
   __main__.py   — entrypoint: reads env, calls run_server()
   main.py       — HTTP handler (stdlib BaseHTTPRequestHandler), routes, request parsing
   domain.py     — pure policy: RewardState lifecycle enum, transition functions (no I/O)
-  storage.py    — SQLite schema + all DB operations (sessions, failures, rewards, nudges)
+  storage.py    — SQLite schema + all DB operations (legacy tables plus reward/evidence/payment/support ledgers)
+  glass_adapter.py — Glass bridge to ingest-payload mapper; preserves telemetry as evidence only
   stripe_sig.py — HMAC-SHA256 Stripe webhook signature verification (no Stripe SDK)
   nudge.py      — deterministic nudge text generation from failure commands
 ```
 
-**Request flow:** HTTP request → `AppHandler` (main.py) → auth check → storage write → optional domain transition → response.
+**Request flow:** HTTP request → `AppHandler` (main.py) → auth check/operator rate limit (Stripe uses signature instead) → storage write/read → optional domain transition → response.
 
 **Key design rules from `docs/policy-core-v0.md`:**
 - Only the policy layer (`domain.py` rules) advances reward state — raw evidence and Stripe JSON propose transitions, they don't bypass validation.
@@ -51,12 +52,16 @@ src/xchange/
 | Method | Path | Auth | Purpose |
 |--------|------|------|---------|
 | POST | `/v0/ingest/glass-session` | Bearer token or X-Ingest-Token | Store session + optional failure snapshot |
+| POST | `/v0/ingest/glass-bridge` | Bearer token or X-Ingest-Token | Map caller-enriched Glass bridge telemetry into ingest |
 | POST | `/v0/stripe/webhook` | Stripe-Signature header | Process payment webhooks |
-| GET | `/v0/state/reward/<reward_id>` | None | Query reward delivery state |
+| GET | `/v0/state/reward/<reward_id>` | Bearer token or X-Ingest-Token | Query reward delivery state |
+| GET | `/v0/outcomes/summary` | Bearer token or X-Ingest-Token | Aggregate reward counts by state; optional `student_id` |
+| GET | `/v0/support-signals` | Bearer token or X-Ingest-Token | List support signals |
+| POST | `/v0/support-signals/<id>/resolve` | Bearer token or X-Ingest-Token | Resolve support signal |
 
 ## SQLite Tables
 
-`sessions`, `failures`, `rewards`, `nudges` — schema defined in `storage.py:SCHEMA_SQL`. Auto-created on first connection via `open_db()`.
+Legacy mirror tables: `sessions`, `failures`, `rewards`, `nudges`. Core policy tables: `service_contracts`, `reward_ledger`, `evidence_ledger`, `payment_confirmations`, `support_signals`. Schema is defined in `storage.py` and auto-created on first connection via `open_db()`.
 
 ## Reward Lifecycle States
 
@@ -72,3 +77,5 @@ src/xchange/
 | `XCHANGE_HOST` | No | `0.0.0.0` |
 | `XCHANGE_PORT` | No | `8788` |
 | `XCHANGE_STRIPE_TOLERANCE_SECONDS` | No | `300` |
+| `XCHANGE_RATE_LIMIT_REQUESTS` | No | `60` |
+| `XCHANGE_RATE_LIMIT_WINDOW_SECONDS` | No | `60` |

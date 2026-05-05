@@ -916,3 +916,37 @@ def create_nudge(
     (student_id, reward_id, now, failure_command, suggestion),
   )
   conn.commit()
+
+
+def get_outcome_summary(
+  conn: sqlite3.Connection,
+  *,
+  student_id: str | None = None,
+) -> dict[str, Any]:
+  where = ""
+  params: list[Any] = []
+  if student_id:
+    where = "WHERE student_id=?"
+    params.append(student_id)
+
+  cur = conn.execute(
+    f"SELECT state, COUNT(*) as cnt FROM reward_ledger {where} GROUP BY state",
+    params,
+  )
+  by_state: dict[str, int] = {}
+  total = 0
+  for row in cur.fetchall():
+    by_state[row["state"]] = row["cnt"]
+    total += row["cnt"]
+
+  cur2 = conn.execute(
+    f"SELECT COUNT(DISTINCT student_id) as n FROM reward_ledger {where}",
+    params,
+  )
+  student_count = cur2.fetchone()["n"]
+
+  return {
+    "total_rewards": total,
+    "by_state": by_state,
+    "student_count": student_count,
+  }
