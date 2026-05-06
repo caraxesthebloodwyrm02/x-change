@@ -164,6 +164,58 @@ CREATE INDEX IF NOT EXISTS idx_exchange_student ON exchange_requests(student_id)
 CREATE INDEX IF NOT EXISTS idx_webhook_events_type ON webhook_events(event_type);
 """
 
+# Operator/orchestrator memos from parallel agents (INSERT OR IGNORE — idempotent).
+_INBOX_ORCHESTRATOR_MEMOS: Final[
+    tuple[tuple[str, str, str, str, str, str], ...]
+] = (
+    (
+        "memo-grid-slices-2-5",
+        "GRID-main agent",
+        "626450",
+        "/mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main",
+        "GRID Slices 2–5: route normalization, event bus, DDD fix, docs",
+        """Slice 2 — Route normalization
+- corruption, admission, drt, safety routers moved from app.include_router() → api_router.include_router(), landing them under /api/v1/*
+- health_router, /ping, /, /security/status remain root-level (operational)
+- Added two new test cases to tests/integration/test_mothership_route_map.py locking versioned paths and asserting root-level product paths are gone
+
+Slice 3 — Event bus cleanup
+- Fixed double-delivery bug in src/grid/agentic/event_bus.py: removed event_queue.put() from publish(), leaving _trigger_handlers() as the single delivery path
+- Added await event_bus.start() and app.state.infrastructure_event_bus in lifespan startup; await stop() on shutdown
+
+Slice 4 — DDD inversion fix
+- main.py had wrong dispose wiring (set_dispose_engine vs wire_dispose_engine); injection was silently no-op — corrected to wire_dispose_engine
+- PrunerOrchestrator gains dispose-engine hooks; removed application-layer import from infrastructure dispose path
+
+Slice 5 — Docs
+- docs/ARCHITECTURE.md bumped to v2.8.0 (May 2026): router map, ownership appendix (event bus matrix, safety/security, DDD boundaries)
+""",
+    ),
+    (
+        "memo-xchange-scope",
+        "x-change agent",
+        "parallel-session",
+        "/home/irfankabir/x-change",
+        "x-change: Token/Tool scope layer + tests",
+        """Completed: Token scope + Tool scope definition and implementation
+
+Docs (docs/):
+- token-scope.md — RewardToken semantics; tier/rarity/exchange; not currency/signal/license
+- tool-scope.md — tools (Glass, GRID, Calculator), evidence, no-auto-inference, provenance
+- scope-integration.md — tool → evidence → reward → token; payload traces; organic scope
+
+Code:
+- domain.py — ToolProvenance enum, TokenScope, ToolScope, infer_token_scope()
+- storage.py — resolve_token_scope(), resolve_tool_scope()
+- main.py — GET /v0/scope/token/<reward_id>, GET /v0/scope/tool?provenance=
+
+Tests: tests/test_scope.py (scope resolution + API parsing); full suite green at time of memo.
+
+See live reward scope via authorized GET /v0/scope/token/reward-circuit-close-001.
+""",
+    ),
+)
+
 
 @dataclass(frozen=True)
 class FailureSnapshot:
@@ -263,6 +315,28 @@ def _run_migration(conn: sqlite3.Connection, version: str, sql: str) -> bool:
     return True
 
 
+def _seed_orchestrator_inbox_memos(conn: sqlite3.Connection) -> None:
+    """Load canonical parallel-agent memos once per empty id (INSERT OR IGNORE)."""
+    now = _utc_now_iso()
+    for (
+        memo_id,
+        source,
+        pid,
+        cwd,
+        title,
+        content,
+    ) in _INBOX_ORCHESTRATOR_MEMOS:
+        conn.execute(
+            """
+            INSERT OR IGNORE INTO inbox_entries
+            (id, source, pid, cwd, title, content, status, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, 'unprocessed', ?)
+            """,
+            (memo_id, source, pid, cwd, title, content, now),
+        )
+    conn.commit()
+
+
 def init_db(conn: sqlite3.Connection) -> None:
     conn.execute("PRAGMA foreign_keys=ON")
     conn.executescript(LEGACY_SCHEMA_SQL)
@@ -276,6 +350,24 @@ def init_db(conn: sqlite3.Connection) -> None:
         "v001_reward_token_json",
         "ALTER TABLE reward_ledger ADD COLUMN reward_token_json TEXT;",
     )
+    _run_migration(
+        conn,
+        "v002_inbox_entries",
+        """
+CREATE TABLE IF NOT EXISTS inbox_entries (
+  id TEXT PRIMARY KEY,
+  source TEXT,
+  pid TEXT,
+  cwd TEXT,
+  title TEXT,
+  content TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'unprocessed',
+  created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_inbox_entries_created_at ON inbox_entries(created_at);
+""",
+    )
+    _seed_orchestrator_inbox_memos(conn)
 
 
 @contextmanager
