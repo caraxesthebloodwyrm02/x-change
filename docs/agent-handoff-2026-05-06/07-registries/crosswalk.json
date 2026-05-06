@@ -1,0 +1,104 @@
+{
+  "schema": "crosswalk.v1",
+  "objective": "Map each batch to its source maps, authority docs, registry files, and fix candidates. An agent picking up any batch can resolve all inputs from this file alone.",
+  "batches": [
+    {
+      "batch_id": "BATCH-00",
+      "batch_doc": "03-batches/BATCH-00-ORIENTATION.md",
+      "source_maps": [
+        "01-source-maps/portfolio-inventory-benchmark.md",
+        "01-source-maps/directory-structure-consolidation-playbook.md",
+        "01-source-maps/domain-landscape-local-asset-allocation.md",
+        "01-source-maps/buried-assets-resurfacing-inventory.md",
+        "01-source-maps/custom-harness-agentic-performance-audit.md",
+        "01-source-maps/development-toolchain-wiring-maintenance-audit.md",
+        "01-source-maps/development-wiring-fix-candidates.json"
+      ],
+      "authority_docs": [],
+      "registry_files": ["07-registries/preparedness-record.json"],
+      "fix_candidates": [],
+      "parallel_group_from_matrix": "A"
+    },
+    {
+      "batch_id": "BATCH-01",
+      "batch_doc": "03-batches/BATCH-01-KNOWLEDGEBASE-MEMORY.md",
+      "source_maps": [
+        "01-source-maps/custom-harness-agentic-performance-audit.md",
+        "01-source-maps/development-toolchain-wiring-maintenance-audit.md",
+        "01-source-maps/portfolio-inventory-benchmark.md"
+      ],
+      "authority_docs": ["06-authority/MEMORY-AUTHORITY.md"],
+      "registry_files": ["07-registries/memory-authority.json"],
+      "fix_candidates": [],
+      "parallel_group_from_matrix": "B"
+    },
+    {
+      "batch_id": "BATCH-02",
+      "batch_doc": "03-batches/BATCH-02-CUSTOM-ASSET-REGISTRY.md",
+      "source_maps": [
+        "01-source-maps/custom-harness-agentic-performance-audit.md"
+      ],
+      "authority_docs": ["06-authority/CUSTOM-ASSET-REGISTRY-SEED.md"],
+      "registry_files": ["07-registries/custom-assets-seed.json"],
+      "fix_candidates": [],
+      "parallel_group_from_matrix": "B"
+    },
+    {
+      "batch_id": "BATCH-03",
+      "batch_doc": "03-batches/BATCH-03-MCP-WIRING.md",
+      "source_maps": [
+        "01-source-maps/development-toolchain-wiring-maintenance-audit.md",
+        "01-source-maps/development-wiring-fix-candidates.json"
+      ],
+      "authority_docs": ["06-authority/MCP-WIRING-AUTHORITY.md"],
+      "registry_files": ["07-registries/mcp-authority.json"],
+      "fix_candidates": ["WIRE-P0-001", "WIRE-P0-002", "WIRE-P1-001", "WIRE-P1-002"],
+      "parallel_group_from_matrix": "C"
+    },
+    {
+      "batch_id": "BATCH-04",
+      "batch_doc": "03-batches/BATCH-04-TOOLCHAIN-MAINTENANCE.md",
+      "source_maps": [
+        "01-source-maps/development-toolchain-wiring-maintenance-audit.md",
+        "01-source-maps/development-wiring-fix-candidates.json"
+      ],
+      "authority_docs": ["06-authority/TOOLCHAIN-MAINTENANCE-AUTHORITY.md"],
+      "registry_files": ["07-registries/toolchain-authority.json", "07-registries/maintenance-authority.json"],
+      "fix_candidates": ["DEVTOOL-P0-001", "MAINT-P0-001", "MAINT-P0-002", "DEVTOOL-P1-001", "DEVTOOL-P1-002", "MAINT-P1-001", "MAINT-P2-001"],
+      "parallel_group_from_matrix": "C"
+    },
+    {
+      "batch_id": "BATCH-05",
+      "batch_doc": "03-batches/BATCH-05-DIRECTORY-CONSOLIDATION.md",
+      "source_maps": [
+        "01-source-maps/directory-structure-consolidation-playbook.md"
+      ],
+      "authority_docs": ["06-authority/DIRECTORY-DOMAIN-RESURFACING-AUTHORITY.md"],
+      "registry_files": ["07-registries/directory-domain-resurfacing-authority.json"],
+      "fix_candidates": [],
+      "parallel_group_from_matrix": "D"
+    },
+    {
+      "batch_id": "BATCH-06",
+      "batch_doc": "03-batches/BATCH-06-DOMAIN-DISTRIBUTION.md",
+      "source_maps": [
+        "01-source-maps/domain-landscape-local-asset-allocation.md"
+      ],
+      "authority_docs": ["06-authority/DIRECTORY-DOMAIN-RESURFACING-AUTHORITY.md"],
+      "registry_files": ["07-registries/directory-domain-resurfacing-authority.json"],
+      "fix_candidates": [],
+      "parallel_group_from_matrix": "D"
+    },
+    {
+      "batch_id": "BATCH-07",
+      "batch_doc": "03-batches/BATCH-07-BURIED-ASSET-RESURFACING.md",
+      "source_maps": [
+        "01-source-maps/buried-assets-resurfacing-inventory.md"
+      ],
+      "authority_docs": ["06-authority/DIRECTORY-DOMAIN-RESURFACING-AUTHORITY.md"],
+      "registry_files": ["07-registries/directory-domain-resurfacing-authority.json"],
+      "fix_candidates": [],
+      "parallel_group_from_matrix": "E"
+    }
+  ]
+}

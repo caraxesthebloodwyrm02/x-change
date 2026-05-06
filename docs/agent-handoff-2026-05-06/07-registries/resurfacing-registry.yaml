@@ -1,0 +1,98 @@
+version: 1
+generated_at: "2026-05-07"
+source: "01-source-maps/buried-assets-resurfacing-inventory.md"
+
+summary:
+  total_candidates: 8
+  tier_1_count: 8
+  verified_on_disk: 8
+  missing: 0
+
+candidates:
+  - name: Atmosphere Arcade
+    current_path: /mnt/arch_data/home/caraxes/seed/archive/Atmosphere/Arcade
+    path_exists: true
+    tier: 1
+    value_statement: "AI-powered terminal arcade — original product with interactive game loop. Unique creative/spatial asset."
+    current_status: archived in seed/archive
+    target_surface: standalone project or canopy app candidate
+    has_readme: false
+    domains: [creative-spatial-media, AI-agents-automation]
+    notes: "Inside Atmosphere parent dir alongside Delay, Reverb, network-visualizer, mental-load-balancer"
+
+  - name: Reverb
+    current_path: /mnt/arch_data/home/caraxes/seed/archive/Atmosphere/Reverb
+    path_exists: true
+    tier: 1
+    value_statement: "Spatial audio/emotion processing component. Part of Atmosphere stack with Delay — potential Glass integration."
+    current_status: archived in seed/archive/Atmosphere
+    target_surface: roots library or Glass audio subsystem
+    has_readme: false
+    domains: [creative-spatial-media]
+    notes: "Paired with Delay — both are signal-processing primitives"
+
+  - name: Delay
+    current_path: /mnt/arch_data/home/caraxes/seed/archive/Atmosphere/Delay
+    path_exists: true
+    tier: 1
+    value_statement: "Time-based signal processing component. Pairs with Reverb for audio/spatial pipeline."
+    current_status: archived in seed/archive/Atmosphere
+    target_surface: roots library or Glass audio subsystem
+    has_readme: false
+    domains: [creative-spatial-media]
+    notes: "Consider promoting Reverb+Delay together as a signal-processing pair"
+
+  - name: network-visualizer-python
+    current_path: /mnt/arch_data/home/caraxes/seed/archive/Atmosphere/network-visualizer-python
+    path_exists: true
+    tier: 1
+    value_statement: "Python network visualization tool. Could serve as diagnostic/infrastructure asset."
+    current_status: archived in seed/archive/Atmosphere
+    target_surface: roots utility or infrastructure tooling
+    has_readme: false
+    domains: [infrastructure-DevOps, data-memory]
+    notes: "Nested inside Atmosphere — easy to miss"
+
+  - name: Coinbase_from_zip
+    current_path: /mnt/arch_data/home/caraxes/seed/archive/Coinbase_from_zip
+    path_exists: true
+    tier: 1
+    value_statement: "Historical finance/crypto system with concurrent streams demo and config. Domain knowledge for x-change."
+    current_status: archived in seed/archive
+    target_surface: reference material for x-change finance domain
+    has_readme: true
+    domains: [finance-payments]
+    notes: "Has README.md, config/, coinbase/ dirs. Reference-only — not a promotion candidate for active use."
+
+  - name: mental-load-balancer
+    current_path: /mnt/arch_data/home/caraxes/seed/archive/Atmosphere/mental-load-balancer
+    path_exists: true
+    tier: 1
+    value_statement: "Wellness/cognitive load management tool. Unique health domain asset."
+    current_status: archived in seed/archive/Atmosphere
+    target_surface: canopy app or pulse-server integration
+    has_readme: false
+    domains: [health-wellness, productivity-personal-OS]
+    notes: "Also found at /mnt/arch_data/home/caraxes/workspace/racks/routines/mental-load-pulse (variant)"
+
+  - name: claude-cursor-integration-bridge
+    current_path: /mnt/arch_data/home/caraxes/seed/templates/claude-cursor-integration-bridge
+    path_exists: true
+    tier: 1
+    value_statement: "Governance bridge between Claude Code and Cursor. Agent coordination and config parity tool."
+    current_status: template in seed/templates
+    target_surface: active tooling or plugins integration
+    has_readme: false
+    domains: [governance-policy, AI-agents-automation]
+    notes: "Template-quality — may already be superseded by current .cursor/rules alignment"
+
+  - name: root scripts catalog
+    current_path: /home/irfankabir/scripts
+    path_exists: true
+    tier: 1
+    value_statement: "33+ maintenance, security, and automation scripts. Already active but not registered as a governed asset."
+    current_status: active but unregistered
+    target_surface: maintenance-authority.yaml governs these now
+    has_readme: false
+    domains: [infrastructure-DevOps, security-trust]
+    notes: "Cataloged in maintenance-authority.yaml from BATCH-04. Resurfacing = governance, not relocation."

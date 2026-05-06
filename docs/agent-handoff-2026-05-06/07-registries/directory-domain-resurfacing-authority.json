@@ -1,0 +1,17 @@
+{
+  "schema": "directory-domain-resurfacing-authority.v1",
+  "objective": "Prepare structural discipline, domain distribution, and buried asset resurfacing without breaking paths.",
+  "directory_roots": [
+    { "path": "/home/irfankabir/x-change", "classification": "handoff-policy-host", "rule": "keep handoff here until promotion is explicit" },
+    { "path": "/home/irfankabir/CascadeProjects", "classification": "active-local-root", "rule": "verify before moving or consolidating" },
+    { "path": "/mnt/arch_data/home/caraxes/CascadeProjects", "classification": "preserved-large-workspace", "rule": "treat as active or preserved based on live path use" },
+    { "path": "/home/irfankabir/gruff/workspace", "classification": "active-gruff-workspace", "rule": "do not confuse with /home/irfankabir/gruff" },
+    { "path": "/home/irfankabir/canopy", "classification": "active-or-mirrored-root", "rule": "classify before moving" },
+    { "path": "/home/irfankabir/roots", "classification": "active-or-mirrored-root", "rule": "classify before moving" }
+  ],
+  "domain_record_shape": ["domain_name", "real_world_use_case", "primary_assets", "secondary_assets", "missing_pieces", "integration_surfaces", "diagram_candidates"],
+  "resurfacing_record_shape": ["candidate_name", "current_path", "tier", "value_statement", "current_status", "target_surface", "owner", "validation"],
+  "no_break_rule": ["source_path_exists", "target_path_declared", "references_searched", "rollback_note_exists", "archive_status_clear"],
+  "completion_gate": "Every proposed move or promotion has source, destination, impact, rollback note, and no-break validation."
+}
+

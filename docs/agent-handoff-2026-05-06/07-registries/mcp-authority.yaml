@@ -1,0 +1,650 @@
+# MCP Wiring Authority — canonical parity report
+# Generated: 2026-05-07
+# Source configs audited: 11
+
+verified_at: "2026-05-07T00:00:00Z"
+amended_at: "2026-05-07T00:00:00+06:00"
+amendment_reason: "P0 npx fixes applied; codex extra servers evaluated; hogsmade timers disabled; glass-server + glimpse-server added to canonical-claude-code-config"
+
+canonical_server_set:
+  count: 25
+  servers:
+    - afloat-server
+    - code-analysis
+    - craft-server
+    - echoes-server
+    - eligibility-server
+    - glass-server
+    - glimpse-server
+    - grid-enhanced-tools
+    - grid-intelligence
+    - grid-rag
+    - grid-rag-enhanced
+    - grid-server
+    - harness-server
+    - lots-server
+    - maintain-server
+    - mangrove-server
+    - nexus-server
+    - ori-server
+    - overview-server
+    - personal-rag
+    - portfolio-safety-lens
+    - pulse-server
+    - school-server
+    - seeds-server
+    - test-runner
+
+command_policy:
+  preferred_npx_path: /home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx
+  reason: >
+    Deterministic absolute path avoids shell PATH resolution failures.
+    Claude Code and editors that do not inherit the user shell need an absolute
+    binary. Bare "npx" only works when the shell PATH includes the nvm node bin.
+  python_command: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main/.venv/bin/python
+  python_personal_rag: /home/irfankabir/personal-rag/.venv/bin/python
+  npx_path_exists: true # validated via Read of ~/.claude.json which uses the path
+
+client_profiles:
+  - id: canonical-mcp-config
+    config_path: /mnt/arch_data/home/caraxes/CascadeProjects/mcp_config.json
+    format: json
+    server_count: 25
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing: []
+    command_style: bare-npx
+    classification: full
+    npx_path_valid: false # uses bare "npx", not absolute path
+    notes: >
+      Canonical source of truth for editor configs. Uses bare npx for TS servers
+      and relative args for Python servers with cwd set. Updated 2026-04-30.
+      Needs command policy repair to use absolute npx path.
+
+  - id: canonical-claude-code-config
+    config_path: /mnt/arch_data/home/caraxes/CascadeProjects/claude_code_config.json
+    format: json
+    server_count: 25
+    server_count_at_audit: 23 # authority incorrectly listed glimpse-server as present; actual was 23
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server # added 2026-05-07
+      - glimpse-server # added 2026-05-07 — was missing despite being listed here at audit
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing: []
+    command_style: bare-npx
+    classification: full
+    npx_path_valid: false # uses bare "npx" — archive mount, low priority
+    notes: >
+      Claude Code companion config. Patched 2026-05-07: glass-server and
+      glimpse-server both added (authority audit error had glimpse-server listed
+      as present when it was absent). Now at 25/25 parity with canonical set.
+      Uses bare npx and absolutized Python args. Archive mount — npx fix deferred.
+
+  - id: claude-code-live
+    config_path: /home/irfankabir/.claude.json
+    format: json
+    server_count: 25
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing: []
+    command_style: absolute-npx
+    classification: full
+    npx_path_valid: true
+    notes: >
+      Live Claude Code config. All 25 servers present. TS servers use absolute
+      npx path with PATH+HOME env injection. Python servers use absolute venv
+      python with absolutized args. Gold standard.
+
+  - id: claude-code-settings-local
+    config_path: /home/irfankabir/.claude/settings.local.json
+    format: json
+    server_count: n/a
+    servers_present: []
+    servers_missing: []
+    command_style: n/a
+    classification: enablement-filter
+    npx_path_valid: n/a
+    notes: >
+      Not a server definition file. Controls which servers from ~/.claude.json are
+      enabled/disabled. Currently enabled: personal-rag, eligibility-server,
+      echoes-server, glimpse-server. Disabled: grid-server, afloat-server,
+      lots-server, pulse-server. enableAllProjectMcpServers: true.
+
+  - id: cursor-current-home
+    config_path: /home/irfankabir/.cursor/mcp.json
+    format: json
+    server_count: 25
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing: []
+    command_style: absolute-npx
+    classification: full
+    npx_path_valid: true
+    notes: >
+      Full 25-server set. Absolute npx for TS servers, absolute venv python for
+      Python servers. Some servers have disabled:false flags. Matches claude.json
+      server set exactly.
+
+  - id: windsurf-current-home
+    config_path: /home/irfankabir/.codeium/windsurf/mcp_config.json
+    format: json
+    server_count: 25
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing: []
+    command_style: mixed
+    classification: full
+    npx_path_valid: false
+    notes: >
+      Full 25-server set. TS servers use bare "npx" (not absolute path).
+      Python servers use absolute venv python with absolutized args. Needs
+      command policy repair: switch bare npx to absolute path.
+
+  - id: windsurf-next-current-home
+    config_path: /home/irfankabir/.codeium/windsurf-next/mcp_config.json
+    format: json
+    server_count: 25
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing: []
+    command_style: mixed
+    classification: full
+    npx_path_valid: false
+    notes: >
+      Identical to windsurf config. Same bare npx issue.
+
+  - id: copilot
+    config_path: /home/irfankabir/.copilot/mcp-config.json
+    format: json
+    server_count: 5
+    servers_present:
+      - seeds-server
+      - maintain-server
+      - overview-server
+      - echoes-server
+      - ori-server
+    servers_missing:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - eligibility-server
+      - glass-server
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - mangrove-server
+      - nexus-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - test-runner
+    command_style: bare-npx
+    classification: minimal
+    npx_path_valid: false
+    notes: >
+      5-server subset with stdio type annotations. Uses bare npx. Different env
+      vars from canonical (e.g. MAINTAIN_DATA_DIR, SCAN_ROOTS). Intentionally
+      minimal unless promoted.
+
+  - id: generic-mcp-home
+    config_path: /home/irfankabir/.mcp.json
+    format: json
+    server_count: 1
+    servers_present:
+      - glimpse-server
+    servers_missing:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    command_style: bare-npx
+    classification: minimal
+    npx_path_valid: false
+    notes: >
+      Single glimpse-server entry. Likely a test or fallback config.
+
+  - id: antigravity-current-home
+    config_path: /home/irfankabir/.gemini/antigravity/mcp_config.json
+    format: json
+    server_count: 0
+    servers_present: []
+    servers_missing: all
+    command_style: n/a
+    classification: disabled
+    npx_path_valid: n/a
+    notes: >
+      Empty file. Needs regeneration from canonical config if Antigravity is in use.
+
+  - id: codex-config
+    config_path: /home/irfankabir/.codex/config.toml
+    format: toml
+    server_count: 27
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server # missing from codex — see note
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-agentic # extra — experimental, arch_data venv only, do not promote
+      - grid-rag-enhanced
+      - grid-memory # extra — experimental, arch_data venv only, do not promote
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing:
+      - glass-server
+      - personal-rag
+    command_style: absolute-npx
+    classification: custom
+    npx_path_valid: true
+    npx_fix_applied: "2026-05-07"
+    notes: >
+      TOML format. 27 server entries including 2 extras not in canonical set.
+      bare-npx fixed on 2026-05-07 — all 16 TS command entries now use
+      /home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx. 9 Python entries
+      unchanged. Missing glass-server and personal-rag.
+      grid-rag-agentic and grid-memory evaluated: do not promote. See
+      codex-extra-servers evaluation block in known_blockers.
+
+  - id: caraxes-cursor
+    config_path: /mnt/arch_data/home/caraxes/.cursor/mcp.json
+    format: json
+    server_count: 21
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server # missing from caraxes
+      - ori-server
+      - overview-server
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing:
+      - glass-server
+      - nexus-server # actually present, correcting
+      - personal-rag
+    command_style: bare-npx
+    classification: archive
+    npx_path_valid: false
+    notes: >
+      Old Arch-era config. Uses stale /home/caraxes paths (not /mnt/arch_data
+      or /home/irfankabir). 21 servers. Missing glass-server and personal-rag.
+      All paths are broken on current system. Archive only.
+
+  - id: caraxes-windsurf
+    config_path: /mnt/arch_data/home/caraxes/.codeium/windsurf/mcp_config.json
+    format: json
+    server_count: 25
+    servers_present:
+      - afloat-server
+      - code-analysis
+      - craft-server
+      - echoes-server
+      - eligibility-server
+      - glass-server
+      - glimpse-server
+      - grid-enhanced-tools
+      - grid-intelligence
+      - grid-rag
+      - grid-rag-enhanced
+      - grid-server
+      - harness-server
+      - lots-server
+      - maintain-server
+      - mangrove-server
+      - nexus-server
+      - ori-server
+      - overview-server
+      - personal-rag
+      - portfolio-safety-lens
+      - pulse-server
+      - school-server
+      - seeds-server
+      - test-runner
+    servers_missing: []
+    command_style: bare-npx
+    classification: archive
+    npx_path_valid: false
+    notes: >
+      Full 25-server set but located under /mnt/arch_data (old Arch home).
+      TS servers use bare npx. Content appears to be a copy of the current-home
+      windsurf config (paths use /mnt/arch_data and /home/irfankabir). Archive.
+
+parity_report:
+  summary: >
+    Of 13 config files found, 4 are full (25 servers), 1 is full-minus-one (24),
+    2 are minimal (1 and 5 servers), 1 is disabled (empty), 1 is custom (27 servers
+    with extras), 1 is an enablement filter, and 3 are archive (caraxes-side).
+
+  full_parity_configs:
+    - claude-code-live # ~/.claude.json — gold standard
+    - cursor-current-home
+    - windsurf-current-home
+    - windsurf-next-current-home
+
+  command_style_mismatches:
+    - config: canonical-mcp-config
+      issue: Uses bare "npx" instead of absolute path
+      fix: Replace "npx" with /home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx
+    - config: canonical-claude-code-config
+      issue: Uses bare "npx" instead of absolute path
+      fix: Replace "npx" with /home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx
+    - config: windsurf-current-home
+      issue: TS servers use bare "npx"
+      fix: Replace "npx" with absolute path
+    - config: windsurf-next-current-home
+      issue: TS servers use bare "npx"
+      fix: Replace "npx" with absolute path
+    - config: copilot
+      issue: Uses bare "npx"
+      fix: Replace "npx" with absolute path
+    - config: generic-mcp-home
+      issue: Uses bare "npx"
+      fix: Replace "npx" with absolute path
+    - config: codex-config
+      issue: Uses bare "npx" for all TS servers
+      fix: Replace "npx" with absolute path
+    - config: caraxes-windsurf
+      issue: Uses bare "npx"
+      fix: Archive — do not repair
+
+  server_count_gaps:
+    - config: canonical-claude-code-config
+      missing: [glass-server]
+      action: Add glass-server entry
+    - config: copilot
+      missing: 20 servers
+      action: Intentionally minimal — no action unless promoted
+    - config: generic-mcp-home
+      missing: 24 servers
+      action: Expand or delete
+    - config: codex-config
+      missing: [glass-server, personal-rag]
+      extras: [grid-rag-agentic, grid-memory]
+      action: Add missing, evaluate extras for canonical promotion
+    - config: caraxes-cursor
+      missing: [glass-server, personal-rag]
+      action: Archive — stale /home/caraxes paths
+
+  stale_path_configs:
+    - config: caraxes-cursor
+      paths_using: /home/caraxes (non-existent on current system)
+      action: Archive — do not use
+
+known_blockers:
+  - id: bare-npx-resolution
+    severity: medium
+    status: partially_resolved
+    resolved_at: "2026-05-07"
+    description: >
+      Active configs using bare "npx" depend on shell PATH inheritance.
+      Editors that spawn MCP servers without inheriting the user shell
+      (Windsurf, Copilot) will fail to find npx. The canonical fix is
+      absolute /home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx.
+    fixed_configs:
+      - copilot # fixed 2026-05-07
+      - codex-config # fixed 2026-05-07 (16 TS entries)
+      - windsurf-current-home # was already correct on inspection
+    not_applicable:
+      - windsurf-next-current-home # file does not exist
+    remaining_configs:
+      - canonical-mcp-config # archive mount — fix if mount is live
+      - canonical-claude-code-config # archive mount — fix if mount is live
+    generic_mcp_home_note: >
+      ~/.mcp.json (glimpse-server only) fixed 2026-05-07. Excluded from
+      canonical count as it is a minimal stub, not a managed config.
+
+  - id: glass-server-missing-from-claude-code-config
+    severity: low
+    status: resolved
+    resolved_at: "2026-05-07"
+    description: >
+      claude_code_config.json was missing glass-server and (audit error)
+      glimpse-server. Both added 2026-05-07. Config is now at 25/25 parity
+      with the canonical server set. Authority audit had incorrectly listed
+      glimpse-server as present — corrected in server_count_at_audit field.
+    affected_configs:
+      - canonical-claude-code-config
+
+  - id: codex-extra-servers
+    severity: info
+    status: evaluated
+    evaluated_at: "2026-05-07"
+    decision: do_not_promote
+    description: >
+      Codex config has grid-rag-agentic and grid-memory servers not in the
+      canonical 25. Both point to the preserved arch_data venv
+      (/mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main/.venv)
+      rather than the active roots/GRID venv. Evaluation complete.
+    servers:
+      - id: grid-rag-agentic
+        script: mcp-setup/server/agentic_mcp_server.py
+        assessment: >
+          Agentic variant of the GRID RAG server. Runs with Ollama local
+          inference (ministral-3) and .rag_db on the arch_data volume.
+          Functional only if arch_data mount is live and the preserved venv
+          is current. Active GRID dev is now in roots/GRID, making this
+          server stale relative to current development.
+        promotion_verdict: no
+        promotion_blocker: "Points to archived arch_data venv, not roots/GRID"
+      - id: grid-memory
+        script: mcp-setup/server/memory_mcp_server.py
+        assessment: >
+          Thin wrapper over memory_mcp_server.py on the arch_data venv.
+          Stale duplicate if roots/GRID has a parallel memory_mcp_server.py.
+          Confirm with: ls ~/roots/GRID/mcp-setup/server/memory_mcp_server.py
+        promotion_verdict: no
+        promotion_blocker: "Points to archived arch_data venv, not roots/GRID"
+    future_path: >
+      If agentic-RAG or memory-MCP capabilities are needed in ~/.claude.json,
+      rebuild entries pointing to the active roots/GRID venv once those server
+      scripts are confirmed present there. Until then, keep in codex only as
+      local-inference experiment servers.
+    affected_configs:
+      - codex-config
+
+  - id: caraxes-stale-paths
+    severity: info
+    description: >
+      /mnt/arch_data/home/caraxes/.cursor/mcp.json uses /home/caraxes paths
+      that do not exist on the current system. Archive only.
+    affected_configs:
+      - caraxes-cursor

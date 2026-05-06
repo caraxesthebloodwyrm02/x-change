@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Preparedness Check",
+  "type": "object",
+  "required": ["check_id", "status", "timestamp", "checked_by", "evidence", "blockers"],
+  "properties": {
+    "check_id": { "type": "string" },
+    "status": { "type": "string", "enum": ["pass", "fail", "blocked"] },
+    "timestamp": { "type": "string" },
+    "checked_by": { "type": "string" },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}
+

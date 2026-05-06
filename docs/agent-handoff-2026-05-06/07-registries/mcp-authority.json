@@ -1,0 +1,89 @@
+{
+  "schema": "mcp-authority.v1",
+  "objective": "Stop editor and agent wiring drift through canonical MCP server set, client profiles, command policy, and parity checks.",
+  "canonical_servers": [
+    "afloat-server",
+    "code-analysis",
+    "craft-server",
+    "echoes-server",
+    "eligibility-server",
+    "glass-server",
+    "glimpse-server",
+    "grid-enhanced-tools",
+    "grid-intelligence",
+    "grid-rag",
+    "grid-rag-enhanced",
+    "grid-server",
+    "harness-server",
+    "lots-server",
+    "maintain-server",
+    "mangrove-server",
+    "nexus-server",
+    "ori-server",
+    "overview-server",
+    "personal-rag",
+    "portfolio-safety-lens",
+    "pulse-server",
+    "school-server",
+    "seeds-server",
+    "test-runner"
+  ],
+  "command_policy": {
+    "typescript_mcp_preferred_command": "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx",
+    "alternative": "controlled agent PATH exposing npm and npx",
+    "rule": "Do not mix command policies without recording the client profile."
+  },
+  "client_profiles": [
+    {
+      "client": "cursor-current-home",
+      "config_path": "/home/irfankabir/.cursor/mcp.json",
+      "profile": "full",
+      "current_read": "25-server set with absolute nvm npx"
+    },
+    {
+      "client": "windsurf-current-home",
+      "config_path": "/home/irfankabir/.codeium/windsurf/mcp_config.json",
+      "profile": "full",
+      "current_read": "25-server set with absolute nvm npx"
+    },
+    {
+      "client": "cascadeprojects-canonical",
+      "config_path": "/mnt/arch_data/home/caraxes/CascadeProjects/mcp_config.json",
+      "profile": "full-needs-command-policy-repair",
+      "current_read": "25-server set with bare npx"
+    },
+    {
+      "client": "copilot",
+      "config_path": "/home/irfankabir/.copilot/mcp-config.json",
+      "profile": "minimal",
+      "current_read": "5-server subset"
+    },
+    {
+      "client": "generic-mcp",
+      "config_path": "/home/irfankabir/.mcp.json",
+      "profile": "minimal-or-disabled",
+      "current_read": "1-server subset"
+    },
+    {
+      "client": "antigravity-current-home",
+      "config_path": "/home/irfankabir/.gemini/antigravity/mcp_config.json",
+      "profile": "disabled-or-regenerate",
+      "current_read": "empty config found"
+    },
+    {
+      "client": "caraxes-side-user-configs",
+      "config_path": "/mnt/arch_data/home/caraxes/.config",
+      "profile": "archive-unless-confirmed-active",
+      "current_read": "partial 19-21 server sets"
+    }
+  ],
+  "parity_checks": [
+    "server_count_matches_profile",
+    "command_path_exists",
+    "cwd_exists_after_expansion",
+    "no_active_stale_home_caraxes_paths",
+    "env_key_names_only_no_values"
+  ],
+  "completion_gate": "Every client is classified as full, minimal, archive, or disabled, and every mismatch has a fix-candidate record."
+}
+

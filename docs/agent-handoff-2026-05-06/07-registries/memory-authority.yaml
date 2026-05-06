@@ -1,0 +1,209 @@
+# Memory Authority
+# Generated: 2026-05-07
+# Source: disk inventory of all memory-like stores on prince (hostname)
+
+verified_at: "2026-05-07T00:30:00+06:00"
+
+canonical_sources:
+
+  - id: claude.auto_memory
+    path: /home/irfankabir/.claude/memory/
+    status: active
+    file_count: 7
+    size_kb: 68
+    last_modified: "2026-05-06"
+    notes: >
+      Claude Code user-scoped auto memory. Contains behavioral_portrait.md,
+      context_transport_ref.md, deployment-orchestration-manifest.md,
+      Session Highlights 2026.md, MCP health memo, strategyboard pinned note, README.
+
+  - id: claude.project_memory
+    path: /home/irfankabir/.claude/projects/-home-irfankabir/memory/
+    status: active
+    file_count: 18
+    size_kb: ~60  # estimated from file list
+    last_modified: "2026-05-06"
+    notes: >
+      Claude Code project-scoped auto memory for /home/irfankabir. Contains MEMORY.md
+      index plus per-topic files: user_profile, workspace_layout, grid_project,
+      feedback_style, archive_mount, gap_calculation, grid_multi_pass, signal_io_gap4,
+      pr_template, intentional_failures, wardrobe_at_gate, ultraplan_handoff,
+      surface_variation, xchange_glass_commitment, scenario files.
+
+  - id: codex.memories
+    path: /home/irfankabir/.codex/memories/
+    status: active
+    file_count: 4  # MEMORY.md, memory_summary.md, raw_memories.md, .codex sentinel + rollout_summaries/ dir
+    size_kb: 148
+    last_modified: "2026-05-06"
+    notes: >
+      Codex memory store. Git-tracked (.git present). Contains MEMORY.md (36KB),
+      raw_memories.md (78KB), memory_summary.md (12KB), and rollout_summaries/
+      with 14 session rollout files from 2026-04-23 to 2026-05-04.
+
+  - id: claude.knowledge
+    path: /home/irfankabir/.claude/knowledge/
+    status: active
+    file_count: ~10
+    size_kb: 64
+    last_modified: "2026-05-06"
+    notes: >
+      Knowledge scripts and decision store. Contains bootstrap.py, ingest.py, query.py,
+      simple_query.py, surface_to_context.py, config.json, simple_knowledge_store.json,
+      plus decisions/ and state/ subdirectories.
+
+  - id: personal_rag.db
+    path: /home/irfankabir/personal-rag/db/
+    status: active
+    file_count: 6
+    size_kb: 83700  # ~82 MB total (chroma.sqlite3 ~23MB + HNSW index ~62MB)
+    last_modified: "2026-05-07"
+    notes: >
+      ChromaDB vector store for personal-rag. chroma.sqlite3 (23MB, updated daily
+      via hourly digest at ~/.claude/dynamic-context.md) plus HNSW index files
+      (data_level0.bin 62MB, last rebuilt 2026-05-03). Healthy and operational.
+
+  - id: claude.dynamic_context
+    path: /home/irfankabir/.claude/dynamic-context.md
+    status: active
+    file_count: 1
+    size_kb: ~8  # estimated
+    last_modified: "2026-05-06"
+    notes: >
+      Hourly personal-rag digest. Contains sha256 receipt, TTL, and condensed
+      intelligence summary. Staleness threshold: 70 minutes.
+
+  - id: claude.session_context
+    path: /home/irfankabir/.claude/SESSION_CONTEXT.md
+    status: active
+    file_count: 1
+    size_kb: ~4  # estimated
+    last_modified: "2026-05-06"
+    notes: >
+      Narrow session goal snapshot. Updated per-session or on priority pivots.
+      Read at session start alongside CLAUDE.md files.
+
+  - id: echoes.audit
+    path: /home/irfankabir/.echoes/audit.ndjson
+    status: active
+    file_count: 1  # primary; also .bak, .sha256, and multiple log files in parent
+    size_kb: ~500  # estimated from ecosystem
+    last_modified: "2026-05-07"
+    notes: >
+      NDJSON audit trail. All MCP servers append AuditEvent objects via shared-types
+      emitAudit. Parent dir ~/.echoes/ also contains integrity logs, git-hygiene logs,
+      maintenance logs, character state, precedents, and telemetry subdirs.
+
+  - id: echoes.precedents
+    path: /home/irfankabir/.echoes/precedents/
+    status: active
+    file_count: ~5  # estimated
+    last_modified: "2026-05-06"
+    notes: >
+      Echoes precedent store. Used by echoes-server query_precedents and
+      resolve_precedent tools.
+
+  - id: archive.codex_memories
+    path: /mnt/arch_data/home/caraxes/.codex/memories/
+    status: preserved
+    file_count: 0
+    size_kb: 0
+    last_modified: "2026-04-19"
+    notes: >
+      Empty directory on old Arch rootfs. No content to migrate.
+
+  - id: archive.claude_knowledge
+    path: /mnt/arch_data/home/caraxes/.claude/knowledge/
+    status: preserved
+    file_count: ~10
+    size_kb: ~64  # same content structure as active counterpart
+    last_modified: "2026-05-04"
+    notes: >
+      Mirror of ~/.claude/knowledge/ on old Arch rootfs. Same file set as active
+      counterpart (bootstrap.py, ingest.py, etc.). Preserved, not authoritative.
+
+  - id: archive.claude_memory
+    path: /mnt/arch_data/home/caraxes/.claude/memory/
+    status: missing
+    file_count: 0
+    size_kb: 0
+    last_modified: null
+    notes: >
+      Does not exist on the old Arch rootfs. Memory dir was created after the
+      migration to /home/irfankabir.
+
+staleness_rules:
+  dynamic_context:
+    source: claude.dynamic_context
+    stale_after_minutes: 70
+    action: "Note '(stale, recommend refresh)' in session greeting"
+  personal_rag_index:
+    source: personal_rag.db
+    stale_after_days: 7
+    action: "Run reindex_personal_intel to rebuild HNSW index"
+  codex_memories:
+    source: codex.memories
+    stale_after_days: 14
+    action: "Review raw_memories.md for outdated entries; prune or archive"
+  auto_memory:
+    source: claude.auto_memory
+    stale_after_days: 30
+    action: "Review and archive notes older than 30 days"
+  project_memory:
+    source: claude.project_memory
+    stale_after_days: 30
+    action: "Verify memory-derived paths and facts against live code before acting"
+  audit_trail:
+    source: echoes.audit
+    stale_after_days: 90
+    action: "Rotate audit.ndjson; backup older entries"
+  preserved_sources:
+    source: "archive.*"
+    stale_after_days: 0
+    action: "Never treat as authoritative. Reference-only. Flag if any active path resolves here."
+
+session_protocol:
+  start:
+    - "Call mcp__personal-rag__get_session_digest() and cite sha256 prefix"
+    - "Read ~/.claude/SESSION_CONTEXT.md for narrow goal"
+    - "Check dynamic-context.md staleness (>70 min = stale)"
+    - "Verify memory-derived paths exist before trusting them"
+    - "Run Lumos fast-lane (check_the_line, ecosystem_scan, enforcement_status)"
+  during:
+    - "Verify any path, function name, or config from memory against live disk state"
+    - "If memory conflicts with observed code, trust code and update memory"
+    - "Mark stale facts explicitly when discovered"
+    - "Do not hallucinate context when personal-rag returns empty results"
+  end:
+    - "Session-end hook appends AuditEvent to ~/.echoes/audit.ndjson"
+    - "Write .claude-progress.md if approaching limits (done/next/blockers)"
+    - "Record changed files, validation status, and blockers"
+
+known_gaps:
+  - id: no_unified_retrieval
+    severity: medium
+    description: >
+      Four separate memory systems (claude auto-memory, codex memories,
+      claude knowledge, personal-rag) with no single retrieval contract.
+      personal-rag indexes some but not all sources.
+  - id: codex_memory_not_indexed
+    severity: low
+    description: >
+      ~/.codex/memories/ is git-tracked with 78KB raw_memories.md but is not
+      indexed by personal-rag. Rollout summaries contain useful session history.
+  - id: knowledge_scripts_no_runner
+    severity: low
+    description: >
+      ~/.claude/knowledge/ contains Python ingest/query scripts but no evidence
+      of automated execution. May be a dead prototype.
+  - id: arch_data_knowledge_drift
+    severity: low
+    description: >
+      /mnt/arch_data/home/caraxes/.claude/knowledge/ is a mirror of the active
+      knowledge dir. No mechanism to detect drift between them.
+  - id: project_memory_scope_unknown
+    severity: low
+    description: >
+      Only one project memory dir found (-home-irfankabir). Other project dirs
+      under ~/.claude/projects/ may have memory subdirs not yet inventoried
+      (permission issues during scan).

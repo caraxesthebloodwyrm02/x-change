@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Batch Execution Record",
+  "description": "Records the result of executing a single batch. One record per batch per execution attempt.",
+  "type": "object",
+  "required": ["batch_id", "status", "timestamp", "executed_by", "changed_files", "validation", "blockers", "next_step"],
+  "properties": {
+    "batch_id": { "type": "string" },
+    "status": { "type": "string", "enum": ["pending", "in-progress", "pass", "partial", "fail", "blocked", "skipped"] },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "executed_by": { "type": "string" },
+    "changed_files": { "type": "array", "items": { "type": "string" } },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "acceptance_criteria_met": { "type": "array", "items": { "type": "string" } },
+        "acceptance_criteria_failed": { "type": "array", "items": { "type": "string" } },
+        "commands_run": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "next_step": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": true
+}

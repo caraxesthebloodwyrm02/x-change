@@ -1,0 +1,94 @@
+{
+  "schema": "fix-candidate-routing.v1",
+  "objective": "Map each fix candidate to its owning batch, authority doc, and parallel group so agents picking up a batch know exactly which candidates to address.",
+  "routes": [
+    {
+      "fix_id": "DEVTOOL-P0-001",
+      "batch": "BATCH-04",
+      "authority_doc": "06-authority/TOOLCHAIN-MAINTENANCE-AUTHORITY.md",
+      "registry_file": "07-registries/toolchain-authority.json",
+      "parallel_group": "A",
+      "summary": "npm/npx not on PATH despite nvm install"
+    },
+    {
+      "fix_id": "WIRE-P0-001",
+      "batch": "BATCH-03",
+      "authority_doc": "06-authority/MCP-WIRING-AUTHORITY.md",
+      "registry_file": "07-registries/mcp-authority.json",
+      "parallel_group": "A",
+      "summary": "Canonical Cascade MCP config uses bare npx while PATH lacks npx"
+    },
+    {
+      "fix_id": "WIRE-P0-002",
+      "batch": "BATCH-03",
+      "authority_doc": "06-authority/MCP-WIRING-AUTHORITY.md",
+      "registry_file": "07-registries/mcp-authority.json",
+      "parallel_group": "B",
+      "summary": "Stale /home/caraxes paths in MCP and automation configs"
+    },
+    {
+      "fix_id": "MAINT-P0-001",
+      "batch": "BATCH-04",
+      "authority_doc": "06-authority/TOOLCHAIN-MAINTENANCE-AUTHORITY.md",
+      "registry_file": "07-registries/maintenance-authority.json",
+      "parallel_group": "C",
+      "summary": "hogsmade systemd timers point to missing driver path"
+    },
+    {
+      "fix_id": "MAINT-P0-002",
+      "batch": "BATCH-04",
+      "authority_doc": "06-authority/TOOLCHAIN-MAINTENANCE-AUTHORITY.md",
+      "registry_file": "07-registries/maintenance-authority.json",
+      "parallel_group": "C",
+      "summary": "No single maintenance authority file governs timers and scripts"
+    },
+    {
+      "fix_id": "WIRE-P1-001",
+      "batch": "BATCH-03",
+      "authority_doc": "06-authority/MCP-WIRING-AUTHORITY.md",
+      "registry_file": "07-registries/mcp-authority.json",
+      "parallel_group": "D",
+      "summary": "MCP server coverage differs across editor clients"
+    },
+    {
+      "fix_id": "DEVTOOL-P1-001",
+      "batch": "BATCH-04",
+      "authority_doc": "06-authority/TOOLCHAIN-MAINTENANCE-AUTHORITY.md",
+      "registry_file": "07-registries/toolchain-authority.json",
+      "parallel_group": "E",
+      "summary": "Go/Rust/Cargo/Code fail snap-confine checks"
+    },
+    {
+      "fix_id": "DEVTOOL-P1-002",
+      "batch": "BATCH-04",
+      "authority_doc": "06-authority/TOOLCHAIN-MAINTENANCE-AUTHORITY.md",
+      "registry_file": "07-registries/toolchain-authority.json",
+      "parallel_group": "F",
+      "summary": "Node and Python projects missing lockfiles"
+    },
+    {
+      "fix_id": "WIRE-P1-002",
+      "batch": "BATCH-03",
+      "authority_doc": "06-authority/MCP-WIRING-AUTHORITY.md",
+      "registry_file": "07-registries/mcp-authority.json",
+      "parallel_group": "D",
+      "summary": "Empty or non-strict JSON editor/agent config files"
+    },
+    {
+      "fix_id": "MAINT-P1-001",
+      "batch": "BATCH-04",
+      "authority_doc": "06-authority/TOOLCHAIN-MAINTENANCE-AUTHORITY.md",
+      "registry_file": "07-registries/maintenance-authority.json",
+      "parallel_group": "G",
+      "summary": "Arch-era maintenance script overlaps with Ubuntu-era scripts"
+    },
+    {
+      "fix_id": "MAINT-P2-001",
+      "batch": "BATCH-04",
+      "authority_doc": "06-authority/TOOLCHAIN-MAINTENANCE-AUTHORITY.md",
+      "registry_file": "07-registries/maintenance-authority.json",
+      "parallel_group": "C",
+      "summary": "Timer live status unverifiable from sandbox"
+    }
+  ]
+}

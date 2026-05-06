@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Asset Registry Entry",
+  "type": "object",
+  "required": ["id", "kind", "path", "owner", "status"],
+  "properties": {
+    "id": { "type": "string" },
+    "kind": {
+      "type": "string",
+      "enum": ["project", "agent", "hook", "skill", "command", "workflow", "rule", "plugin", "mcp-server", "memory-source", "maintenance-job", "tool", "domain-asset", "buried-asset"]
+    },
+    "path": { "type": "string" },
+    "owner": { "type": "string" },
+    "status": { "type": "string", "enum": ["active", "experimental", "archive", "mirror", "vendor", "derived", "broken", "unknown"] },
+    "attribution": { "type": "string" },
+    "domains": { "type": "array", "items": { "type": "string" } },
+    "validation": { "type": "object" }
+  },
+  "additionalProperties": true
+}
+

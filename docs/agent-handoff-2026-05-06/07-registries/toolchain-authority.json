@@ -1,0 +1,40 @@
+{
+  "schema": "toolchain-authority.v1",
+  "objective": "Make development tool availability explicit before repairs or automation.",
+  "records": [
+    {
+      "tool": "python",
+      "status": "available",
+      "policy": "Use uv for Python project work.",
+      "commands": ["python3", "uv"]
+    },
+    {
+      "tool": "node",
+      "status": "partial",
+      "policy": "Expose npm and npx through controlled PATH or user symlinks before MCP repair.",
+      "commands": ["node", "npm", "npx"],
+      "known_gap": "node present, npm/npx missing from PATH"
+    },
+    {
+      "tool": "docker",
+      "status": "available",
+      "policy": "Use docker compose, not standalone docker-compose.",
+      "commands": ["docker", "docker compose"]
+    },
+    {
+      "tool": "go-rust-code",
+      "status": "degraded",
+      "policy": "Classify snap-backed command failures as environment-level until repaired.",
+      "commands": ["go", "rustc", "cargo", "code"],
+      "known_gap": "snap-confine/AppArmor error"
+    },
+    {
+      "tool": "ollama",
+      "status": "client-present-daemon-unverified",
+      "policy": "Run daemon health check before local model workflows.",
+      "commands": ["ollama"]
+    }
+  ],
+  "completion_gate": "Toolchain authority records distinguish available, missing, partial, and degraded tools with validation commands."
+}
+

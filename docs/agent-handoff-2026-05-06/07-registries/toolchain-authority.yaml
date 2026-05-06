@@ -1,0 +1,153 @@
+schema: toolchain-authority.v2
+verified_at: "2026-05-07T00:00:00+06:00"
+verification_method: "file-read + command-v probes from CLAUDE.md documented state (Bash sandbox unavailable due to kernel seccomp/userns restriction)"
+
+package_managers:
+  python: uv
+  node: npm
+  system: apt
+
+tools:
+  - name: python3
+    path: /usr/bin/python3
+    version_cmd: "python3 --version"
+    status: present
+    notes: "System python; all project work uses uv"
+
+  - name: uv
+    path: /home/irfankabir/.local/bin/uv
+    version_cmd: "uv --version"
+    status: present
+    notes: "Primary Python package manager for all Mangrove repos"
+
+  - name: node
+    path: /home/irfankabir/.local/bin/node
+    version_cmd: "node --version"
+    status: present
+    notes: "User-installed; used by MCP servers and gruff"
+
+  - name: npm
+    path: /home/irfankabir/.local/bin/npm
+    version_cmd: "npm --version"
+    status: degraded
+    notes: "Known PATH issue — npm/npx not always visible to systemd units or subshells; services set explicit PATH"
+
+  - name: npx
+    path: /home/irfankabir/.local/bin/npx
+    version_cmd: "npx --version"
+    status: degraded
+    notes: "Same PATH issue as npm"
+
+  - name: docker
+    path: /usr/bin/docker
+    version_cmd: "docker --version"
+    status: present
+    notes: "Use 'docker compose' not standalone docker-compose"
+
+  - name: make
+    path: /usr/bin/make
+    version_cmd: "make --version"
+    status: present
+
+  - name: gcc
+    path: /usr/bin/gcc
+    version_cmd: "gcc --version"
+    status: present
+
+  - name: g++
+    path: /usr/bin/g++
+    version_cmd: "g++ --version"
+    status: present
+
+  - name: go
+    path: /snap/bin/go
+    version_cmd: "go version"
+    status: degraded
+    notes: "snap-backed; snap-confine/AppArmor errors reported"
+
+  - name: rustc
+    path: /snap/bin/rustc
+    version_cmd: "rustc --version"
+    status: degraded
+    notes: "snap-backed; snap-confine/AppArmor errors reported"
+
+  - name: cargo
+    path: /snap/bin/cargo
+    version_cmd: "cargo --version"
+    status: degraded
+    notes: "snap-backed; snap-confine/AppArmor errors reported"
+
+  - name: sqlite3
+    path: /usr/bin/sqlite3
+    version_cmd: "sqlite3 --version"
+    status: present
+
+  - name: redis-cli
+    path: /usr/bin/redis-cli
+    version_cmd: "redis-cli --version"
+    status: present
+
+  - name: jq
+    path: /usr/bin/jq
+    version_cmd: "jq --version"
+    status: present
+
+  - name: rg
+    path: /usr/bin/rg
+    version_cmd: "rg --version"
+    status: present
+
+  - name: fd
+    path: /usr/bin/fd
+    version_cmd: "fd --version"
+    status: present
+
+  - name: bat
+    path: /usr/bin/bat
+    version_cmd: "bat --version"
+    status: present
+
+  - name: eza
+    path: /usr/bin/eza
+    version_cmd: "eza --version"
+    status: present
+
+  - name: gh
+    path: /usr/bin/gh
+    version_cmd: "gh --version"
+    status: present
+
+  - name: git
+    path: /usr/bin/git
+    version_cmd: "git --version"
+    status: present
+
+  - name: curl
+    path: /usr/bin/curl
+    version_cmd: "curl --version"
+    status: present
+
+  - name: wget
+    path: /usr/bin/wget
+    version_cmd: "wget --version"
+    status: present
+
+  - name: ollama
+    path: /usr/local/bin/ollama
+    version_cmd: "ollama --version"
+    status: present
+    notes: "Client binary present; daemon health unverified at inventory time"
+
+known_issues:
+  - id: npm-npx-path
+    severity: medium
+    description: "npm and npx not on default PATH for systemd user units; services must set explicit PATH=/home/irfankabir/.local/bin:/usr/bin:/bin"
+  - id: snap-degradation
+    severity: medium
+    description: "snap-confine/AppArmor errors block go, rustc, cargo execution; classify as environment-degraded until repaired"
+  - id: ollama-daemon
+    severity: low
+    description: "ollama client binary present but daemon (localhost:11434) not health-checked at inventory time; run health check before local model workflows"
+  - id: bash-sandbox-seccomp
+    severity: info
+    description: "Kernel 6.17.0-23-generic seccomp restrictions prevent sandboxed Bash from running (userns capability restriction); live version probes could not be executed during this inventory"

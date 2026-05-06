@@ -1,0 +1,496 @@
+version: 1
+generated_at: "2026-05-07"
+source: "01-source-maps/domain-landscape-local-asset-allocation.md"
+
+domains:
+  - name: education-learning
+    description: "Learning progress, tutoring, evidence, assessment, skill tracking, reward-linked learning systems"
+    primary_assets:
+      - project: x-change
+        path: /home/irfankabir/x-change
+      - project: gruff-python-prototype
+        path: /home/irfankabir/gruff/workspace/python-prototype
+      - project: GRID-main
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main
+      - project: python-craft
+        path: /mnt/arch_data/home/caraxes/roots/python-craft
+      - project: Vision
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/Vision
+    secondary_assets:
+      - project: Glass
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Applications/glass
+      - project: personal-rag
+        path: /home/irfankabir/personal-rag
+      - project: token-type-calculator
+        path: /home/irfankabir/canopy/token-type-calculator
+      - project: seed-templates
+        path: /home/irfankabir/seed/templates
+    gaps:
+      - learner profile model
+      - student-facing dashboard
+      - educator/admin review surface
+      - rubric/evidence schema
+      - course/module organization
+      - longitudinal progress graph
+      - privacy model for student evidence
+    integration_surfaces:
+      - "x-change reward-state to Glass evidence display"
+      - "GRID intelligence layer for learning diagnostics"
+      - "personal-rag for learning history storage"
+
+  - name: finance-payments
+    description: "Money movement, rewards, invoices, payment events, exchange, tokens, wallets, ledgers"
+    primary_assets:
+      - project: x-change
+        path: /home/irfankabir/x-change
+      - project: afloat
+        path: /home/irfankabir/canopy/afloat
+      - project: token-type-calculator
+        path: /home/irfankabir/canopy/token-type-calculator
+      - project: apiguard
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/apiguard
+    secondary_assets:
+      - project: workspace-trust-auditor
+        path: /home/irfankabir/workspace-trust-auditor
+      - project: roots-security
+        path: /mnt/arch_data/home/caraxes/roots/security
+      - project: portfolio-control
+        path: /mnt/arch_data/home/caraxes/roots/portfolio-control
+      - project: assistive-agreement-contracts
+        path: /home/irfankabir/canopy/assistive-agreement-contracts
+    gaps:
+      - general ledger model
+      - reconciliation report
+      - payment audit dashboard
+      - wallet/account abstraction
+      - refund/dispute path
+      - webhook replay tooling
+      - risk/fraud scoring
+    integration_surfaces:
+      - "x-change Stripe webhook boundary"
+      - "token-type-calculator value taxonomy"
+      - "apiguard rate limiting for finance services"
+
+  - name: ai-agents-automation
+    description: "Proactive task execution, routing, workflows, MCP tools, agent orchestration"
+    primary_assets:
+      - project: GRID-main
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main
+      - project: CascadeProjects-MCP-servers
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Tools/MCPServers
+      - project: glass-server
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Tools/MCPServers/glass-server
+      - project: mcp-orchestration-language
+        path: /mnt/arch_data/home/caraxes/roots/mcp-orchestration-language
+      - project: afloat
+        path: /home/irfankabir/canopy/afloat
+      - project: echoes
+        path: /home/irfankabir/canopy/echoes
+      - project: workspace-trust-auditor
+        path: /home/irfankabir/workspace-trust-auditor
+    secondary_assets:
+      - project: personal-rag
+        path: /home/irfankabir/personal-rag
+      - project: Glass
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Applications/glass
+      - project: apiguard
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/apiguard
+      - project: portfolio-control
+        path: /mnt/arch_data/home/caraxes/roots/portfolio-control
+      - project: ai-web-demo
+        path: /home/irfankabir/canopy/ai-web-demo
+    gaps:
+      - canonical MCP capability registry
+      - workflow execution ledger
+      - rollback plans for agent actions
+      - cross-tool permission model
+      - agent run scorecards
+      - visual workflow trace
+      - shared event envelope
+    integration_surfaces:
+      - "GRID reasoning/validation core"
+      - "MCP servers expose capabilities"
+      - "mcp-orchestration-language compiles workflows"
+      - "Glass visualizes agent session state"
+
+  - name: data-memory
+    description: "Search, retrieval, RAG, summarization, ingestion, indexing, datasets, signal processing"
+    primary_assets:
+      - project: personal-rag
+        path: /home/irfankabir/personal-rag
+      - project: constrained-signal-pipeline
+        path: /home/irfankabir/constrained-signal-pipeline
+      - project: Vision
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/Vision
+      - project: dep-mapper
+        path: /mnt/arch_data/home/caraxes/roots/dep-mapper
+      - project: echoes
+        path: /home/irfankabir/canopy/echoes
+      - project: GRID-main
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main
+    secondary_assets:
+      - project: workspace-trust-auditor
+        path: /home/irfankabir/workspace-trust-auditor
+      - project: HANDOFF
+        path: /home/irfankabir/HANDOFF
+    gaps:
+      - canonical source taxonomy
+      - ingestion priority rules
+      - mirror/archive awareness
+      - report index
+      - diagram extraction
+      - stale-context detection
+      - knowledge graph export
+    integration_surfaces:
+      - "personal-rag indexes sessions, docs, reports"
+      - "constrained-signal-pipeline as numeric sidecar"
+      - "Vision screen-aware summarization"
+
+  - name: security-trust
+    description: "Audit, policy, secrets, dependency posture, path authority, safety, provenance"
+    primary_assets:
+      - project: workspace-trust-auditor
+        path: /home/irfankabir/workspace-trust-auditor
+      - project: portfolio-control
+        path: /mnt/arch_data/home/caraxes/roots/portfolio-control
+      - project: roots-security
+        path: /mnt/arch_data/home/caraxes/roots/security
+      - project: apiguard
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/apiguard
+    secondary_assets:
+      - project: x-change
+        path: /home/irfankabir/x-change
+      - project: Glass
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Applications/glass
+      - project: dep-mapper
+        path: /mnt/arch_data/home/caraxes/roots/dep-mapper
+      - project: caraxes-engine
+        path: /home/irfankabir/.caraxes
+    gaps:
+      - canonical registry enforcement
+      - per-project trust tier
+      - trusted command manifest
+      - generated security scorecard
+      - path authority checker
+      - mirror drift detector
+    integration_surfaces:
+      - "workspace-trust-auditor inspects all projects"
+      - "portfolio-control automates safe checks"
+      - "apiguard provides request-level resilience"
+
+  - name: productivity-personal-os
+    description: "Context gates, daily briefs, routines, local memory, work-session visualization, dashboards"
+    primary_assets:
+      - project: afloat
+        path: /home/irfankabir/canopy/afloat
+      - project: Glass
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Applications/glass
+      - project: personal-rag
+        path: /home/irfankabir/personal-rag
+      - project: workspace-trust-auditor
+        path: /home/irfankabir/workspace-trust-auditor
+      - project: gruff-workspace
+        path: /home/irfankabir/gruff/workspace
+    secondary_assets:
+      - project: upwork-cli
+        path: /home/irfankabir/canopy/upwork-cli
+      - project: mcp-orchestration-language
+        path: /mnt/arch_data/home/caraxes/roots/mcp-orchestration-language
+      - project: Vision
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/Vision
+    gaps:
+      - daily operator dashboard
+      - personal command center
+      - task/workflow queue
+      - context-switch ledger
+      - unified notification surface
+    integration_surfaces:
+      - "afloat context gates"
+      - "Glass visualizes work sessions"
+      - "personal-rag remembers context"
+
+  - name: creative-spatial-media
+    description: "Spatial canvases, visual work maps, generated artifacts, design systems, multimodal workflows"
+    primary_assets:
+      - project: Glass
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Applications/glass
+      - project: gruff-python-prototype
+        path: /home/irfankabir/gruff/workspace/python-prototype
+      - project: Vision
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/Vision
+      - project: glimpse-engine
+        path: /mnt/arch_data/home/caraxes/roots/glimpse-engine
+      - project: glimpse-artifact
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/glimpse-artifact
+      - project: token-type-calculator
+        path: /home/irfankabir/canopy/token-type-calculator
+    secondary_assets:
+      - project: echoes
+        path: /home/irfankabir/canopy/echoes
+      - project: ai-web-demo
+        path: /home/irfankabir/canopy/ai-web-demo
+    gaps:
+      - shared diagram schema
+      - visual export pipeline
+      - dashboard design language
+      - canvas-to-data contract
+      - diagram versioning
+      - artifact gallery
+    integration_surfaces:
+      - "Glass owns live agent-session space"
+      - "GRUFF owns notebook/manifest visualization"
+      - "Vision owns screen-aware summarization"
+
+  - name: health-wellness
+    description: "Mental load tracking, habit loops, routines, reflection, focus management, burnout prevention"
+    primary_assets:
+      - project: afloat
+        path: /home/irfankabir/canopy/afloat
+      - project: mental-load-balancer
+        path: /home/irfankabir/seed/archive/Atmosphere/mental-load-balancer
+    secondary_assets:
+      - project: personal-rag
+        path: /home/irfankabir/personal-rag
+      - project: Glass
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Applications/glass
+      - project: claude-scheduler-routines
+        path: /home/irfankabir/.claude/scheduler
+    gaps:
+      - cognitive-load model (production)
+      - routine dashboard
+      - reflection capture
+      - trend graph
+      - wellness-specific agent constraints
+      - canonical wellness app
+    integration_surfaces:
+      - "afloat context-gate framing"
+      - "mental-load-balancer pressure score model"
+      - "pulse-server focus sessions"
+
+  - name: career-marketplace
+    description: "Profile management, proposal drafting, job matching, portfolio evidence, pricing, client ops"
+    primary_assets:
+      - project: upwork-cli
+        path: /home/irfankabir/canopy/upwork-cli
+      - project: afloat
+        path: /home/irfankabir/canopy/afloat
+    secondary_assets:
+      - project: workspace-trust-auditor
+        path: /home/irfankabir/workspace-trust-auditor
+      - project: x-change
+        path: /home/irfankabir/x-change
+      - project: personal-rag
+        path: /home/irfankabir/personal-rag
+      - project: token-type-calculator
+        path: /home/irfankabir/canopy/token-type-calculator
+      - project: assistive-agreement-contracts
+        path: /home/irfankabir/canopy/assistive-agreement-contracts
+    gaps:
+      - portfolio showcase map
+      - project one-pagers
+      - proposal evidence snippets
+      - case study generator
+      - pricing model
+      - client-safe demo bundle
+    integration_surfaces:
+      - "upwork-cli for job operations"
+      - "portfolio reports as showcase evidence"
+
+  - name: infrastructure-devops
+    description: "Shared packages, CI, package tooling, reusable libraries, local services, runners"
+    primary_assets:
+      - project: CascadeProjects
+        path: /mnt/arch_data/home/caraxes/CascadeProjects
+      - project: apiguard
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/apiguard
+      - project: roots
+        path: /mnt/arch_data/home/caraxes/roots
+      - project: shared-types
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Components/shared-types
+      - project: shared-resilience
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Components/shared-resilience
+      - project: MCP-servers
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Tools/MCPServers
+      - project: portfolio-control
+        path: /mnt/arch_data/home/caraxes/roots/portfolio-control
+    secondary_assets:
+      - project: gruff-workspace
+        path: /home/irfankabir/gruff/workspace
+      - project: scripts
+        path: /home/irfankabir/scripts
+      - project: caraxes-engine
+        path: /home/irfankabir/.caraxes
+    gaps:
+      - shared service catalog
+      - package ownership map
+      - CI command registry
+      - runner policy
+      - dependency update policy
+      - generated infrastructure diagram
+    integration_surfaces:
+      - "shared-types must build before MCP servers"
+      - "CI workflows across 6 repos"
+      - "self-hosted runner for agent-fix"
+
+  - name: governance-policy
+    description: "User agreements, consent, policy decisions, service contracts, audit records, reward rules"
+    primary_assets:
+      - project: x-change
+        path: /home/irfankabir/x-change
+      - project: assistive-agreement-contracts
+        path: /home/irfankabir/canopy/assistive-agreement-contracts
+      - project: echoes
+        path: /home/irfankabir/canopy/echoes
+      - project: portfolio-control
+        path: /mnt/arch_data/home/caraxes/roots/portfolio-control
+      - project: workspace-trust-auditor
+        path: /home/irfankabir/workspace-trust-auditor
+    secondary_assets:
+      - project: roots-security
+        path: /mnt/arch_data/home/caraxes/roots/security
+      - project: apiguard
+        path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/apiguard
+      - project: development-contract
+        path: /home/irfankabir/seed/templates/development-contract.md
+    gaps:
+      - central policy registry
+      - consent/audit event format
+      - contract template catalog
+      - automation permission tiers
+      - human approval workflow
+      - machine-readable policy docs
+    integration_surfaces:
+      - "x-change policy lifecycle"
+      - "assistive-agreement-contracts governance patterns"
+      - "TUV-001 trust contract"
+
+  - name: archives-templates
+    description: "Historical work, reusable scaffolds, experiments, handoffs, migration traces"
+    primary_assets:
+      - project: seed
+        path: /home/irfankabir/seed
+      - project: HANDOFF
+        path: /home/irfankabir/HANDOFF
+      - project: grove-archive
+        path: /home/irfankabir/grove/archive
+    secondary_assets:
+      - project: cascade-system-audit
+        path: /home/irfankabir/cascade-system-audit
+      - project: session-transcripts
+        path: /home/irfankabir/session_transcripts
+    gaps:
+      - archive index
+      - active/archive flag per asset
+      - template catalog
+      - handoff summary index
+      - retention policy
+      - search filters
+      - import path into personal-rag
+    integration_surfaces:
+      - "seed templates feed new projects"
+      - "HANDOFF bundles carry transfer context"
+      - "grove/archive holds historical repos"
+
+multi_domain_projects:
+  - project: x-change
+    path: /home/irfankabir/x-change
+    domains:
+      - education-learning
+      - finance-payments
+      - governance-policy
+      - security-trust
+
+  - project: Glass
+    path: /mnt/arch_data/home/caraxes/CascadeProjects/Applications/glass
+    domains:
+      - creative-spatial-media
+      - ai-agents-automation
+      - productivity-personal-os
+      - education-learning
+
+  - project: GRID-main
+    path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main
+    domains:
+      - ai-agents-automation
+      - data-memory
+      - security-trust
+      - infrastructure-devops
+      - education-learning
+
+  - project: personal-rag
+    path: /home/irfankabir/personal-rag
+    domains:
+      - data-memory
+      - productivity-personal-os
+      - ai-agents-automation
+      - security-trust
+
+  - project: afloat
+    path: /home/irfankabir/canopy/afloat
+    domains:
+      - productivity-personal-os
+      - ai-agents-automation
+      - finance-payments
+      - career-marketplace
+      - health-wellness
+
+  - project: echoes
+    path: /home/irfankabir/canopy/echoes
+    domains:
+      - ai-agents-automation
+      - data-memory
+      - governance-policy
+      - creative-spatial-media
+
+  - project: workspace-trust-auditor
+    path: /home/irfankabir/workspace-trust-auditor
+    domains:
+      - security-trust
+      - productivity-personal-os
+      - infrastructure-devops
+      - governance-policy
+
+  - project: apiguard
+    path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/apiguard
+    domains:
+      - infrastructure-devops
+      - security-trust
+      - finance-payments
+      - ai-agents-automation
+
+  - project: gruff-python-prototype
+    path: /home/irfankabir/gruff/workspace/python-prototype
+    domains:
+      - education-learning
+      - creative-spatial-media
+      - data-memory
+      - productivity-personal-os
+
+  - project: token-type-calculator
+    path: /home/irfankabir/canopy/token-type-calculator
+    domains:
+      - finance-payments
+      - creative-spatial-media
+      - governance-policy
+
+  - project: Vision
+    path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/Vision
+    domains:
+      - data-memory
+      - creative-spatial-media
+      - education-learning
+      - productivity-personal-os
+
+  - project: constrained-signal-pipeline
+    path: /home/irfankabir/constrained-signal-pipeline
+    domains:
+      - data-memory
+      - ai-agents-automation
+      - productivity-personal-os
+
+  - project: mcp-orchestration-language
+    path: /mnt/arch_data/home/caraxes/roots/mcp-orchestration-language
+    domains:
+      - ai-agents-automation
+      - infrastructure-devops
+      - productivity-personal-os

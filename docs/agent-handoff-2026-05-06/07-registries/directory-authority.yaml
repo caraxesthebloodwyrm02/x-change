@@ -1,0 +1,429 @@
+# Directory Authority Plan
+# Generated: 2026-05-07
+# Scope: /home/irfankabir and /mnt/arch_data/home/caraxes
+# Mode: classification only — NO moves
+# Sources: CLAUDE.md, SESSION_CONTEXT.md, consolidation playbook,
+#   workspace_layout memory (2026-05-06 consolidation confirmed),
+#   DIRECTORY-DOMAIN-RESURFACING-AUTHORITY.md
+
+verified_at: "2026-05-07T00:00:00Z"
+
+# ---------------------------------------------------------------------------
+# ROOTS — every significant top-level directory classified
+# ---------------------------------------------------------------------------
+roots:
+
+  # === /home/irfankabir — active user home ===
+
+  - path: /home/irfankabir/CascadeProjects
+    type: canonical
+    git_repo: true
+    notes: >
+      Forward-direction target for CascadeProjects work (confirmed 2026-04-22).
+      Currently shallow (Documentation/docs, Projects/GATE/harness); content
+      migrates forward from arch_data on demand. Contains local non-symlinked
+      dirs: Projects/Vision, Projects/GATE, grove/.
+
+  - path: /home/irfankabir/canopy
+    type: canonical
+    git_repo: false
+    notes: >
+      Native directory since 2026-05-06 consolidation (no longer symlinked to
+      arch_data). Contains afloat/, echoes/, assistive-agreement-contracts/,
+      ai-web-demo/, token-type-calculator/, upwork-cli/. Each child is its own
+      git repo.
+
+  - path: /home/irfankabir/roots
+    type: canonical
+    git_repo: false
+    notes: >
+      Native directory since 2026-05-06 consolidation. Contains GRID/,
+      apiguard/, glimpse-engine/, dep-mapper/, mcp-orchestration-language/,
+      portfolio-control/, security/. Each child is its own git repo.
+
+  - path: /home/irfankabir/seed
+    type: canonical
+    git_repo: true
+    notes: >
+      Native directory since 2026-05-06 consolidation. Contains templates/ and
+      archive/. The propagule — templates and historical seeds.
+
+  - path: /home/irfankabir/grove
+    type: mirror
+    symlink_target: /mnt/arch_data/home/caraxes/grove
+    git_repo: false
+    notes: >
+      Only remaining symlink to arch_data as of 2026-05-06. Contains irfankabir02
+      account repos (Vision, archive/). Migration deferred — not yet blocking.
+
+  - path: /home/irfankabir/gruff
+    type: canonical
+    git_repo: true
+    notes: >
+      Active gruff dev repo (git: caraxesthebloodwyrm02/gruff). Contains
+      workspace/ subdirectory which is the day-to-day umbrella.
+
+  - path: /home/irfankabir/gruff/workspace
+    type: canonical
+    git_repo: true
+    notes: >
+      Day-to-day GRUFF umbrella — has own AGENTS.md/CLAUDE.md. Contains
+      prototype/, python-prototype/, rust-prototype/, racks/, design-system/,
+      schemas/, scripts/. CascadeProjects/ subdir historically symlinked into
+      arch_data (currently absent per CLAUDE.md).
+
+  - path: /home/irfankabir/x-change
+    type: canonical
+    git_repo: true
+    notes: >
+      Active finance + evidence ledger project. GitHub: irfankabir/x-change.
+      Keep in place — not mirrored elsewhere.
+
+  - path: /home/irfankabir/personal-rag
+    type: canonical
+    git_repo: true
+    notes: >
+      Local RAG index system. DB at ~/personal-rag/db/. Active, local-first.
+
+  - path: /home/irfankabir/workspace-trust-auditor
+    type: canonical
+    git_repo: true
+    notes: >
+      Workspace audit tooling. Natural home for inventory/scorecard automation.
+
+  - path: /home/irfankabir/hogsmade
+    type: stale
+    git_repo: true
+    notes: >
+      Cascade-like overlap. Needs git-level comparison with arch_data
+      CascadeProjects and ~/CascadeProjects to determine if mirror, worktree,
+      or archive. Likely should be reclassified as mirror or archive after
+      verification.
+
+  - path: /home/irfankabir/constrained-signal-pipeline
+    type: canonical
+    git_repo: false
+    notes: >
+      Float32 three-band resonance filter lib + JSON CLI. No git; uv sync
+      --extra dev. Standalone experiment.
+
+  - path: /home/irfankabir/archive
+    type: archive
+    git_repo: false
+    notes: >
+      Historical content. May contain caraxes-workspace-legacy and other
+      archived material. Exclude from default project discovery.
+
+  - path: /home/irfankabir/HANDOFF
+    type: archive
+    git_repo: false
+    notes: >
+      Transfer/handoff bundles. Preserve and index separately. Do not treat as
+      active source.
+
+  - path: /home/irfankabir/renovation
+    type: canonical
+    git_repo: false
+    notes: >
+      Current renovation/handoff pack (agent-handoff-2026-05-06). Active
+      planning workspace for this consolidation effort.
+
+  - path: /home/irfankabir/scripts
+    type: canonical
+    git_repo: false
+    notes: >
+      ~20 workspace-level automation scripts. Native dir. Includes
+      prince-agent-bootstrap.py, agent-review-loop.sh, security scripts,
+      gap-calc.sh, mcp-probe.sh, etc.
+
+  - path: /home/irfankabir/plugins
+    type: canonical
+    git_repo: false
+    notes: Custom plugins (caraxes, atlas-echoes).
+
+  - path: /home/irfankabir/design
+    type: canonical
+    git_repo: false
+    notes: Design docs staged at ~/design/hogsmade/ (Audit + Cockpit HTMLs).
+
+  - path: /home/irfankabir/docs
+    type: canonical
+    git_repo: false
+    notes: Audit index — symlinks to 10 security/diagnostic markdown reports.
+
+  # --- Tool state (do not move) ---
+
+  - path: /home/irfankabir/.claude
+    type: canonical
+    git_repo: false
+    notes: >
+      Tool state — Claude Code config, rules, skills, hooks, agents, memory,
+      plans, backups, telemetry. Do not move.
+
+  - path: /home/irfankabir/.codex
+    type: canonical
+    git_repo: false
+    notes: Tool state — Codex config. Do not move.
+
+  - path: /home/irfankabir/.caraxes
+    type: canonical
+    git_repo: false
+    notes: >
+      Caraxes engine runtime — engine.toml, bin/, registry/, vault/, logs/,
+      memos/, lib/. Do not move.
+
+  - path: /home/irfankabir/.afloat
+    type: canonical
+    git_repo: false
+    notes: Afloat tool state. Do not move.
+
+  - path: /home/irfankabir/.echoes
+    type: canonical
+    git_repo: false
+    notes: Echoes audit trail (audit.ndjson). Runtime data. Do not move.
+
+  # === /mnt/arch_data/home/caraxes — old Arch rootfs ===
+
+  - path: /mnt/arch_data/home/caraxes/CascadeProjects
+    type: archive
+    git_repo: true
+    notes: >
+      Pre-migration snapshot of full monorepo (4.8G). Archival reference per
+      2026-04-22 decision. Consult for .git history and legacy content. The
+      canonical forward path is ~/CascadeProjects. MCP servers, shared-types,
+      and Applications/glass still reference this path in configs — those
+      references need updating as migration proceeds.
+
+  - path: /mnt/arch_data/home/caraxes/canopy
+    type: archive
+    git_repo: false
+    notes: >
+      Pre-consolidation canopy. Now that ~/canopy is native (2026-05-06), this
+      is archival. Verify per-child commit parity before dropping references.
+
+  - path: /mnt/arch_data/home/caraxes/roots
+    type: archive
+    git_repo: false
+    notes: >
+      Pre-consolidation roots. Now that ~/roots is native (2026-05-06), this is
+      archival. Verify per-child commit parity before dropping references.
+
+  - path: /mnt/arch_data/home/caraxes/seed
+    type: archive
+    git_repo: true
+    notes: >
+      Pre-consolidation seed. Now that ~/seed is native (2026-05-06), this is
+      archival.
+
+  - path: /mnt/arch_data/home/caraxes/grove
+    type: canonical
+    git_repo: false
+    notes: >
+      Still the canonical grove location — ~/grove symlinks here. Contains
+      irfankabir02 repos. Migration to native ~/grove/ not yet done.
+
+  - path: /mnt/arch_data/home/caraxes/workspace
+    type: stale
+    git_repo: true
+    notes: >
+      GRUFF-like workspace — parallel or legacy copy of ~/gruff/workspace.
+      Needs commit-level comparison to classify as mirror or archive.
+
+  - path: /mnt/arch_data/home/caraxes/HANDOFF
+    type: archive
+    git_repo: false
+    notes: Handoff bundles on arch_data. Preserve; index separately.
+
+  - path: /mnt/arch_data/home/caraxes/actions-runner
+    type: canonical
+    git_repo: false
+    notes: >
+      Self-hosted CI runner. Tool-state. Do not move casually. Required labels:
+      self-hosted, linux, agent-fix.
+
+# ---------------------------------------------------------------------------
+# COMPETING ROOTS — same project appearing in multiple places
+# ---------------------------------------------------------------------------
+competing_roots:
+
+  - project_name: CascadeProjects
+    locations:
+      - path: /home/irfankabir/CascadeProjects
+        classification: canonical
+        reason: >
+          Forward-direction target confirmed 2026-04-22. Currently shallow but
+          receiving migrations.
+      - path: /mnt/arch_data/home/caraxes/CascadeProjects
+        classification: archive
+        reason: >
+          Pre-migration full monorepo. Archival reference. Many configs still
+          point here (CASCADE_WORKSPACE_ROOT, MCP servers, Glass app path).
+      - path: /home/irfankabir/hogsmade
+        classification: stale
+        reason: >
+          Cascade-like overlap. Needs git comparison to confirm status. Likely
+          archive or retired worktree.
+
+  - project_name: GRUFF workspace
+    locations:
+      - path: /home/irfankabir/gruff/workspace
+        classification: canonical
+        reason: Active day-to-day umbrella per CLAUDE.md and memory.
+      - path: /mnt/arch_data/home/caraxes/workspace
+        classification: stale
+        reason: >
+          Parallel or legacy-compatible copy. Needs commit comparison to
+          confirm archive status.
+
+  - project_name: canopy (family)
+    locations:
+      - path: /home/irfankabir/canopy
+        classification: canonical
+        reason: Native since 2026-05-06 consolidation. Active work happens here.
+      - path: /mnt/arch_data/home/caraxes/canopy
+        classification: archive
+        reason: Pre-consolidation copy. Per-child commit parity not yet verified.
+
+  - project_name: roots (family)
+    locations:
+      - path: /home/irfankabir/roots
+        classification: canonical
+        reason: Native since 2026-05-06 consolidation.
+      - path: /mnt/arch_data/home/caraxes/roots
+        classification: archive
+        reason: Pre-consolidation copy. Per-child commit parity not yet verified.
+
+  - project_name: seed
+    locations:
+      - path: /home/irfankabir/seed
+        classification: canonical
+        reason: Native since 2026-05-06 consolidation.
+      - path: /mnt/arch_data/home/caraxes/seed
+        classification: archive
+        reason: Pre-consolidation copy.
+
+  - project_name: HANDOFF
+    locations:
+      - path: /home/irfankabir/HANDOFF
+        classification: archive
+        reason: Handoff bundles on home.
+      - path: /mnt/arch_data/home/caraxes/HANDOFF
+        classification: archive
+        reason: Handoff bundles on arch_data.
+
+  - project_name: grove
+    locations:
+      - path: /home/irfankabir/grove
+        classification: mirror
+        reason: Symlink to arch_data/home/caraxes/grove.
+      - path: /mnt/arch_data/home/caraxes/grove
+        classification: canonical
+        reason: Actual content lives here. Migration to native ~/grove deferred.
+
+  - project_name: GRID
+    locations:
+      - path: /home/irfankabir/roots/GRID
+        classification: canonical
+        reason: Native roots/GRID under canonical roots directory.
+      - path: /mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main
+        classification: archive
+        reason: >
+          SSH-remote dev copy in archival CascadeProjects. Was the active dev
+          path pre-migration.
+      - path: /mnt/arch_data/home/caraxes/CascadeProjects/GRID-main
+        classification: archive
+        reason: Read-only submodule reference in archival CascadeProjects.
+
+# ---------------------------------------------------------------------------
+# SYMLINKS — all known symlinks and their targets
+# ---------------------------------------------------------------------------
+symlinks:
+
+  - link_path: /home/irfankabir/grove
+    target_path: /mnt/arch_data/home/caraxes/grove
+    target_exists: true
+
+  - link_path: /home/irfankabir/GRID
+    target_path: /home/irfankabir/CascadeProjects/Projects/GRID-main
+    target_exists: true
+
+  # Historical symlinks removed in 2026-05-06 consolidation:
+  # ~/canopy was -> /mnt/arch_data/home/caraxes/canopy (now native)
+  # ~/roots was -> /mnt/arch_data/home/caraxes/roots (now native)
+  # ~/seed was -> /mnt/arch_data/home/caraxes/seed (now native)
+
+# ---------------------------------------------------------------------------
+# MOVE CANDIDATES — proposed future moves (NO execution in this plan)
+# ---------------------------------------------------------------------------
+move_candidates:
+
+  - source: /home/irfankabir/grove (symlink)
+    destination: /home/irfankabir/grove (native copy)
+    reason: >
+      Last remaining symlink to arch_data. Consolidating to native would
+      complete the 2026-05-06 migration pattern (canopy, roots, seed already
+      done). Low priority — not currently blocking.
+    references_to_update:
+      - /home/irfankabir/CLAUDE.md (directory map, symlink note)
+      - /home/irfankabir/.claude/SESSION_CONTEXT.md (env section)
+      - /home/irfankabir/.claude/rules/prince-context.md (GitHub accounts)
+      - /home/irfankabir/.claude/projects/-home-irfankabir/memory/workspace_layout.md
+      - /home/irfankabir/.gitconfig (includeIf for ~/grove/)
+      - /home/irfankabir/PROJECT_REGISTRY.yaml (grove entries)
+      - /home/irfankabir/CENTRAL_PLAZA.md (gate references)
+    rollback_note: >
+      Restore symlink: ln -s /mnt/arch_data/home/caraxes/grove ~/grove.
+      No content loss since arch_data copy remains.
+
+  - source: /home/irfankabir/hogsmade
+    destination: /home/irfankabir/archive/hogsmade (or delete after verification)
+    reason: >
+      Competing root with CascadeProjects. If confirmed as stale worktree or
+      retired branch, should be archived to reduce confusion.
+    references_to_update:
+      - /home/irfankabir/CLAUDE.md (if referenced)
+      - /home/irfankabir/.bashrc (if aliased)
+      - Any scripts referencing ~/hogsmade
+    rollback_note: >
+      Move back: mv ~/archive/hogsmade ~/hogsmade. Verify git remotes intact.
+
+  - source: CASCADE_WORKSPACE_ROOT=/mnt/arch_data/home/caraxes/CascadeProjects
+    destination: CASCADE_WORKSPACE_ROOT=/home/irfankabir/CascadeProjects
+    reason: >
+      Environment variable and MCP configs still point to arch_data as
+      canonical CascadeProjects. As content migrates forward to ~/CascadeProjects,
+      this env var and all MCP server configs need updating. This is the
+      highest-impact config migration.
+    references_to_update:
+      - /home/irfankabir/CLAUDE.md (MCP Server Config section)
+      - /mnt/arch_data/home/caraxes/CascadeProjects/mcp_config.json
+      - /mnt/arch_data/home/caraxes/CascadeProjects/claude_code_config.json
+      - ~/.claude/settings.local.json (MCP server env vars)
+      - ~/.bashrc or ~/.bash_aliases (CASCADE_WORKSPACE_ROOT)
+      - All 16 TS MCP server configs referencing CASCADE_WORKSPACE_ROOT
+      - GATE_DIR, SEEDS_ROOT, LOTS_EXPERIMENTS_DIR, PYTHONPATH env vars
+      - Glass app path in SESSION_CONTEXT.md
+    rollback_note: >
+      Revert env var to arch_data path. MCP servers will resume using old path.
+      No data loss — arch_data content preserved.
+
+# ---------------------------------------------------------------------------
+# STALE PATHS — references to /home/caraxes (old Arch username, no longer valid)
+# ---------------------------------------------------------------------------
+stale_paths:
+  # The old Arch user was "caraxes" at /home/caraxes. After migration to Ubuntu,
+  # this became /mnt/arch_data/home/caraxes. Any reference to /home/caraxes
+  # (without /mnt/arch_data prefix) is broken.
+  #
+  # Known risk areas:
+  - /home/caraxes  # Old Arch home — does not exist on Ubuntu. All valid refs should use /mnt/arch_data/home/caraxes
+  # Likely found in:
+  # - Old git configs inside arch_data repos
+  # - Hardcoded paths in archived scripts
+  # - Historical CLAUDE.md / AGENTS.md snapshots
+  # - Old .env files
+  # - Python/Node configs with absolute paths baked in
+  #
+  # Cannot grep without Bash access — flag for manual search:
+  #   rg -n --fixed-strings "/home/caraxes" /home/irfankabir /mnt/arch_data/home/caraxes \
+  #     -g '!node_modules' -g '!.git' -g '!.cache'

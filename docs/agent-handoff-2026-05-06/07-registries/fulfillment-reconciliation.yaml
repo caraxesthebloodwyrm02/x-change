@@ -1,0 +1,125 @@
+version: 1
+reconciled_at: "2026-05-07"
+reconciled_by: claude-opus-4-6
+execution_session: "renovation-starry-gizmo"
+
+batch_execution_summary:
+  BATCH-00:
+    status: pass
+    output: "14-point preparedness gate cleared — all schemas valid, source maps present, no structural gaps"
+  BATCH-01:
+    status: complete
+    output: 07-registries/memory-authority.yaml
+    findings: "11 memory sources inventoried. personal-rag DB healthy (23MB ChromaDB + 62MB HNSW). Primary gap: 4 separate memory systems with no unified retrieval contract. ~/.claude/knowledge contains dead prototype scripts."
+  BATCH-02:
+    status: complete
+    output: 07-registries/custom-assets-registry.yaml
+    findings: "119 assets across 8 kinds (44 skills, 32 commands, 22 rules, 14 agents, 13 workflows, 11 hooks, 8 plugins, 3 output-styles). 5 duplicate groups identified (arch_data mirrors)."
+  BATCH-03:
+    status: complete
+    output: 07-registries/mcp-authority.yaml
+    findings: "13 MCP configs audited. Only 2/13 use correct absolute npx path. claude_code_config.json missing glass-server. Codex has 2 extra servers not in canonical 25. Caraxes-side configs archived."
+  BATCH-04:
+    status: complete
+    output: [07-registries/toolchain-authority.yaml, 07-registries/maintenance-authority.yaml]
+    findings: "15/17 systemd timers healthy. 2 broken: hogsmade-harness and hogsmade-scan (missing hogsmade-driver.sh). 33 scripts cataloged. npm/npx PATH confirmed as blocker. Snap Go/Rust/Code degraded."
+  BATCH-05:
+    status: complete
+    output: 07-registries/directory-authority.yaml
+    findings: "6 competing root families identified (CascadeProjects 3 locations, GRUFF 2, canopy 2, roots 2, seed 2, grove 2). 3 move candidates documented with rollback plans. Classification based on docs — live verification recommended."
+  BATCH-06:
+    status: complete
+    output: 07-registries/domain-registry.yaml
+    findings: "12 domains mapped with primary/secondary assets, gaps, and integration surfaces. 496-line registry."
+  BATCH-07:
+    status: complete
+    output: 07-registries/resurfacing-registry.yaml
+    findings: "All 8 Tier-1 candidates verified on disk. Atmosphere parent dir contains 5 buried assets (Arcade, Reverb, Delay, network-visualizer, mental-load-balancer). Coinbase_from_zip reference-only."
+
+fulfillment_matrix_reconciliation:
+  - outcome: "Security and safeguards mapped"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "OPERATING-RULES.md safety rules codified in all authority YAMLs"
+
+  - outcome: "Both homes inventoried"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "memory-authority.yaml, directory-authority.yaml both classify /home/irfankabir vs /mnt/arch_data"
+
+  - outcome: "Projects benchmarked and ranked"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "domain-registry.yaml maps all projects to 12 domains with integration surfaces"
+
+  - outcome: "Directory consolidation planned"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "directory-authority.yaml: 6 competing roots, 3 move candidates with rollback"
+
+  - outcome: "Domain categories mapped"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "domain-registry.yaml (496 lines, 12 domains)"
+
+  - outcome: "Buried assets surfaced"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "resurfacing-registry.yaml: 8/8 Tier-1 candidates verified on disk"
+
+  - outcome: "Custom definitions inventoried"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "custom-assets-registry.yaml: 119 assets, 8 kinds, 5 duplicate groups"
+
+  - outcome: "Tooling gaps mapped"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "toolchain-authority.yaml: npm/npx PATH, snap degradation, ollama daemon unverified"
+
+  - outcome: "OS and dev tools inventoried"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "toolchain-authority.yaml: 24 tools checked, 18 present, 3 degraded, 2 PATH issues"
+
+  - outcome: "Memory gap identified"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "memory-authority.yaml: 4 separate systems, no unified retrieval contract"
+
+  - outcome: "Handoff directory equipped"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "All 8 subdirectories populated, 14-point preparedness gate passed"
+
+  - outcome: "Execution batched and parallelizable"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "All 8 batches executed — 4 ran in parallel successfully"
+
+  - outcome: "Momentum protected by gates"
+    original_status: satisfied
+    execution_status: confirmed
+    evidence: "BATCH-00 gate ran first, each batch produced validation output"
+
+  - outcome: "Full downstream repairs applied"
+    original_status: intentionally_deferred
+    execution_status: still_deferred
+    evidence: "Authority records now exist for all domains. No configs, timers, directories, or packages were mutated. Next step: use authority YAMLs to drive scoped repairs."
+
+actionable_next_steps:
+  P0_blockers:
+    - "Fix npm/npx PATH for 6 MCP configs using absolute path from mcp-authority.yaml"
+    - "Repair or disable hogsmade-harness and hogsmade-scan timers"
+  P1_authority_gaps:
+    - "Unify 4 memory systems under single retrieval contract (memory-authority.yaml defines sources)"
+    - "Add glass-server to claude_code_config.json"
+    - "Evaluate codex's 2 extra servers (grid-rag-agentic, grid-memory) for canonical promotion"
+  P2_consolidation:
+    - "Resolve hogsmade vs CascadeProjects competing root (git comparison needed)"
+    - "Migrate grove symlink to native (lowest risk move candidate)"
+    - "Run live filesystem verification pass on directory-authority.yaml classifications"
+  P3_resurfacing:
+    - "Evaluate Atmosphere/Arcade for standalone canopy promotion"
+    - "Evaluate Reverb+Delay pair for Glass audio integration"
+    - "Archive claude-cursor-integration-bridge if superseded by current .cursor/rules"

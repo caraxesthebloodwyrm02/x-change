@@ -1,0 +1,11 @@
+evidence_id,reward_id,student_id,evidence_type,payload_summary,provenance,created_at
+EVD-001,RWD-2026-001,STU-alpha,glass_session_event,session_id=GSS-001 blocks=12 threshold_state=above,glass_bridge,2026-04-01T09:15:00Z
+EVD-002,RWD-2026-001,STU-alpha,failure_snapshot,command=cargo_build exit_code=1 error=linker_not_found,glass_session,2026-04-01T11:30:00Z
+EVD-003,RWD-2026-001,STU-alpha,return_attempt,session_id=GSS-002 elapsed_hours=18.5,glass_bridge,2026-04-02T10:00:00Z
+EVD-004,RWD-2026-002,STU-alpha,glass_session_event,session_id=GSS-003 blocks=8 threshold_state=above,glass_bridge,2026-04-03T14:22:00Z
+EVD-005,RWD-2026-003,STU-beta,glass_session_event,session_id=GSS-004 blocks=15 threshold_state=above,glass_bridge,2026-04-05T11:05:00Z
+EVD-006,RWD-2026-003,STU-beta,failure_snapshot,command=npm_test exit_code=2 error=timeout,glass_session,2026-04-05T13:40:00Z
+EVD-007,,STU-delta,glass_session_event,session_id=GSS-005 blocks=6 threshold_state=below,glass_bridge,2026-04-08T10:00:00Z
+EVD-008,,STU-delta,failure_snapshot,command=python_main exit_code=1 error=import_error,glass_session,2026-04-08T10:45:00Z
+EVD-009,RWD-2026-006,STU-alpha,glass_session_event,session_id=GSS-006 blocks=20 threshold_state=above,glass_bridge,2026-04-12T13:55:00Z
+EVD-010,RWD-2026-007,STU-gamma,glass_session_event,session_id=GSS-007 blocks=9 threshold_state=at_boundary,glass_bridge,2026-04-14T10:10:00Z

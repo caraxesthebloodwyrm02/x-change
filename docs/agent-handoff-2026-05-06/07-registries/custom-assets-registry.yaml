@@ -1,0 +1,1032 @@
+# Custom Asset Registry
+# Generated: 2026-05-07
+# Source: live filesystem scan + custom-assets-seed.json cross-reference
+# Scope: ~/.claude/, ~/.cursor/, ~/.windsurf/, ~/.codex/, /mnt/arch_data/home/caraxes/
+
+verified_at: "2026-05-07T00:30:00Z"
+
+summary:
+  total_count: 119
+  by_kind:
+    agent: 14
+    hook: 11
+    skill: 44
+    command: 32
+    rule: 22
+    output-style: 3
+    workflow: 13
+    plugin: 8
+  notes:
+    - "Bash permission was intermittent during scan; sizes/mtimes from successful ls runs and seed JSON"
+    - "Codex directory existence unconfirmed (permission denied); seed claims ~/.codex/skills with 45 files"
+    - "~/plugins/ does not exist; plugins live at ~/.claude/plugins/"
+
+assets:
+
+  # ============================================================
+  # AGENTS
+  # ============================================================
+  agents:
+    # --- ~/.claude/agents/ (7 files, all active) ---
+    - id: claude.agent.glass-dev
+      kind: agent
+      path: /home/irfankabir/.claude/agents/glass-dev.md
+      status: active
+      size_bytes: 6716
+      last_modified: "2026-05-06T11:39:00Z"
+      frontmatter:
+        name: glass-dev
+        model: sonnet
+        color: cyan
+        effort: high
+        maxTurns: 40
+
+    - id: claude.agent.hermes
+      kind: agent
+      path: /home/irfankabir/.claude/agents/hermes.md
+      status: active
+      size_bytes: 3547
+      last_modified: "2026-04-28T01:00:00Z"
+      frontmatter:
+        name: hermes
+        model: sonnet
+        color: purple
+        effort: medium
+        maxTurns: 20
+
+    - id: claude.agent.incident-commander
+      kind: agent
+      path: /home/irfankabir/.claude/agents/incident-commander.md
+      status: active
+      size_bytes: 8020
+      last_modified: "2026-05-05T19:02:00Z"
+      frontmatter:
+        name: incident-commander
+        model: opus
+        color: red
+        effort: high
+        maxTurns: 30
+
+    - id: claude.agent.organizer
+      kind: agent
+      path: /home/irfankabir/.claude/agents/organizer.md
+      status: active
+      size_bytes: 2665
+      last_modified: "2026-04-28T01:00:00Z"
+      frontmatter:
+        name: organizer
+        model: sonnet
+        color: yellow
+        effort: medium
+        maxTurns: 15
+
+    - id: claude.agent.os-engineer
+      kind: agent
+      path: /home/irfankabir/.claude/agents/os-engineer.md
+      status: active
+      size_bytes: 4829
+      last_modified: "2026-05-01T13:02:00Z"
+      frontmatter:
+        name: os-engineer
+        model: opus
+        color: cyan
+        effort: high
+        maxTurns: 30
+
+    - id: claude.agent.session-gate
+      kind: agent
+      path: /home/irfankabir/.claude/agents/session-gate.md
+      status: active
+      size_bytes: 2695
+      last_modified: "2026-05-01T13:02:00Z"
+      frontmatter:
+        name: session-gate
+        model: sonnet
+        color: orange
+        effort: low
+        maxTurns: 20
+
+    - id: claude.agent.workspace-auditor
+      kind: agent
+      path: /home/irfankabir/.claude/agents/workspace-auditor.md
+      status: active
+      size_bytes: 7563
+      last_modified: "2026-05-01T13:02:00Z"
+      frontmatter:
+        name: workspace-auditor
+        model: sonnet
+        color: cyan
+        effort: high
+        maxTurns: 40
+        permissionMode: auto
+
+    # --- /mnt/arch_data mirrors (from seed JSON) ---
+    - id: caraxes.agent.mirror-set
+      kind: agent
+      path: /mnt/arch_data/home/caraxes/.claude/agents/
+      status: mirror
+      notes: "5 files per seed scan; mirror of older agent definitions from Arch rootfs"
+
+    # --- CascadeProjects agents ---
+    - id: cascade.agent.software-engineering-pilot
+      kind: agent
+      path: /mnt/arch_data/home/caraxes/CascadeProjects/agents/software-engineering-pilot.md
+      status: active
+      notes: "CascadeProjects domain pilot for GRID, Echoes, APIGuard, MCP server work"
+
+    # --- Other CascadeProjects agents (from seed: 5 files total) ---
+    - id: cascade.agent.set
+      kind: agent
+      path: /mnt/arch_data/home/caraxes/CascadeProjects/agents/
+      status: active
+      notes: "5 agent files in CascadeProjects agents directory"
+
+  # ============================================================
+  # HOOKS
+  # ============================================================
+  hooks:
+    - id: claude.hook.pre-bash-guard
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/pre-bash-guard.sh
+      status: active
+      size_bytes: 5365
+      last_modified: "2026-05-07T00:29:00Z"
+      event: PreToolUse
+      notes: "Blocks destructive rm, force-push, --no-verify, curl|sh, dd/mkfs, chmod 777, fork bomb"
+
+    - id: claude.hook.post-write-lint
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/post-write-lint.sh
+      status: active
+      size_bytes: 2249
+      last_modified: "2026-05-07T00:29:00Z"
+      event: PostToolUse
+      notes: "Runs ruff (.py) or tsc --noEmit (.ts/.tsx). Non-blocking."
+
+    - id: claude.hook.session-start
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/session-start.sh
+      status: active
+      size_bytes: 3643
+      last_modified: "2026-05-07T00:29:00Z"
+      event: SessionStart
+      notes: "Injects digest sha256, staleness warning, SESSION_CONTEXT pointer, Lumos fast-lane"
+
+    - id: claude.hook.session-end
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/session-end.sh
+      status: active
+      size_bytes: 1334
+      last_modified: "2026-05-06T09:37:00Z"
+      event: SessionEnd
+      notes: "Appends AuditEvent to ~/.echoes/audit.ndjson"
+
+    - id: claude.hook.user-prompt-submit
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/user-prompt-submit.sh
+      status: active
+      size_bytes: 3334
+      last_modified: "2026-05-06T11:39:00Z"
+      event: UserPromptSubmit
+      notes: "TUV-001 conditions reminder; soft-warn on destructive patterns"
+
+    - id: claude.hook.pre-compact
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/pre-compact.sh
+      status: active
+      size_bytes: 1420
+      last_modified: "2026-05-06T11:39:00Z"
+      event: PreCompact
+      notes: "Preserve TUV state, cascade-state, digest sha256 across compaction"
+
+    - id: claude.hook.pre-sensitive-guard
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/pre-sensitive-guard.sh
+      status: active
+      size_bytes: 2188
+      last_modified: "2026-05-07T00:29:00Z"
+      event: PreToolUse
+      notes: "Sensitive-file protection boundary"
+
+    - id: claude.hook.pre-write-mode-guard
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/pre-write-mode-guard.sh
+      status: active
+      size_bytes: 1005
+      last_modified: "2026-05-06T09:36:00Z"
+      event: PreToolUse
+      notes: "Write-mode enforcement for /ro skill"
+
+    - id: claude.hook.glass-seed-signal
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/glass-seed-signal.sh
+      status: active
+      size_bytes: 3292
+      last_modified: "2026-05-06T09:40:00Z"
+      event: PreToolUse
+      notes: "Glass signal hook"
+
+    - id: claude.hook.hook-lib
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/hook-lib.sh
+      status: active
+      size_bytes: 5714
+      last_modified: "2026-05-06T09:40:00Z"
+      event: library
+      notes: "Shared utility library sourced by other hooks"
+
+    - id: claude.hook.tests
+      kind: hook
+      path: /home/irfankabir/.claude/hooks/tests/
+      status: active
+      notes: "Hook test directory"
+
+  # ============================================================
+  # SKILLS (41 skill directories in ~/.claude/skills/)
+  # ============================================================
+  skills:
+    - id: claude.skill.brand-guidelines
+      kind: skill
+      path: /home/irfankabir/.claude/skills/brand-guidelines/
+      status: active
+
+    - id: claude.skill.breach-state
+      kind: skill
+      path: /home/irfankabir/.claude/skills/breach-state/
+      status: active
+
+    - id: claude.skill.canvas-design
+      kind: skill
+      path: /home/irfankabir/.claude/skills/canvas-design/
+      status: active
+
+    - id: claude.skill.claude-api
+      kind: skill
+      path: /home/irfankabir/.claude/skills/claude-api/
+      status: active
+
+    - id: claude.skill.cybersafety
+      kind: skill
+      path: /home/irfankabir/.claude/skills/cybersafety/
+      status: active
+
+    - id: claude.skill.dep-wave
+      kind: skill
+      path: /home/irfankabir/.claude/skills/dep-wave/
+      status: active
+
+    - id: claude.skill.docx
+      kind: skill
+      path: /home/irfankabir/.claude/skills/docx/
+      status: vendor
+
+    - id: claude.skill.echoes-dev
+      kind: skill
+      path: /home/irfankabir/.claude/skills/echoes-dev/
+      status: active
+
+    - id: claude.skill.gated-execution
+      kind: skill
+      path: /home/irfankabir/.claude/skills/gated-execution/
+      status: active
+
+    - id: claude.skill.glimpse
+      kind: skill
+      path: /home/irfankabir/.claude/skills/glimpse/
+      status: active
+
+    - id: claude.skill.grid
+      kind: skill
+      path: /home/irfankabir/.claude/skills/grid/
+      status: active
+
+    - id: claude.skill.harden
+      kind: skill
+      path: /home/irfankabir/.claude/skills/harden/
+      status: active
+
+    - id: claude.skill.interview
+      kind: skill
+      path: /home/irfankabir/.claude/skills/interview/
+      status: active
+
+    - id: claude.skill.iterate
+      kind: skill
+      path: /home/irfankabir/.claude/skills/iterate/
+      status: active
+
+    - id: claude.skill.lifeguard-review
+      kind: skill
+      path: /home/irfankabir/.claude/skills/lifeguard-review/
+      status: active
+
+    - id: claude.skill.mcp-builder
+      kind: skill
+      path: /home/irfankabir/.claude/skills/mcp-builder/
+      status: active
+
+    - id: claude.skill.mcp-server-setup
+      kind: skill
+      path: /home/irfankabir/.claude/skills/mcp-server-setup/
+      status: active
+
+    - id: claude.skill.os-guardrails
+      kind: skill
+      path: /home/irfankabir/.claude/skills/os-guardrails/
+      status: active
+
+    - id: claude.skill.pdf
+      kind: skill
+      path: /home/irfankabir/.claude/skills/pdf/
+      status: vendor
+
+    - id: claude.skill.pptx
+      kind: skill
+      path: /home/irfankabir/.claude/skills/pptx/
+      status: vendor
+
+    - id: claude.skill.prince-runtime-intel
+      kind: skill
+      path: /home/irfankabir/.claude/skills/prince-runtime-intel/
+      status: active
+      notes: "Dispatch hub for /shield-break, /breach-state, /harden, /dep-wave, /repo-hygiene, /remediate, /strategyboard, /gap-calc"
+
+    - id: claude.skill.read-only
+      kind: skill
+      path: /home/irfankabir/.claude/skills/read-only/
+      status: active
+
+    - id: claude.skill.remediate
+      kind: skill
+      path: /home/irfankabir/.claude/skills/remediate/
+      status: active
+
+    - id: claude.skill.repo-hygiene
+      kind: skill
+      path: /home/irfankabir/.claude/skills/repo-hygiene/
+      status: active
+
+    - id: claude.skill.rhyme-and-reasons
+      kind: skill
+      path: /home/irfankabir/.claude/skills/rhyme-and-reasons/
+      status: active
+
+    - id: claude.skill.rift
+      kind: skill
+      path: /home/irfankabir/.claude/skills/rift/
+      status: active
+
+    - id: claude.skill.ro
+      kind: skill
+      path: /home/irfankabir/.claude/skills/ro/
+      status: active
+
+    - id: claude.skill.routines
+      kind: skill
+      path: /home/irfankabir/.claude/skills/routines/
+      status: active
+
+    - id: claude.skill.rw
+      kind: skill
+      path: /home/irfankabir/.claude/skills/rw/
+      status: active
+
+    - id: claude.skill.s-and-pp
+      kind: skill
+      path: /home/irfankabir/.claude/skills/s-and-pp/
+      status: active
+
+    - id: claude.skill.school
+      kind: skill
+      path: /home/irfankabir/.claude/skills/school/
+      status: active
+
+    - id: claude.skill.screen-budget
+      kind: skill
+      path: /home/irfankabir/.claude/skills/screen-budget/
+      status: active
+
+    - id: claude.skill.session-triage
+      kind: skill
+      path: /home/irfankabir/.claude/skills/session-triage/
+      status: active
+
+    - id: claude.skill.shield-break
+      kind: skill
+      path: /home/irfankabir/.claude/skills/shield-break/
+      status: active
+
+    - id: claude.skill.strategyboard
+      kind: skill
+      path: /home/irfankabir/.claude/skills/strategyboard/
+      status: active
+
+    - id: claude.skill.theme-factory
+      kind: skill
+      path: /home/irfankabir/.claude/skills/theme-factory/
+      status: vendor
+
+    - id: claude.skill.trust-contract-review
+      kind: skill
+      path: /home/irfankabir/.claude/skills/trust-contract-review/
+      status: active
+
+    - id: claude.skill.trust-layer-review
+      kind: skill
+      path: /home/irfankabir/.claude/skills/trust-layer-review/
+      status: active
+
+    - id: claude.skill.wardrobe
+      kind: skill
+      path: /home/irfankabir/.claude/skills/wardrobe/
+      status: active
+
+    - id: claude.skill.webapp-testing
+      kind: skill
+      path: /home/irfankabir/.claude/skills/webapp-testing/
+      status: vendor
+
+    - id: claude.skill.xlsx
+      kind: skill
+      path: /home/irfankabir/.claude/skills/xlsx/
+      status: vendor
+
+    # --- Plugin-embedded skills ---
+    - id: plugin.caraxes.harness-skill
+      kind: skill
+      path: /home/irfankabir/.claude/plugins/caraxes/skills/harness/SKILL.md
+      status: active
+      notes: "Harness domain-function constraint layer"
+
+    - id: plugin.atlas-echoes.skill
+      kind: skill
+      path: /home/irfankabir/.claude/plugins/atlas-echoes/skills/atlas-echoes/SKILL.md
+      status: active
+      notes: "Echoes Atlas umbrella skill"
+
+    - id: caraxes.skill.trust-contract-review
+      kind: skill
+      path: /mnt/arch_data/home/caraxes/skills/trust-contract-review/SKILL.md
+      status: active
+      notes: "Trust/TUV compliance review on arch_data side"
+
+  # ============================================================
+  # COMMANDS (32 files in ~/.claude/commands/)
+  # ============================================================
+  commands:
+    - id: claude.command.atlas-echoes-audit
+      kind: command
+      path: /home/irfankabir/.claude/commands/atlas-echoes-audit.md
+      status: active
+      size_bytes: 433
+
+    - id: claude.command.atlas-echoes-repl
+      kind: command
+      path: /home/irfankabir/.claude/commands/atlas-echoes-repl.md
+      status: active
+      size_bytes: 483
+
+    - id: claude.command.atlas-echoes
+      kind: command
+      path: /home/irfankabir/.claude/commands/atlas-echoes.md
+      status: active
+      size_bytes: 648
+
+    - id: claude.command.caraxes-audit
+      kind: command
+      path: /home/irfankabir/.claude/commands/caraxes-audit.md
+      status: active
+      size_bytes: 420
+
+    - id: claude.command.caraxes-compare
+      kind: command
+      path: /home/irfankabir/.claude/commands/caraxes-compare.md
+      status: active
+      size_bytes: 405
+
+    - id: claude.command.caraxes-dossier
+      kind: command
+      path: /home/irfankabir/.claude/commands/caraxes-dossier.md
+      status: active
+      size_bytes: 344
+
+    - id: claude.command.caraxes-intake
+      kind: command
+      path: /home/irfankabir/.claude/commands/caraxes-intake.md
+      status: active
+      size_bytes: 430
+
+    - id: claude.command.caraxes-seed
+      kind: command
+      path: /home/irfankabir/.claude/commands/caraxes-seed.md
+      status: active
+      size_bytes: 302
+
+    - id: claude.command.caraxes
+      kind: command
+      path: /home/irfankabir/.claude/commands/caraxes.md
+      status: active
+      size_bytes: 828
+
+    - id: claude.command.illuminate
+      kind: command
+      path: /home/irfankabir/.claude/commands/illuminate.md
+      status: active
+      size_bytes: 7642
+
+    - id: claude.command.knowledge-simple
+      kind: command
+      path: /home/irfankabir/.claude/commands/knowledge-simple.md
+      status: active
+      size_bytes: 652
+
+    - id: claude.command.knowledge
+      kind: command
+      path: /home/irfankabir/.claude/commands/knowledge.md
+      status: active
+      size_bytes: 1018
+      notes: "Known gap: expects ~/.rag_db which may not exist"
+
+    - id: claude.command.leap-candidate
+      kind: command
+      path: /home/irfankabir/.claude/commands/leap-candidate-2026-04-14T2114Z.md
+      status: experimental
+      size_bytes: 959
+
+    - id: claude.command.levicorpus
+      kind: command
+      path: /home/irfankabir/.claude/commands/levicorpus.md
+      status: active
+      size_bytes: 9921
+
+    - id: claude.command.lumos
+      kind: command
+      path: /home/irfankabir/.claude/commands/lumos.md
+      status: active
+      size_bytes: 17941
+
+    - id: claude.command.maintain-execute
+      kind: command
+      path: /home/irfankabir/.claude/commands/maintain-execute.md
+      status: active
+      size_bytes: 641
+
+    - id: claude.command.maintain-intake
+      kind: command
+      path: /home/irfankabir/.claude/commands/maintain-intake.md
+      status: active
+      size_bytes: 529
+
+    - id: claude.command.maintain-probe
+      kind: command
+      path: /home/irfankabir/.claude/commands/maintain-probe.md
+      status: active
+      size_bytes: 534
+
+    - id: claude.command.maintain-seal
+      kind: command
+      path: /home/irfankabir/.claude/commands/maintain-seal.md
+      status: active
+      size_bytes: 568
+
+    - id: claude.command.maintain-triage
+      kind: command
+      path: /home/irfankabir/.claude/commands/maintain-triage.md
+      status: active
+      size_bytes: 623
+
+    - id: claude.command.maintain
+      kind: command
+      path: /home/irfankabir/.claude/commands/maintain.md
+      status: active
+      size_bytes: 889
+
+    - id: claude.command.moonblast
+      kind: command
+      path: /home/irfankabir/.claude/commands/moonblast.md
+      status: active
+      size_bytes: 4573
+
+    - id: claude.command.mufliato
+      kind: command
+      path: /home/irfankabir/.claude/commands/mufliato.md
+      status: active
+      size_bytes: 6449
+
+    - id: claude.command.package
+      kind: command
+      path: /home/irfankabir/.claude/commands/package.md
+      status: active
+      size_bytes: 1192
+
+    - id: claude.command.portrait
+      kind: command
+      path: /home/irfankabir/.claude/commands/portrait.md
+      status: active
+      size_bytes: 3030
+
+    - id: claude.command.prince
+      kind: command
+      path: /home/irfankabir/.claude/commands/prince.md
+      status: active
+      size_bytes: 5185
+
+    - id: claude.command.safety
+      kind: command
+      path: /home/irfankabir/.claude/commands/safety.md
+      status: active
+      size_bytes: 1151
+
+    - id: claude.command.scalpel
+      kind: command
+      path: /home/irfankabir/.claude/commands/scalpel.md
+      status: active
+      size_bytes: 16694
+
+    - id: claude.command.sylveon
+      kind: command
+      path: /home/irfankabir/.claude/commands/sylveon.md
+      status: active
+      size_bytes: 505
+
+    - id: claude.command.trace
+      kind: command
+      path: /home/irfankabir/.claude/commands/trace.md
+      status: active
+      size_bytes: 1600
+
+    - id: claude.command.verify-scope
+      kind: command
+      path: /home/irfankabir/.claude/commands/verify-scope.md
+      status: active
+      size_bytes: 2036
+      last_modified: "2026-05-06T11:39:00Z"
+
+  # ============================================================
+  # RULES
+  # ============================================================
+  rules:
+    # --- ~/.claude/rules/ (4 files) ---
+    - id: claude.rule.dev-rules
+      kind: rule
+      path: /home/irfankabir/.claude/rules/dev-rules.md
+      status: active
+      size_bytes: 1135
+      last_modified: "2026-05-07T00:29:00Z"
+
+    - id: claude.rule.prince-agent
+      kind: rule
+      path: /home/irfankabir/.claude/rules/prince-agent.md
+      status: active
+      size_bytes: 7366
+      last_modified: "2026-05-07T00:29:00Z"
+
+    - id: claude.rule.prince-context
+      kind: rule
+      path: /home/irfankabir/.claude/rules/prince-context.md
+      status: active
+      size_bytes: 2528
+      last_modified: "2026-05-07T00:29:00Z"
+
+    - id: claude.rule.remote-agents
+      kind: rule
+      path: /home/irfankabir/.claude/rules/remote-agents.md
+      status: active
+      size_bytes: 4859
+      last_modified: "2026-04-30T23:24:00Z"
+
+    # --- ~/.cursor/rules/ (14 files) ---
+    - id: cursor.rule.agent-context-bootstrap
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/agent-context-bootstrap.mdc
+      status: derived
+      size_bytes: 825
+      last_modified: "2026-05-07T00:29:00Z"
+      notes: "Cursor parity layer for Claude Code bootstrap"
+
+    - id: cursor.rule.cascade-agent-baseline
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/cascade-agent-baseline.mdc
+      status: derived
+      size_bytes: 1136
+      last_modified: "2026-05-05T22:12:00Z"
+
+    - id: cursor.rule.cascade-mcp
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/cascade-mcp.mdc
+      status: derived
+      size_bytes: 395
+      last_modified: "2026-05-05T19:06:00Z"
+
+    - id: cursor.rule.claude-code-global-index
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/claude-code-global-index.mdc
+      status: derived
+      size_bytes: 670
+      last_modified: "2026-05-07T00:29:00Z"
+
+    - id: cursor.rule.composition-trigger
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/composition-trigger.mdc
+      status: derived
+      size_bytes: 441
+      last_modified: "2026-05-05T19:06:00Z"
+
+    - id: cursor.rule.echoes-api
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/echoes-api.mdc
+      status: derived
+      size_bytes: 335
+      last_modified: "2026-05-05T19:06:00Z"
+
+    - id: cursor.rule.grid-main
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/grid-main.mdc
+      status: derived
+      size_bytes: 336
+      last_modified: "2026-05-05T19:06:00Z"
+
+    - id: cursor.rule.gruff-agents-lyric
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/gruff-agents-lyric.mdc
+      status: derived
+      size_bytes: 2209
+      last_modified: "2026-05-05T19:06:00Z"
+
+    - id: cursor.rule.home-meta
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/home-meta.mdc
+      status: derived
+      size_bytes: 1200
+      last_modified: "2026-05-06T11:39:00Z"
+
+    - id: cursor.rule.local-starter-rule
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/local-starter-rule.mdc
+      status: derived
+      size_bytes: 238
+      last_modified: "2026-05-05T19:15:00Z"
+
+    - id: cursor.rule.mangrove-canonical-map
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/mangrove-canonical-map.mdc
+      status: derived
+      size_bytes: 813
+      last_modified: "2026-05-07T00:29:00Z"
+
+    - id: cursor.rule.prince-instruction-stack
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/prince-instruction-stack.mdc
+      status: derived
+      size_bytes: 968
+      last_modified: "2026-05-07T00:29:00Z"
+
+    - id: cursor.rule.tuv-governance-pointers
+      kind: rule
+      path: /home/irfankabir/.cursor/rules/tuv-governance-pointers.mdc
+      status: derived
+      size_bytes: 694
+      last_modified: "2026-05-07T00:29:00Z"
+
+    # --- Windsurf rules (from seed: 15 files) ---
+    - id: windsurf.rule.scope
+      kind: rule
+      path: /home/irfankabir/.windsurf/rules/scope.md
+      status: active
+      notes: "Windsurf scope rule"
+
+    - id: windsurf.rule.tuv-governance
+      kind: rule
+      path: /home/irfankabir/.windsurf/rules/tuv-governance-pointers.md
+      status: active
+      notes: "Windsurf TUV governance pointer"
+
+    # --- arch_data mirror rules (from seed: 8 files) ---
+    - id: caraxes.rule.dev-rules-mirror
+      kind: rule
+      path: /mnt/arch_data/home/caraxes/.claude/rules/dev-rules.md
+      status: mirror
+
+    # --- Home-level rule files ---
+    - id: home.rule.agents-md
+      kind: rule
+      path: /home/irfankabir/AGENTS.md
+      status: active
+      notes: "Home-level agent baseline and precedence"
+
+  # ============================================================
+  # OUTPUT STYLES
+  # ============================================================
+  output_styles:
+    - id: claude.style.collab-stem
+      kind: output-style
+      path: /home/irfankabir/.claude/output-styles/collab-stem.md
+      status: active
+      size_bytes: 6063
+      last_modified: "2026-05-06T11:39:00Z"
+      notes: "Default output style"
+
+    - id: claude.style.concise
+      kind: output-style
+      path: /home/irfankabir/.claude/output-styles/concise.md
+      status: active
+      size_bytes: 2117
+      last_modified: "2026-04-28T00:57:00Z"
+
+    - id: claude.style.tuv-strict
+      kind: output-style
+      path: /home/irfankabir/.claude/output-styles/tuv-strict.md
+      status: active
+      size_bytes: 2252
+      last_modified: "2026-04-28T00:57:00Z"
+
+  # ============================================================
+  # WORKFLOWS (scheduler)
+  # ============================================================
+  workflows:
+    - id: claude.workflow.dispatch
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/dispatch.py
+      status: active
+      size_bytes: 39429
+      last_modified: "2026-05-06T16:19:00Z"
+      notes: "Main scheduler dispatch engine"
+
+    - id: claude.workflow.trace
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/trace.py
+      status: active
+      size_bytes: 14070
+      last_modified: "2026-05-06T04:52:00Z"
+
+    - id: claude.workflow.dep-warden
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/dep-warden.yaml
+      status: active
+      size_bytes: 3979
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.dep-scan
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/dep-scan.yaml
+      status: active
+      size_bytes: 1313
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.ecosystem-triage
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/ecosystem-triage.yaml
+      status: active
+      size_bytes: 2108
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.guard-report
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/guard-report.yaml
+      status: active
+      size_bytes: 943
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.knowledge-loop
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/knowledge-loop.yaml
+      status: active
+      size_bytes: 1456
+      last_modified: "2026-05-06T16:19:00Z"
+      notes: "Known gap: references /home/caraxes paths"
+
+    - id: claude.workflow.ori-health
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/ori-health.yaml
+      status: active
+      size_bytes: 1621
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.ori-recommend
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/ori-recommend.yaml
+      status: active
+      size_bytes: 1948
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.ori-remediate
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/ori-remediate.yaml
+      status: active
+      size_bytes: 1839
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.pipeline-sweep
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/pipeline-sweep.yaml
+      status: active
+      size_bytes: 2342
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.remote-sweep
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/remote-sweep.yaml
+      status: active
+      size_bytes: 1082
+      last_modified: "2026-05-06T16:19:00Z"
+
+    - id: claude.workflow.session-gate
+      kind: workflow
+      path: /home/irfankabir/.claude/scheduler/session-gate.yaml
+      status: active
+      size_bytes: 1442
+      last_modified: "2026-05-06T16:19:00Z"
+
+  # ============================================================
+  # PLUGINS
+  # ============================================================
+  plugins:
+    - id: plugin.atlas-echoes
+      kind: plugin
+      path: /home/irfankabir/.claude/plugins/atlas-echoes/
+      status: active
+      notes: "Atlas Echoes plugin — skills, hooks, assets, scripts, codex-plugin metadata"
+
+    - id: plugin.atlas-echoes.metadata
+      kind: plugin
+      path: /home/irfankabir/.claude/plugins/atlas-echoes/.codex-plugin/plugin.json
+      status: active
+
+    - id: plugin.atlas-echoes.hooks
+      kind: plugin
+      path: /home/irfankabir/.claude/plugins/atlas-echoes/hooks.json
+      status: active
+
+    - id: plugin.caraxes
+      kind: plugin
+      path: /home/irfankabir/.claude/plugins/caraxes/
+      status: active
+      notes: "Caraxes plugin — harness skill, codex-plugin metadata"
+
+    - id: plugin.caraxes.metadata
+      kind: plugin
+      path: /home/irfankabir/.claude/plugins/caraxes/.codex-plugin/plugin.json
+      status: active
+
+    - id: plugin.caraxes.hooks
+      kind: plugin
+      path: /home/irfankabir/.claude/plugins/caraxes/hooks.json
+      status: active
+
+    # --- arch_data mirrors ---
+    - id: caraxes.plugin.atlas-echoes-mirror
+      kind: plugin
+      path: /mnt/arch_data/home/caraxes/plugins/atlas-echoes/
+      status: mirror
+
+    - id: caraxes.plugin.caraxes-mirror
+      kind: plugin
+      path: /mnt/arch_data/home/caraxes/plugins/caraxes/
+      status: mirror
+
+# ============================================================
+# DUPLICATES
+# ============================================================
+duplicates:
+  - name: trust-contract-review
+    locations:
+      - /home/irfankabir/.claude/skills/trust-contract-review/
+      - /mnt/arch_data/home/caraxes/skills/trust-contract-review/SKILL.md
+    note: "Same skill in claude-home and caraxes-side; verify which is canonical"
+
+  - name: dev-rules
+    locations:
+      - /home/irfankabir/.claude/rules/dev-rules.md
+      - /mnt/arch_data/home/caraxes/.claude/rules/dev-rules.md
+    note: "Active + mirror pair; arch_data copy is mirror status"
+
+  - name: atlas-echoes plugin
+    locations:
+      - /home/irfankabir/.claude/plugins/atlas-echoes/
+      - /mnt/arch_data/home/caraxes/plugins/atlas-echoes/
+    note: "Active + mirror pair"
+
+  - name: caraxes plugin
+    locations:
+      - /home/irfankabir/.claude/plugins/caraxes/
+      - /mnt/arch_data/home/caraxes/plugins/caraxes/
+    note: "Active + mirror pair"
+
+  - name: tuv-governance-pointers
+    locations:
+      - /home/irfankabir/.cursor/rules/tuv-governance-pointers.mdc
+      - /home/irfankabir/.windsurf/rules/tuv-governance-pointers.md
+    note: "Cursor (.mdc) and Windsurf (.md) derived copies of same governance pointer"
+
+# ============================================================
+# SCAN NOTES
+# ============================================================
+scan_notes:
+  - "Bash tool permission was intermittent during scan; some directories scanned via successful early runs, others via seed JSON cross-reference"
+  - "~/.codex/ existence could not be confirmed (permission denied); seed JSON claims 45 skill files there"
+  - "~/plugins/ does not exist on disk; all plugins at ~/.claude/plugins/"
+  - "Windsurf rules/workflows counts from seed JSON (15 rules, workflows dir); individual file listing incomplete"
+  - "arch_data agent/rule/skill mirrors confirmed via seed JSON; individual file-level detail deferred"
+  - "Skill directories confirmed at 41 entries via live ls; SKILL.md presence per-directory not individually verified due to permission issues"
+  - "All command files in ~/.claude/commands/ confirmed via live ls (32 files)"
+  - "All scheduler files confirmed via live ls (12 workflow files + 2 Python engines + state/tests/routines subdirs)"

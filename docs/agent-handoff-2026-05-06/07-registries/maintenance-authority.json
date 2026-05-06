@@ -1,0 +1,23 @@
+{
+  "schema": "maintenance-authority.v1",
+  "objective": "Make routine maintenance governed, scheduled, and safe.",
+  "safety_policy": [
+    "No sudo from agents.",
+    "No package upgrades from routine report scripts.",
+    "No destructive cleanup without operator-approved apply step.",
+    "Separate live systemd checks from offline unit-file validation."
+  ],
+  "jobs": [
+    { "id": "runtime-health-pass", "status": "target-exists", "policy": "daily read-only health report" },
+    { "id": "stay-current", "status": "target-exists", "policy": "weekly package/toolchain report, no upgrades" },
+    { "id": "weekly-security-check", "status": "target-exists", "policy": "weekly non-privileged security report" },
+    { "id": "git-hygiene", "status": "target-exists", "policy": "fetch/prune/gc as configured, no branch deletion" },
+    { "id": "integrity-monitor", "status": "target-exists", "policy": "config drift reporting" },
+    { "id": "network-watchdog", "status": "target-exists", "policy": "outbound connection reporting" },
+    { "id": "process-sentinel", "status": "target-exists", "policy": "process drift reporting" },
+    { "id": "hogsmade-harness", "status": "target-missing-in-audit", "policy": "repair or disable before relying on timer" },
+    { "id": "hogsmade-scan", "status": "target-missing-in-audit", "policy": "repair or disable before relying on timer" }
+  ],
+  "completion_gate": "Every known timer has an authority record with schedule, target, safety mode, and broken-target handling."
+}
+

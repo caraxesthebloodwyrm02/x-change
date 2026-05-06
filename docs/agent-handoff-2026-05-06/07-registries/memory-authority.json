@@ -1,0 +1,53 @@
+{
+  "schema": "memory-authority.v1",
+  "objective": "Make persistent context carryover real through canonical memory sources, stale-context rules, and session handoff.",
+  "canonical_sources": [
+    {
+      "id": "codex.memories",
+      "path": "/home/irfankabir/.codex/memories",
+      "status": "active",
+      "purpose": "Codex memory, rollout summaries, prior decisions",
+      "validation": ["path_exists", "source_freshness_required"]
+    },
+    {
+      "id": "claude.knowledge.current",
+      "path": "/home/irfankabir/.claude/knowledge",
+      "status": "active-candidate",
+      "purpose": "Knowledge scripts, decisions, state files",
+      "validation": ["path_exists", "stale_path_scan_required"]
+    },
+    {
+      "id": "claude.knowledge.caraxes",
+      "path": "/mnt/arch_data/home/caraxes/.claude/knowledge",
+      "status": "preserved-candidate",
+      "purpose": "Mirrored or historical knowledge assets",
+      "validation": ["classify_active_or_archive"]
+    },
+    {
+      "id": "claude.memory.current",
+      "path": "/home/irfankabir/.claude/memory",
+      "status": "active-candidate",
+      "purpose": "Human-readable memory notes and operational references",
+      "validation": ["path_exists", "secret_safe_read"]
+    },
+    {
+      "id": "project.registry",
+      "path": "/home/irfankabir/PROJECT_REGISTRY.yaml",
+      "status": "workspace-authority",
+      "purpose": "Project provenance and registry source",
+      "validation": ["path_exists", "registry_schema_check"]
+    }
+  ],
+  "known_gaps": [
+    "No operational .rag_db was found at expected locations during the audit.",
+    "Some scheduler or knowledge-loop paths may still reference stale /home/caraxes paths.",
+    "Multiple memory systems exist without a single retrieval contract."
+  ],
+  "session_protocol": {
+    "start": ["read handoff entrypoint", "read workspace rules", "read selected batch", "hydrate relevant memory"],
+    "during_work": ["verify memory-derived paths", "mark stale facts", "record source path and freshness"],
+    "end": ["record changed files", "record validation", "record blockers", "record next batch", "record stale assumptions"]
+  },
+  "completion_gate": "A memory implementation can ingest and retrieve a non-secret note with source path and freshness metadata."
+}
+

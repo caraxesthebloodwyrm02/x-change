@@ -1,0 +1,450 @@
+{
+  "schema": "agentic-maintenance-fix-candidates.v1",
+  "generated_at": "2026-05-06",
+  "scope": [
+    "/home/irfankabir",
+    "/mnt/arch_data/home/caraxes"
+  ],
+  "safety": {
+    "mode": "read-only-audit-output",
+    "secret_policy": "Do not read or emit secret values. Only path, key-name, command, cwd, and existence metadata are allowed.",
+    "destructive_actions": "Never delete, prune, upgrade, or rewrite configs without an explicit operator-approved apply step."
+  },
+  "fix_candidates": [
+    {
+      "id": "DEVTOOL-P0-001",
+      "priority": "P0",
+      "lane": "toolchain",
+      "type": "path_mismatch",
+      "title": "npm and npx exist inside nvm but are not on PATH",
+      "evidence": [
+        "node resolves to /home/irfankabir/.local/bin/node",
+        "npm and npx are missing on PATH",
+        "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npm exists and reports 11.13.0",
+        "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx exists and reports 11.13.0",
+        "Cascade MCP configs and project instructions require npm/npx for TypeScript MCP servers"
+      ],
+      "affected_paths": [
+        "/home/irfankabir/.local/bin",
+        "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npm",
+        "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx",
+        "/mnt/arch_data/home/caraxes/CascadeProjects/mcp_config.json"
+      ],
+      "recommended_fix": {
+        "strategy": "Expose npm and npx consistently to non-interactive agents.",
+        "steps": [
+          "Choose either PATH normalization or symlink normalization.",
+          "Preferred: add /home/irfankabir/.nvm/versions/node/v24.15.0/bin to the agent-maintenance PATH used by systemd, hooks, and MCP configs.",
+          "Alternative: create user-level symlinks /home/irfankabir/.local/bin/npm and /home/irfankabir/.local/bin/npx pointing to the nvm binaries.",
+          "Run command -v npm and command -v npx in a non-interactive shell.",
+          "Run npm --version and npx --version.",
+          "Re-run MCP parity check."
+        ],
+        "example": {
+          "desired_path_entries": [
+            "/home/irfankabir/.local/bin",
+            "/home/irfankabir/.nvm/versions/node/v24.15.0/bin",
+            "/usr/local/bin",
+            "/usr/bin",
+            "/bin"
+          ],
+          "validation_commands": [
+            "command -v npm",
+            "command -v npx",
+            "npm --version",
+            "npx --version"
+          ]
+        }
+      },
+      "parallel_group": "A"
+    },
+    {
+      "id": "WIRE-P0-001",
+      "priority": "P0",
+      "lane": "wiring",
+      "type": "mcp_command_mismatch",
+      "title": "Canonical Cascade MCP config uses bare npx while current shell PATH lacks npx",
+      "evidence": [
+        "/mnt/arch_data/home/caraxes/CascadeProjects/mcp_config.json has 25 servers",
+        "17 TypeScript MCP servers in that config use command npx",
+        "command -v npx failed in the audit environment",
+        "/home/irfankabir/.cursor/mcp.json and /home/irfankabir/.codeium/windsurf/mcp_config.json use absolute npx paths and validate"
+      ],
+      "affected_paths": [
+        "/mnt/arch_data/home/caraxes/CascadeProjects/mcp_config.json",
+        "/home/irfankabir/.cursor/mcp.json",
+        "/home/irfankabir/.codeium/windsurf/mcp_config.json"
+      ],
+      "recommended_fix": {
+        "strategy": "Make MCP command resolution deterministic across all clients.",
+        "steps": [
+          "Pick a canonical command form: absolute npx path or controlled PATH.",
+          "Update the MCP generator/source of truth, not individual derived configs by hand.",
+          "Regenerate Cursor, Windsurf, VS Code, Copilot, Antigravity, and generic .mcp configs.",
+          "Validate every server command exists.",
+          "Validate every cwd exists after variable expansion.",
+          "Store parity report."
+        ],
+        "example": {
+          "canonical_command": "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx",
+          "validation_shape": {
+            "server": "echoes-server",
+            "command_exists": true,
+            "cwd_exists": true,
+            "env_keys_only": [
+              "ECHOES_AUDIT_PATH"
+            ]
+          }
+        }
+      },
+      "parallel_group": "A"
+    },
+    {
+      "id": "WIRE-P0-002",
+      "priority": "P0",
+      "lane": "wiring",
+      "type": "stale_path",
+      "title": "Some MCP and automation configs still refer to stale /home/caraxes paths",
+      "evidence": [
+        "Root AGENTS.md identifies /home/caraxes paths as stale",
+        "MCP parity scan found /home/caraxes references in archived and caraxes-side MCP configs",
+        "Earlier knowledge-loop scan also found /home/caraxes references"
+      ],
+      "affected_paths": [
+        "/mnt/arch_data/home/caraxes/CascadeProjects/.mcp.json",
+        "/mnt/arch_data/home/caraxes/CascadeProjects/mcp_config.example.json",
+        "/home/irfankabir/scripts/mcp-probe.sh",
+        "/home/irfankabir/scripts/morning-session-launch.sh",
+        "/home/irfankabir/scripts/workspace-gates.sh",
+        "/home/irfankabir/scripts/run-vision.sh",
+        "/home/irfankabir/scripts/integrity-monitor.sh"
+      ],
+      "recommended_fix": {
+        "strategy": "Create a path-drift repair pass with allowlisted archived paths.",
+        "steps": [
+          "Search for /home/caraxes across scripts and active configs.",
+          "Classify each occurrence as active, archive, fixture, or documentation.",
+          "Replace active occurrences with /home/irfankabir or /mnt/arch_data/home/caraxes as appropriate.",
+          "Add a CI or timer check that fails only active stale paths.",
+          "Document archived exceptions."
+        ],
+        "example": {
+          "record": {
+            "path": "/home/irfankabir/scripts/workspace-gates.sh",
+            "match": "/home/caraxes",
+            "classification": "active-script",
+            "fix": "replace with /home/irfankabir or derive from $HOME",
+            "validation": "bash -n /home/irfankabir/scripts/workspace-gates.sh"
+          }
+        }
+      },
+      "parallel_group": "B"
+    },
+    {
+      "id": "MAINT-P0-001",
+      "priority": "P0",
+      "lane": "maintenance",
+      "type": "broken_timer_target",
+      "title": "hogsmade systemd user timers point to a missing driver path",
+      "evidence": [
+        "hogsmade-harness.service ExecStart=%h/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh",
+        "hogsmade-scan.service ExecStart=%h/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh",
+        "/home/irfankabir/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh does not exist"
+      ],
+      "affected_paths": [
+        "/home/irfankabir/.config/systemd/user/hogsmade-harness.service",
+        "/home/irfankabir/.config/systemd/user/hogsmade-scan.service"
+      ],
+      "recommended_fix": {
+        "strategy": "Point the timers at the current CascadeProjects driver or disable them until the driver exists.",
+        "steps": [
+          "Find the current intended hogsmade-driver.sh path under /home/irfankabir/CascadeProjects or /mnt/arch_data/home/caraxes/CascadeProjects.",
+          "If present, update ExecStart and CASCADE_WORKSPACE_ROOT together.",
+          "If absent, mark the two timers disabled in maintenance-authority.yaml and remove them from routine expectations.",
+          "Run systemd-analyze verify on the unit files.",
+          "Start each service manually once and inspect logs."
+        ],
+        "example": {
+          "desired_record": {
+            "unit": "hogsmade-scan.service",
+            "execstart_exists": true,
+            "workspace_root_exists": true,
+            "timer_enabled": "operator_verified"
+          }
+        }
+      },
+      "parallel_group": "C"
+    },
+    {
+      "id": "MAINT-P0-002",
+      "priority": "P0",
+      "lane": "maintenance",
+      "type": "authority_gap",
+      "title": "Maintenance scripts and timers exist but no single maintenance authority file governs them",
+      "evidence": [
+        "User timers exist for git hygiene, integrity monitor, network watchdog, node refresh, runtime health, stay-current, registry validation, security checks, and workspace maintenance",
+        "systemctl live state could not be queried in the sandbox",
+        "No single manifest maps timers to scripts, schedules, reports, safety mode, and owner"
+      ],
+      "affected_paths": [
+        "/home/irfankabir/.config/systemd/user",
+        "/home/irfankabir/scripts",
+        "/home/irfankabir/.claude/workspace-maintenance-config.json"
+      ],
+      "recommended_fix": {
+        "strategy": "Create a machine-readable maintenance authority registry and generate reports from it.",
+        "steps": [
+          "Create agent-harness/registry/maintenance-authority.yaml.",
+          "Register each timer/service pair with schedule, ExecStart, report path, safety class, and expected outputs.",
+          "Add an offline unit-file validator.",
+          "Add a live-state validator for normal non-sandbox use.",
+          "Emit daily and weekly maintenance summaries into ~/.echoes and docs/agent-harness/reports."
+        ],
+        "example": {
+          "maintenance_job": {
+            "id": "runtime-health-pass",
+            "timer": "/home/irfankabir/.config/systemd/user/runtime-health-pass.timer",
+            "service": "/home/irfankabir/.config/systemd/user/runtime-health-pass.service",
+            "schedule": "daily 06:15",
+            "mode": "read-only",
+            "report": "stdout or ~/.echoes/runtime-health",
+            "validation": [
+              "unit_file_exists",
+              "execstart_exists",
+              "last_run_status"
+            ]
+          }
+        }
+      },
+      "parallel_group": "C"
+    },
+    {
+      "id": "WIRE-P1-001",
+      "priority": "P1",
+      "lane": "wiring",
+      "type": "client_parity_gap",
+      "title": "MCP server coverage differs across Cursor, Windsurf, VS Code, Copilot, Antigravity, generic .mcp, and caraxes configs",
+      "evidence": [
+        "Canonical current server set has 25 servers",
+        "/home/irfankabir/.cursor/mcp.json has all 25",
+        "/home/irfankabir/.codeium/windsurf/mcp_config.json has all 25",
+        "/home/irfankabir/.copilot/mcp-config.json has 5",
+        "/home/irfankabir/.mcp.json has 1",
+        "Several caraxes-side user configs have 19-21 servers"
+      ],
+      "affected_paths": [
+        "/home/irfankabir/.cursor/mcp.json",
+        "/home/irfankabir/.codeium/windsurf/mcp_config.json",
+        "/home/irfankabir/.copilot/mcp-config.json",
+        "/home/irfankabir/.mcp.json",
+        "/mnt/arch_data/home/caraxes/.config/Code/User/mcp.json",
+        "/mnt/arch_data/home/caraxes/.config/Cursor/User/mcp.json",
+        "/mnt/arch_data/home/caraxes/.config/Windsurf/User/mcp.json",
+        "/mnt/arch_data/home/caraxes/.gemini/antigravity/mcp_config.json"
+      ],
+      "recommended_fix": {
+        "strategy": "Decide intentional per-client MCP coverage and generate config variants from one source.",
+        "steps": [
+          "Create mcp-authority.yaml with canonical 25-server registry.",
+          "Add per-client profiles: full, minimal, read-only, legacy, disabled.",
+          "Mark Copilot and generic .mcp as intentionally minimal or regenerate them.",
+          "Mark caraxes-side configs as archive mirrors or active clients.",
+          "Run parity check after every generator run."
+        ],
+        "example": {
+          "client_profile": {
+            "client": "copilot",
+            "profile": "minimal",
+            "servers": [
+              "seeds-server",
+              "maintain-server",
+              "overview-server",
+              "echoes-server",
+              "ori-server"
+            ],
+            "intentional_missing": "all other canonical servers"
+          }
+        }
+      },
+      "parallel_group": "D"
+    },
+    {
+      "id": "DEVTOOL-P1-001",
+      "priority": "P1",
+      "lane": "toolchain",
+      "type": "broken_snap_tooling",
+      "title": "Go, Rust, Cargo, and Code resolve through snap and fail snap-confine checks",
+      "evidence": [
+        "cargo, rustc, go, and code are present under /snap/bin",
+        "Version checks fail with snap-confine/AppArmor confinement error"
+      ],
+      "affected_paths": [
+        "/snap/bin/cargo",
+        "/snap/bin/rustc",
+        "/snap/bin/go",
+        "/snap/bin/code"
+      ],
+      "recommended_fix": {
+        "strategy": "Either repair snapd/AppArmor or install non-snap developer toolchains and prefer them on PATH.",
+        "steps": [
+          "Classify this as OS/toolchain degraded, not project failure.",
+          "Choose operator path: repair snap confinement or replace with apt/rustup/go tarball/deb packages.",
+          "Update tool-preflight to report degraded commands.",
+          "Do not run Go/Rust verification until this is fixed or bypassed by a non-snap toolchain."
+        ],
+        "example": {
+          "health_record": {
+            "command": "go",
+            "path": "/snap/bin/go",
+            "status": "degraded",
+            "failure_class": "snap_confine_apparmor"
+          }
+        }
+      },
+      "parallel_group": "E"
+    },
+    {
+      "id": "DEVTOOL-P1-002",
+      "priority": "P1",
+      "lane": "toolchain",
+      "type": "lockfile_policy_gap",
+      "title": "Active project scan found Node and Python projects without lockfiles",
+      "evidence": [
+        "Active roots produced 337 manifest records across 173 project directories",
+        "52 Node projects have package.json without a detected lockfile",
+        "16 Python projects have pyproject.toml without uv.lock or poetry.lock",
+        "5 Dockerfile surfaces lack a nearby compose file"
+      ],
+      "affected_paths": [
+        "/home/irfankabir/CascadeProjects/Tools/MCPServers",
+        "/mnt/arch_data/home/caraxes/CascadeProjects/Tools/MCPServers",
+        "/home/irfankabir/canopy",
+        "/mnt/arch_data/home/caraxes/canopy",
+        "/home/irfankabir/roots",
+        "/mnt/arch_data/home/caraxes/roots"
+      ],
+      "recommended_fix": {
+        "strategy": "Create per-ecosystem lockfile policy instead of blindly generating lockfiles everywhere.",
+        "steps": [
+          "Classify each package.json as root app, workspace package, MCP server, fixture, archive, or vendored app.",
+          "For root apps and independently installed MCP servers, require package-lock.json unless npm workspace root owns the lock.",
+          "For Python active apps, require uv.lock unless intentionally library-only.",
+          "Add exceptions to dependency-policy.yaml.",
+          "Add a weekly lockfile-policy check."
+        ],
+        "example": {
+          "lockfile_policy_record": {
+            "path": "/home/irfankabir/CascadeProjects/Tools/MCPServers/echoes-server",
+            "ecosystem": "node",
+            "classification": "mcp-server",
+            "required_lockfile": "package-lock.json",
+            "exception": null
+          }
+        }
+      },
+      "parallel_group": "F"
+    },
+    {
+      "id": "WIRE-P1-002",
+      "priority": "P1",
+      "lane": "wiring",
+      "type": "empty_or_non_strict_json_config",
+      "title": "Some editor/agent config files need tolerant parsing or repair",
+      "evidence": [
+        "/home/irfankabir/.gemini/antigravity/mcp_config.json is 0 bytes",
+        "/home/irfankabir/.config/zed/settings.json is not strict JSON under Python json parsing",
+        "/mnt/arch_data/home/caraxes/.gemini/antigravity/mcp_config.json exists and has content"
+      ],
+      "affected_paths": [
+        "/home/irfankabir/.gemini/antigravity/mcp_config.json",
+        "/home/irfankabir/.config/zed/settings.json",
+        "/mnt/arch_data/home/caraxes/.gemini/antigravity/mcp_config.json"
+      ],
+      "recommended_fix": {
+        "strategy": "Use the right parser per client and repair empty active configs.",
+        "steps": [
+          "Determine whether Zed settings are JSONC and parse with a JSONC parser.",
+          "If /home/irfankabir/.gemini/antigravity/mcp_config.json is intended active, regenerate it from mcp-authority.yaml.",
+          "If it is intentionally empty, mark Antigravity MCP disabled in the client profile.",
+          "Add parser_kind to config-sources.yaml."
+        ],
+        "example": {
+          "config_source": {
+            "path": "/home/irfankabir/.config/zed/settings.json",
+            "parser": "jsonc",
+            "strict_json": false,
+            "status": "requires_tolerant_parser"
+          }
+        }
+      },
+      "parallel_group": "D"
+    },
+    {
+      "id": "MAINT-P1-001",
+      "priority": "P1",
+      "lane": "maintenance",
+      "type": "legacy_script_overlap",
+      "title": "Arch-era maintenance script overlaps with Ubuntu-era maintenance scripts",
+      "evidence": [
+        "/home/irfankabir/scripts/toolchain-maintain.sh labels itself Arch Linux maintenance",
+        "Root AGENTS.md says current OS is Ubuntu 25.10 and pacman/brew/yay references are historical",
+        "/home/irfankabir/scripts/stay-current.sh is rewritten for Ubuntu 25.10"
+      ],
+      "affected_paths": [
+        "/home/irfankabir/scripts/toolchain-maintain.sh",
+        "/home/irfankabir/scripts/stay-current.sh"
+      ],
+      "recommended_fix": {
+        "strategy": "Deprecate or guard Arch-era scripts so agents do not execute the wrong maintenance path.",
+        "steps": [
+          "Add a top-of-file guard to toolchain-maintain.sh that exits on non-Arch systems unless --force-legacy is passed.",
+          "Register stay-current.sh as the Ubuntu package/toolchain report path.",
+          "Add script classification to maintenance-authority.yaml.",
+          "Search scripts for pacman/yay/brew and mark historical references."
+        ],
+        "example": {
+          "script_policy": {
+            "path": "/home/irfankabir/scripts/toolchain-maintain.sh",
+            "status": "legacy-arch",
+            "allowed_on": [
+              "arch"
+            ],
+            "replacement": "/home/irfankabir/scripts/stay-current.sh"
+          }
+        }
+      },
+      "parallel_group": "G"
+    },
+    {
+      "id": "MAINT-P2-001",
+      "priority": "P2",
+      "lane": "maintenance",
+      "type": "observability_gap",
+      "title": "Timer/service unit files exist, but live status could not be verified from the sandbox",
+      "evidence": [
+        "systemctl list-timers failed with bus access error in sandbox",
+        "Unit files are present under /home/irfankabir/.config/systemd/user",
+        "Offline ExecStart path validation found two missing hogsmade paths"
+      ],
+      "affected_paths": [
+        "/home/irfankabir/.config/systemd/user"
+      ],
+      "recommended_fix": {
+        "strategy": "Maintain both offline and live validators.",
+        "steps": [
+          "Offline validator: parse unit files, verify ExecStart and script arguments exist.",
+          "Live validator: run systemctl --user list-timers and systemctl --user status outside sandbox.",
+          "Persist both reports.",
+          "Fail maintenance health only when live mode is available and reports failed units."
+        ],
+        "example": {
+          "validator_modes": [
+            "offline_unit_file_check",
+            "live_systemd_user_check"
+          ]
+        }
+      },
+      "parallel_group": "C"
+    }
+  ]
+}

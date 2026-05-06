@@ -1,0 +1,119 @@
+# Ecosystem consolidation registry (machine-readable)
+# See: renovation/agent-handoff-2026-05-06/01-source-maps/directory-structure-consolidation-playbook.md
+# Inventory date: 2026-05-07 (git evidence captured on host prince)
+# Last re-verified: 2026-05-07 (session T1-7 — commit hashes confirmed against live repos)
+
+version: 1
+inventory_date: "2026-05-07"
+last_reverified: "2026-05-07"
+notes:
+  - "Do not treat two hogsmade checkouts as interchangeable without comparing branches and remotes."
+  - "Canonical hogsmade tree for MCP + CI is on arch_data unless you explicitly work in ~/hogsmade for a branch."
+  - "canopy/ and roots/ directories are native (consolidation complete 2026-05-06). No mount dependency."
+
+roots:
+  hogsmade_monorepo:
+    description: "hogsmade git workspace (Cascade ecosystem monorepo)"
+    canonical_path: /mnt/arch_data/home/caraxes/CascadeProjects
+    canonical_git_remote: "git@github-caraxes:caraxesthebloodwyrm02/hogsmade.git"
+    last_verified_commit: "4c34123"
+    branch_at_inventory: "arch/3d-semantic-assets"
+    working_tree_note: "Local modifications may exist; re-verify before relying on hash."
+    mirrors:
+      - path: /home/irfankabir/hogsmade
+        sync_direction: divergent_clone
+        git_remote: "https://github.com/caraxesthebloodwyrm02/hogsmade.git"
+        last_verified_commit: "4c3b060"
+        branch_at_inventory: "fix/vitest-4.1.5-peer-alignment"
+        notes: "Parallel clone; merge via PR from canonical tree when possible."
+    deprecated_paths:
+      - path: /home/irfankabir/CascadeProjects
+        classification: partial_local_tree_not_git_root
+        notes: "Contains Documentation/, Projects/, Tools/, grove/ — not a hogsmade git root. Do not run monorepo npm install from this path alone."
+
+  gruff:
+    description: "gruff GitHub repo"
+    canonical_path: /home/irfankabir/gruff/workspace
+    canonical_git_remote: "git@github.com:caraxesthebloodwyrm02/gruff.git"
+    last_verified_commit: "644aaa5"
+    branch_at_inventory: "main"
+    reverified_2026_05_07: true
+    mirrors:
+      - path: /mnt/arch_data/home/caraxes/workspace
+        sync_direction: pull_from_canonical
+        last_verified_commit: "6959d71"
+        branch_at_inventory: "main"
+        notes: "Was behind origin/main at 2026-05-07 inventory; treat as stale mirror. Not re-verified in T1-7."
+
+  grove_accounts:
+    description: "irfankabir02-scoped repos"
+    canonical_path: /home/irfankabir/CascadeProjects/grove
+    notes: "~/grove symlinks here. Mount-independence: optional future migration documented in CONSOLIDATION-ROLLBACK-NOTES.md"
+
+canopy_apps:
+  - name: "afloat"
+    canonical_path: /home/irfankabir/canopy/afloat
+    last_verified_commit: "8000027"
+    branch: "main"
+  - name: "echoes"
+    canonical_path: /home/irfankabir/canopy/echoes
+    last_verified_commit: "52a9f3bc"
+    branch: "fix/ruff-f841-rebased"
+  - name: "ai-web-demo"
+    canonical_path: /home/irfankabir/canopy/ai-web-demo
+    last_verified_commit: "8227f06"
+    branch: "main"
+  - name: "token-type-calculator"
+    canonical_path: /home/irfankabir/canopy/token-type-calculator
+    last_verified_commit: "38a9144"
+    branch: "main"
+   - name: "upwork-cli"
+     canonical_path: /home/irfankabir/canopy/upwork-cli
+     last_verified_commit: "57b9e56"
+     branch: "main"
+
+roots_projects:
+  - name: "GRID"
+    canonical_path: /home/irfankabir/roots/GRID
+    status_at_inventory: "broken_git_submodule_pointer"
+    reverified_2026_05_07: true
+    notes: >
+      fatal: not a git repository — submodule pointer broken at both
+      /home/irfankabir/roots/GRID and /home/irfankabir/CascadeProjects/Projects/GRID-main.
+      All GRID commits must go through the hogsmade monorepo submodule path.
+      See AGENTS.md: GRID-main is read-only; commit via CascadeProjects/Projects/GRID-main/.
+      Status confirmed still broken on 2026-05-07. No code change made (operator must re-init submodule).
+  - name: "apiguard"
+    canonical_path: /home/irfankabir/roots/apiguard
+    last_verified_commit: "c100af5"
+  - name: "glimpse-engine"
+    canonical_path: /home/irfankabir/roots/glimpse-engine
+    last_verified_commit: "00b983b"
+  - name: "dep-mapper"
+    canonical_path: /home/irfankabir/roots/dep-mapper
+    last_verified_commit: "966713d"
+  - name: "mcp-orchestration-language"
+    canonical_path: /home/irfankabir/roots/mcp-orchestration-language
+    last_verified_commit: "b0c9f58"
+  - name: "portfolio-control"
+    canonical_path: /home/irfankabir/roots/portfolio-control
+    last_verified_commit: "d068726"
+  - name: "security"
+    canonical_path: /home/irfankabir/roots/security
+    last_verified_commit: "0ae8f41"
+  - name: "python-craft"
+    canonical_path: /home/irfankabir/roots/python-craft
+    last_verified_commit: "4caf975"
+
+mcp_and_env:
+  CASCADE_WORKSPACE_ROOT: "/mnt/arch_data/home/caraxes/CascadeProjects"
+  canonical_mcp_config_relative: "CascadeProjects/mcp_config.json"
+  home_editor_stub: "/home/irfankabir/.mcp.json"
+  notes:
+    - "Regenerate editor MCP from monorepo mcp_config after bulk path changes."
+    - "Example env for shells: ~/.config/mangrove-ecosystem.env.example"
+
+optional_tracks:
+  home_consolidation_report:
+    path: "/home/irfankabir/HOME-CONSOLIDATION-REPORT.md"
+    gap_3c_echoes_reference_docs: "ECOSYSTEM_REVIEW and hermes-lounge-snapshot already present under ~/.echoes/ at inventory"

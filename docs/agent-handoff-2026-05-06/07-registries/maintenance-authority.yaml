@@ -1,0 +1,305 @@
+schema: maintenance-authority.v2
+verified_at: "2026-05-07T00:00:00+06:00"
+amended_at: "2026-05-07T00:00:00+06:00"
+amendment_reason: "hogsmade-harness and hogsmade-scan timers disabled by operator"
+verification_method: "Direct read of ~/.config/systemd/user/*.timer and *.service unit files; script existence verified via Read tool"
+
+safety_rules:
+  - "No sudo from agents"
+  - "No package upgrades from routine report scripts"
+  - "No destructive cleanup without operator-approved apply step"
+  - "Separate live systemd checks from offline unit-file validation"
+  - "Never force-push, rewrite history, or delete branches from maintenance timers"
+
+timers:
+  - name: gruff-ingester
+    schedule: "OnBootSec=30s, OnUnitActiveSec=1min"
+    target_unit: gruff-ingester.service
+    exec_start: "%h/.local/bin/node %h/gruff/dist/trust/ingester.cjs"
+    exec_start_resolved: /home/irfankabir/.local/bin/node /home/irfankabir/gruff/dist/trust/ingester.cjs
+    path_exists: true
+    status: healthy
+    purpose: "Tail ~/.echoes/audit.ndjson into ~/.gruff/trust.sqlite"
+
+  - name: network-watchdog
+    schedule: "OnCalendar=*:0/5 (every 5 min)"
+    target_unit: network-watchdog.service
+    exec_start: /home/irfankabir/scripts/network-watchdog.sh
+    path_exists: true
+    status: healthy
+    purpose: "Monitor outbound connections, flag unexpected destinations"
+
+  - name: process-sentinel
+    schedule: "OnBootSec=5min, OnUnitActiveSec=15min"
+    target_unit: process-sentinel.service
+    exec_start: /home/irfankabir/scripts/process-sentinel.sh diff
+    path_exists: true
+    status: healthy
+    purpose: "Detect rogue/unauthorized background processes"
+
+  - name: integrity-monitor
+    schedule: "OnCalendar=*:0/30 (every 30 min)"
+    target_unit: integrity-monitor.service
+    exec_start: /home/irfankabir/scripts/integrity-monitor.sh check
+    path_exists: true
+    status: healthy
+    purpose: "SHA-256 hash check on critical config files, alert on drift"
+
+  - name: hogsmade-scan
+    schedule: "OnCalendar=*-*-* 02:00:00 and 14:00:00 (twice daily)"
+    target_unit: hogsmade-scan.service
+    exec_start: "%h/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh"
+    exec_start_resolved: /home/irfankabir/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh
+    path_exists: false
+    status: disabled
+    disabled_at: "2026-05-07"
+    disabled_by: operator
+    disabled_cmd: "systemctl --user disable --now hogsmade-scan.timer"
+    disable_output: "Removed '.../timers.target.wants/hogsmade-scan.timer'."
+    purpose: "Ecosystem scan (seeds snapshot)"
+    broken_reason: "hogsmade-driver.sh does not exist — gruff/workspace/CascadeProjects/scripts/ was never populated; hogsmade-design/ contains only HTML mockups"
+    reenable_precondition: "hogsmade-driver.sh must be implemented before re-enabling"
+
+  - name: hogsmade-harness
+    schedule: "OnCalendar=*-*-* 03:00:00 (daily)"
+    target_unit: hogsmade-harness.service
+    exec_start: "%h/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh"
+    exec_start_resolved: /home/irfankabir/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh
+    path_exists: false
+    status: disabled
+    disabled_at: "2026-05-07"
+    disabled_by: operator
+    disabled_cmd: "systemctl --user disable --now hogsmade-harness.timer"
+    disable_output: "Removed '.../timers.target.wants/hogsmade-harness.timer'."
+    purpose: "Harness run over all scenarios"
+    broken_reason: "Same missing script as hogsmade-scan — hogsmade-driver.sh does not exist"
+    reenable_precondition: "hogsmade-driver.sh must be implemented before re-enabling"
+
+  - name: git-hygiene
+    schedule: "OnCalendar=*-*-* 04:00:00 (daily at 4am)"
+    target_unit: git-hygiene.service
+    exec_start: /home/irfankabir/scripts/git-hygiene.sh
+    path_exists: true
+    status: healthy
+    purpose: "git fetch --prune + git gc across registered repos"
+
+  - name: validate-registry
+    schedule: "OnCalendar=Fri *-*-* 05:00:00"
+    target_unit: validate-registry.service
+    exec_start: /home/irfankabir/scripts/validate-registry.sh
+    path_exists: true
+    status: healthy
+    purpose: "Cross-check PROJECT_REGISTRY.yaml paths against filesystem"
+
+  - name: personal-rag-morning-brief
+    schedule: "OnCalendar=*-*-* 06:00:00 Asia/Dhaka (daily)"
+    target_unit: personal-rag-morning-brief.service
+    exec_start: "%h/personal-rag/.venv/bin/python %h/personal-rag/scripts/morning-brief.py --no-render"
+    exec_start_resolved: /home/irfankabir/personal-rag/.venv/bin/python /home/irfankabir/personal-rag/scripts/morning-brief.py --no-render
+    path_exists: true
+    status: healthy
+    purpose: "Refresh ~/.claude/morning-brief.md"
+
+  - name: runtime-health-pass
+    schedule: "OnCalendar=*-*-* 06:15:00 (daily)"
+    target_unit: runtime-health-pass.service
+    exec_start: /usr/bin/bash /home/irfankabir/scripts/runtime-health-pass.sh
+    path_exists: true
+    status: healthy
+    purpose: "Daily read-only health report (config + services + freshness)"
+
+  - name: workspace-maintenance-daily
+    schedule: "OnCalendar=*-*-* 07:00:00 (daily)"
+    target_unit: workspace-maintenance-daily.service
+    exec_start: /home/irfankabir/scripts/workspace-maintenance.sh --daily
+    path_exists: true
+    status: healthy
+    purpose: "Daily workspace maintenance orchestrator"
+
+  - name: workspace-maintenance-weekly
+    schedule: "OnCalendar=Sun 07:30:00"
+    target_unit: workspace-maintenance-weekly.service
+    exec_start: /home/irfankabir/scripts/workspace-maintenance.sh --weekly
+    path_exists: true
+    status: healthy
+    purpose: "Weekly workspace maintenance orchestrator"
+
+  - name: weekly-security-check
+    schedule: "OnCalendar=Mon *-*-* 03:00:00"
+    target_unit: weekly-security-check.service
+    exec_start: /home/irfankabir/scripts/weekly-security-check.sh --quiet
+    path_exists: true
+    status: healthy
+    purpose: "Ubuntu CVE/package security audit"
+
+  - name: stay-current
+    schedule: "OnCalendar=Wed *-*-* 03:00:00"
+    target_unit: stay-current.service
+    exec_start: /home/irfankabir/scripts/stay-current.sh --quiet
+    path_exists: true
+    status: healthy
+    purpose: "Collect apt/snap/npm/uv package versions, check for updates"
+
+  - name: node-refresh
+    schedule: "OnCalendar=Sun 03:30"
+    target_unit: node-refresh.service
+    exec_start: "%h/.local/bin/node-weekly-refresh.sh"
+    exec_start_resolved: /home/irfankabir/.local/bin/node-weekly-refresh.sh
+    path_exists: true
+    status: healthy
+    purpose: "Weekly Node LTS + npm cache refresh"
+
+  - name: prince-toolchain-bootstrap
+    schedule: "OnCalendar=weekly (Mon)"
+    target_unit: prince-toolchain-bootstrap.service
+    exec_start: "%h/scripts/toolchain-change-bootstrap.sh"
+    exec_start_resolved: /home/irfankabir/scripts/toolchain-change-bootstrap.sh
+    path_exists: true
+    status: healthy
+    purpose: "Regenerate Prince agent bootstrap artifacts (profile.json, agent-header.md, env-verify.txt)"
+
+  - name: gruff-diagnostic
+    schedule: "OnCalendar=Mon *-*-* 09:00:00"
+    target_unit: gruff-diagnostic.service
+    exec_start: "%h/.local/bin/node %h/gruff/workspace/scripts/route_config_smoke.mjs"
+    exec_start_resolved: /home/irfankabir/.local/bin/node /home/irfankabir/gruff/workspace/scripts/route_config_smoke.mjs
+    path_exists: true
+    status: healthy
+    purpose: "Gruff workspace smoke — validates router_agents.json"
+
+timer_summary:
+  total: 17
+  healthy: 15
+  disabled: 2
+  broken: 0
+  unknown: 0
+  last_amended: "2026-05-07"
+
+scripts:
+  - path: /home/irfankabir/scripts/runtime-health-pass.sh
+    purpose: "Daily runtime-oriented config + service + freshness pass"
+
+  - path: /home/irfankabir/scripts/stay-current.sh
+    purpose: "Ubuntu stay-current pass — collect package versions, report available updates"
+
+  - path: /home/irfankabir/scripts/weekly-security-check.sh
+    purpose: "Weekly Ubuntu CVE/package security audit"
+
+  - path: /home/irfankabir/scripts/git-hygiene.sh
+    purpose: "Git fetch --prune + git gc across registered repos"
+
+  - path: /home/irfankabir/scripts/integrity-monitor.sh
+    purpose: "SHA-256 config drift monitoring"
+
+  - path: /home/irfankabir/scripts/network-watchdog.sh
+    purpose: "Outbound connection monitoring"
+
+  - path: /home/irfankabir/scripts/process-sentinel.sh
+    purpose: "Rogue/unauthorized process detection"
+
+  - path: /home/irfankabir/scripts/workspace-maintenance.sh
+    purpose: "Workspace maintenance orchestrator (--daily / --weekly modes)"
+
+  - path: /home/irfankabir/scripts/validate-registry.sh
+    purpose: "Cross-check PROJECT_REGISTRY.yaml paths against filesystem"
+
+  - path: /home/irfankabir/scripts/toolchain-change-bootstrap.sh
+    purpose: "Regenerate Prince agent bootstrap artifacts after OS/toolchain changes"
+
+  - path: /home/irfankabir/scripts/prince-agent-bootstrap.py
+    purpose: "Emit ~/.claude/agent-context/ (profile.json, agent-header.md, env-verify.txt)"
+
+  - path: /home/irfankabir/scripts/agent-review-loop.sh
+    purpose: "List open Dependabot PRs and failing checks across all repos"
+
+  - path: /home/irfankabir/scripts/os-harden.sh
+    purpose: "OS hardening script"
+
+  - path: /home/irfankabir/scripts/apply-hardening.sh
+    purpose: "Apply OS hardening configuration"
+
+  - path: /home/irfankabir/scripts/ext-guardrails.sh
+    purpose: "External guardrails script"
+
+  - path: /home/irfankabir/scripts/memory-watchdog.sh
+    purpose: "Canonical backup of RSS-only memory watchdog"
+
+  - path: /home/irfankabir/scripts/apply-memory-guardrails.sh
+    purpose: "Staged sudo installer for user-slice memory cap + systemd-oomd"
+
+  - path: /home/irfankabir/scripts/morning-session-launch.sh
+    purpose: "Morning session automation"
+
+  - path: /home/irfankabir/scripts/windsurf-launch.sh
+    purpose: "Windsurf IDE launcher"
+
+  - path: /home/irfankabir/scripts/vscode-scope-verify.sh
+    purpose: "VS Code scope verification"
+
+  - path: /home/irfankabir/scripts/retry-review.sh
+    purpose: "Development workflow retry script"
+
+  - path: /home/irfankabir/scripts/setup-branch-protection.sh
+    purpose: "Branch protection setup"
+
+  - path: /home/irfankabir/scripts/gap-calc.sh
+    purpose: "Reference Track alignment calculator (4 dimensions)"
+
+  - path: /home/irfankabir/scripts/mcp-probe.sh
+    purpose: "MCP server config health probe"
+
+  - path: /home/irfankabir/scripts/mcp-probe-adapter.py
+    purpose: "Bridge mcp-probe.sh output to Canvas probe-alignment schema"
+
+  - path: /home/irfankabir/scripts/echo-tool.sh
+    purpose: "Interactive session snapshot tool"
+
+  - path: /home/irfankabir/scripts/windsurf-prompt-generator.sh
+    purpose: "Generate opening prompts for Windsurf sessions by type"
+
+  - path: /home/irfankabir/scripts/run-grid.sh
+    purpose: "UV runner shim for roots/GRID"
+
+  - path: /home/irfankabir/scripts/run-grid-api.sh
+    purpose: "Start roots/GRID Mothership on port 8080"
+
+  - path: /home/irfankabir/scripts/run-vision.sh
+    purpose: "UV runner shim for Vision project"
+
+  - path: /home/irfankabir/.local/bin/node-weekly-refresh.sh
+    purpose: "Weekly Node LTS + npm cache refresh"
+
+  - path: /home/irfankabir/.local/bin/caraxes
+    purpose: "Caraxes engine CLI (~800 lines bash)"
+
+  - path: /home/irfankabir/.local/bin/memory-watchdog.sh
+    purpose: "Deployed RSS-only memory watchdog (supervised user service)"
+
+  - path: /home/irfankabir/.local/bin/psi-watchdog.sh
+    purpose: "PSI pressure watchdog (supervised user service)"
+
+broken_items: []
+
+disabled_items:
+  - id: hogsmade-harness-timer
+    type: systemd-timer
+    timer: hogsmade-harness.timer
+    service: hogsmade-harness.service
+    resolution: "Disabled 2026-05-07 via systemctl --user disable --now hogsmade-harness.timer"
+    original_problem: "ExecStart references ~/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh which does not exist"
+    root_cause: "hogsmade-driver.sh was never implemented; gruff/workspace/hogsmade-design/ contains only HTML mockups"
+    reenable_precondition: "Implement hogsmade-driver.sh and place at ~/gruff/workspace/CascadeProjects/scripts/"
+
+  - id: hogsmade-scan-timer
+    type: systemd-timer
+    timer: hogsmade-scan.timer
+    service: hogsmade-scan.service
+    resolution: "Disabled 2026-05-07 via systemctl --user disable --now hogsmade-scan.timer"
+    original_problem: "Same missing hogsmade-driver.sh script as hogsmade-harness"
+    root_cause: "Same as hogsmade-harness"
+    reenable_precondition: "Implement hogsmade-driver.sh and place at ~/gruff/workspace/CascadeProjects/scripts/"
+
+notes:
+  - "Bash sandbox was unavailable during this inventory (kernel 6.17.0-23-generic seccomp/userns restriction); script sizes and last-modified dates could not be collected. All existence checks were performed via Read tool."
+  - "Live timer status (active/inactive/failed) could not be queried without systemctl access. Status field reflects unit-file + script-path validation only."
+  - "CLAUDE.md documents 18 active timers but lists gruff-ingester at 1m cadence — this inventory found 17 distinct timer unit files. The 18th may be a service-only unit or the count includes a timer not yet created."
