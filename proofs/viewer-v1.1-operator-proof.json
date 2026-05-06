@@ -1,0 +1,76 @@
+{
+  "proof_type": "viewer_v1_1_operator_feedback_loop",
+  "generated_at": "2026-05-06T13:14:45+06:00",
+  "reward_scope": {
+    "reward_id": "viewer-op-reward-24a90af4",
+    "student_id": "viewer-op-student-9f663756"
+  },
+  "evidence": {
+    "viewer_screenshot_path": "proofs/viewer-v1-operator-evidence.png",
+    "state_endpoint": "GET /v0/state/reward/<reward_id>",
+    "state_snapshot_sanitized_before_patch": {
+      "reward_id": "viewer-op-reward-24a90af4",
+      "student_id": "viewer-op-student-9f663756",
+      "contract_id": "psc-v0-default",
+      "state": "drafted",
+      "reward_token_amount": 1,
+      "reward_token": null,
+      "outcome_state": "unknown",
+      "student_acknowledged_at": null,
+      "review_requested_at": null,
+      "updated_at": "2026-05-06T07:06:18.886616+00:00",
+      "notes": null,
+      "evidence": [],
+      "payment_confirmations": []
+    }
+  },
+  "viewer_v1_1_delta": {
+    "label_tweaks": [
+      {
+        "from": "Current Lifecycle",
+        "to": "Policy Lifecycle"
+      },
+      {
+        "from": "Current Outcome",
+        "to": "Student Outcome"
+      },
+      {
+        "from": "Last Transition Reason",
+        "to": "Last Transition Notes"
+      }
+    ],
+    "one_added_trust_field": {
+      "label": "Reward Token Status",
+      "logic": "Shown as Issued when reward_token exists on the reward state; otherwise Not issued."
+    },
+    "layout_improvement": {
+      "change": "In the trust viewer label/value grid, widen the label column by switching dl grid-template-columns to minmax(220px, 280px) 1fr."
+    }
+  },
+  "feedback_summary": {
+    "30_second_comprehension": "mostly",
+    "ambiguous_labels": [
+      "Current Lifecycle vs Current Outcome (operators weren’t sure which was policy vs student/ack stage at a glance)",
+      "Last Transition Reason (felt generic; operators expected a short “notes” style explanation)"
+    ],
+    "one_missing_trust_signal": "Reward token issuance status (issued vs not issued) was not visible in Viewer v1.0."
+  },
+  "before_after_trust_signal_snapshot": {
+    "before_viewer_v1_0": {
+      "Current Lifecycle": "drafted",
+      "Current Outcome": "unknown",
+      "Last Transition Reason": "No transition log available",
+      "Last Transition Time": "n/a",
+      "Evidence Count": 0
+    },
+    "after_viewer_v1_1": {
+      "Policy Lifecycle": "drafted",
+      "Student Outcome": "unknown",
+      "Last Transition Notes": "No transition log available",
+      "Last Transition Time": "n/a",
+      "Evidence Count": 0,
+      "Reward Token Status": "Not issued"
+    }
+  }
+}
+

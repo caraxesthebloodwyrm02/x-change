@@ -318,6 +318,7 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
     evidence_count = 0
     current_lifecycle = "n/a"
     current_outcome = "n/a"
+    token_status = "n/a"
 
     reward_panel = ""
     if reward_state:
@@ -338,6 +339,8 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
 
         current_lifecycle = str(reward_state.get("state", "n/a"))
         current_outcome = str(reward_state.get("outcome_state", "n/a"))
+        reward_token = reward_state.get("reward_token")
+        token_status = "Issued" if isinstance(reward_token, dict) else "Not issued"
 
         reward_panel = f"""
         <section class="panel">
@@ -345,8 +348,8 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
           <dl>
             <dt>Reward ID</dt><dd>{escape(str(reward_state.get("reward_id", "")))}</dd>
             <dt>Student ID</dt><dd>{escape(str(reward_state.get("student_id", "")))}</dd>
-            <dt>Current Lifecycle</dt><dd>{escape(current_lifecycle)}</dd>
-            <dt>Current Outcome</dt><dd>{escape(current_outcome)}</dd>
+            <dt>Policy Lifecycle</dt><dd>{escape(current_lifecycle)}</dd>
+            <dt>Student Outcome</dt><dd>{escape(current_outcome)}</dd>
             <dt>Last Updated</dt><dd>{escape(str(reward_state.get("updated_at", "")))}</dd>
           </dl>
         </section>
@@ -395,7 +398,7 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
         .grid {{ display: grid; gap: 14px; margin-top: 18px; }}
         .panel {{ background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }}
         .panel h2 {{ margin: 0 0 10px; font-size: 18px; }}
-        dl {{ display: grid; grid-template-columns: 180px 1fr; gap: 6px 10px; margin: 0; }}
+        dl {{ display: grid; grid-template-columns: minmax(220px, 280px) 1fr; gap: 6px 10px; margin: 0; }}
         dt {{ color: var(--mute); }}
         dd {{ margin: 0; font-weight: 600; }}
         .chips {{ display: flex; flex-wrap: wrap; gap: 8px; }}
@@ -415,11 +418,12 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
             <section class="panel highlight">
                 <h2>Trust Signal</h2>
                 <dl>
-                    <dt>Current Lifecycle</dt><dd>{escape(current_lifecycle)}</dd>
-                    <dt>Current Outcome</dt><dd>{escape(current_outcome)}</dd>
-                    <dt>Last Transition Reason</dt><dd>{escape(last_transition_reason)}</dd>
+                    <dt>Policy Lifecycle</dt><dd>{escape(current_lifecycle)}</dd>
+                    <dt>Student Outcome</dt><dd>{escape(current_outcome)}</dd>
+                    <dt>Last Transition Notes</dt><dd>{escape(last_transition_reason)}</dd>
                     <dt>Last Transition Time</dt><dd>{escape(last_transition_at)}</dd>
                     <dt>Evidence Count</dt><dd>{escape(str(evidence_count))}</dd>
+                    <dt>Reward Token Status</dt><dd>{escape(token_status)}</dd>
                 </dl>
             </section>
             {reward_panel}
@@ -442,8 +446,8 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
             </section>
             <section class="panel micro">
                 <h2>Field Guide</h2>
-                <p><strong>Current Lifecycle</strong>: where the reward sits in the policy progression.</p>
-                <p><strong>Current Outcome</strong>: student-side completion/acknowledgement state.</p>
+                <p><strong>Policy Lifecycle</strong>: where the reward sits in the policy progression.</p>
+                <p><strong>Student Outcome</strong>: student-side completion/acknowledgement state.</p>
                 <p><strong>Approved</strong>: request passed configured exchange constraints.</p>
             </section>
         </div>
