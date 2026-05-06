@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-import json
 import os
 import tempfile
 import unittest
 
 from xchange.glass_adapter import map_glass_bridge_to_ingest
-from xchange.storage import get_reward_state, create_reward_draft, ingest_glass_session, open_db
-
+from xchange.storage import (
+    create_reward_draft,
+    get_reward_state,
+    ingest_glass_session,
+    open_db,
+)
 
 SAMPLE_BRIDGE = {
     "timestamp": "2026-05-04T02:16:01.720118+00:00",
@@ -58,6 +61,41 @@ class MapperTests(unittest.TestCase):
         self.assertEqual(result["_glass_bridge"]["agent_state"], "idle")
         self.assertEqual(result["_glass_bridge"]["signals"]["git_diff_lines"], 10)
 
+    def test_map_empty_reward_id_raises(self) -> None:
+        """reward_id provided but empty string must raise ValueError (L23)."""
+        with self.assertRaises(ValueError) as ctx:
+            map_glass_bridge_to_ingest(SAMPLE_BRIDGE, student_id="s1", reward_id="")
+        self.assertIn("reward_id", str(ctx.exception))
+
+    def test_map_student_ack_flag_included(self) -> None:
+        """student_ack=True must appear in the mapped result dict (L37)."""
+        result = map_glass_bridge_to_ingest(
+            SAMPLE_BRIDGE, student_id="s1", student_ack=True
+        )
+        self.assertTrue(result.get("student_ack"))
+
+    def test_map_request_review_flag_included(self) -> None:
+        """request_review=True must appear in the mapped result dict (L39)."""
+        result = map_glass_bridge_to_ingest(
+            SAMPLE_BRIDGE, student_id="s1", request_review=True
+        )
+        self.assertTrue(result.get("request_review"))
+
+    def test_map_false_flags_excluded(self) -> None:
+        """False-valued optional flags must not appear in the result dict."""
+        result = map_glass_bridge_to_ingest(
+            SAMPLE_BRIDGE,
+            student_id="s1",
+            student_ack=False,
+            request_review=False,
+            contract_satisfied=False,
+            ready_for_payment=False,
+        )
+        self.assertNotIn("student_ack", result)
+        self.assertNotIn("request_review", result)
+        self.assertNotIn("contract_satisfied", result)
+        self.assertNotIn("ready_for_payment", result)
+
 
 class EndpointTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -92,7 +130,11 @@ class EndpointTests(unittest.TestCase):
             map_glass_bridge_to_ingest({}, student_id="s1")
 
     def test_endpoint_auth_required(self) -> None:
+        from http.server import BaseHTTPRequestHandler
+        from typing import cast
+
         from xchange.main import _require_ingest_token
+
         original = os.environ.get("XCHANGE_INGEST_TOKEN")
         try:
             os.environ.pop("XCHANGE_INGEST_TOKEN", None)
@@ -100,7 +142,7 @@ class EndpointTests(unittest.TestCase):
             class FakeHandler:
                 headers = {"Authorization": "", "X-Ingest-Token": ""}
 
-            self.assertFalse(_require_ingest_token(FakeHandler()))
+            self.assertFalse(_require_ingest_token(cast(BaseHTTPRequestHandler, FakeHandler())))
         finally:
             if original is not None:
                 os.environ["XCHANGE_INGEST_TOKEN"] = original
