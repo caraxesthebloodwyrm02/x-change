@@ -28,7 +28,7 @@ jobs:
           version: "latest"
 
       - name: Install dependencies
-        run: uv sync --group dev --group test
+        run: uv sync --group dev
 
       - name: Lint with Pyright
         run: uv run pyright --strict
