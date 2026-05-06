@@ -319,6 +319,7 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
     current_lifecycle = "n/a"
     current_outcome = "n/a"
     token_status = "n/a"
+    token_id_preview = "n/a"
 
     reward_panel = ""
     if reward_state:
@@ -340,7 +341,13 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
         current_lifecycle = str(reward_state.get("state", "n/a"))
         current_outcome = str(reward_state.get("outcome_state", "n/a"))
         reward_token = reward_state.get("reward_token")
-        token_status = "Issued" if isinstance(reward_token, dict) else "Not issued"
+        if isinstance(reward_token, dict):
+            token_status = "Issued"
+            token_id = str(reward_token.get("id", "")).strip()
+            token_id_preview = token_id[:16] + "..." if len(token_id) > 16 else token_id or "present"
+        else:
+            token_status = "Not issued"
+            token_id_preview = "none"
 
         reward_panel = f"""
         <section class="panel">
@@ -423,7 +430,8 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
                     <dt>Last Transition Notes</dt><dd>{escape(last_transition_reason)}</dd>
                     <dt>Last Transition Time</dt><dd>{escape(last_transition_at)}</dd>
                     <dt>Evidence Count</dt><dd>{escape(str(evidence_count))}</dd>
-                    <dt>Reward Token Status</dt><dd>{escape(token_status)}</dd>
+                    <dt>Reward Token Issuance</dt><dd>{escape(token_status)}</dd>
+                    <dt>Reward Token ID</dt><dd>{escape(token_id_preview)}</dd>
                 </dl>
             </section>
             {reward_panel}
@@ -448,6 +456,7 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
                 <h2>Field Guide</h2>
                 <p><strong>Policy Lifecycle</strong>: where the reward sits in the policy progression.</p>
                 <p><strong>Student Outcome</strong>: student-side completion/acknowledgement state.</p>
+                <p><strong>Reward Token Issuance</strong>: whether a reward token has been minted for this reward.</p>
                 <p><strong>Approved</strong>: request passed configured exchange constraints.</p>
             </section>
         </div>
