@@ -8,21 +8,25 @@ from datetime import datetime, timezone
 from typing import Any, Final
 
 from xchange.domain import (
-  DEFAULT_CONTRACT_ID,
-  EvidenceType,
-  OutcomeState,
-  POLICY_VERSION,
-  PaymentConfirmationStatus,
-  RewardState,
-  TransitionResult,
-  ingest_bool,
-  next_state_after_glass_evidence,
-  next_state_after_stripe_payment,
+    DEFAULT_CONTRACT_ID,
+    POLICY_VERSION,
+    EvidenceType,
+    ExchangeRequest,
+    ExchangeResult,
+    InsightTier,
+    OutcomeState,
+    PaymentConfirmationStatus,
+    RewardState,
+    RewardToken,
+    TransitionResult,
+    ingest_bool,
+    next_state_after_glass_evidence,
+    next_state_after_stripe_payment,
 )
 
 
 def _utc_now_iso() -> str:
-  return datetime.now(timezone.utc).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 LEGACY_SCHEMA_SQL: Final[str] = """
@@ -76,6 +80,11 @@ CREATE TABLE IF NOT EXISTS service_contracts (
   created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS schema_migrations (
+  version TEXT PRIMARY KEY,
+  applied_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS reward_ledger (
   reward_id TEXT PRIMARY KEY,
   student_id TEXT NOT NULL,
@@ -123,278 +132,332 @@ CREATE TABLE IF NOT EXISTS support_signals (
   resolved_at TEXT
 );
 
+CREATE TABLE IF NOT EXISTS exchange_requests (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  request_id TEXT NOT NULL UNIQUE,
+  reward_id TEXT NOT NULL,
+  student_id TEXT NOT NULL,
+  requested_scope_json TEXT NOT NULL,
+  constraint_config_json TEXT NOT NULL,
+  constraint_result_json TEXT NOT NULL,
+  approved INTEGER NOT NULL,
+  created_at TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_evidence_reward ON evidence_ledger(reward_id);
 CREATE INDEX IF NOT EXISTS idx_evidence_student ON evidence_ledger(student_id);
 CREATE INDEX IF NOT EXISTS idx_payment_reward ON payment_confirmations(reward_id);
+CREATE INDEX IF NOT EXISTS idx_exchange_reward ON exchange_requests(reward_id);
+CREATE INDEX IF NOT EXISTS idx_exchange_student ON exchange_requests(student_id);
 """
 
 
 @dataclass(frozen=True)
 class FailureSnapshot:
-  command: str | None
-  exit_code: int | None
-  stdout_text: str | None
-  stderr_text: str | None
-  failure_at: str
-  payload: dict[str, Any]
+    command: str | None
+    exit_code: int | None
+    stdout_text: str | None
+    stderr_text: str | None
+    failure_at: str
+    payload: dict[str, Any]
 
 
 def _ensure_default_contract(conn: sqlite3.Connection) -> None:
-  now = _utc_now_iso()
-  promise = {
-    "summary": "Default x-change v0 principled service promise (see docs/policy-core-v0.md).",
-    "policy": POLICY_VERSION,
-  }
-  conn.execute(
-    """
+    now = _utc_now_iso()
+    promise = {
+        "summary": "Default x-change v0 principled service promise (see docs/policy-core-v0.md).",
+        "policy": POLICY_VERSION,
+    }
+    conn.execute(
+        """
     INSERT OR IGNORE INTO service_contracts (contract_id, title, promise_json, policy_version, created_at)
     VALUES (?, ?, ?, ?, ?)
     """,
-    (
-      DEFAULT_CONTRACT_ID,
-      "x-change v0 default PSC",
-      json.dumps(promise, ensure_ascii=False),
-      POLICY_VERSION,
-      now,
-    ),
-  )
+        (
+            DEFAULT_CONTRACT_ID,
+            "x-change v0 default PSC",
+            json.dumps(promise, ensure_ascii=False),
+            POLICY_VERSION,
+            now,
+        ),
+    )
 
 
 def _migrate_legacy_rewards(conn: sqlite3.Connection) -> None:
-  cur = conn.execute(
-    "SELECT COUNT(1) AS c FROM reward_ledger",
-  )
-  row = cur.fetchone()
-  if row and int(row["c"]) > 0:
-    return
-  legacy = conn.execute("SELECT reward_id, student_id, delivered FROM rewards").fetchall()
-  now = _utc_now_iso()
-  for lr in legacy:
-    rid = str(lr["reward_id"])
-    sid = str(lr["student_id"])
-    delivered = int(lr["delivered"])
-    state = RewardState.PAYMENT_CONFIRMED if delivered else RewardState.DRAFTED
-    outcome = OutcomeState.DELIVERED_PENDING_ACK if delivered else OutcomeState.UNKNOWN
-    conn.execute(
-      """
+    cur = conn.execute(
+        "SELECT COUNT(1) AS c FROM reward_ledger",
+    )
+    row = cur.fetchone()
+    if row and int(row["c"]) > 0:
+        return
+    legacy = conn.execute(
+        "SELECT reward_id, student_id, delivered FROM rewards"
+    ).fetchall()
+    now = _utc_now_iso()
+    for lr in legacy:
+        rid = str(lr["reward_id"])
+        sid = str(lr["student_id"])
+        delivered = int(lr["delivered"])
+        state = RewardState.PAYMENT_CONFIRMED if delivered else RewardState.DRAFTED
+        outcome = (
+            OutcomeState.DELIVERED_PENDING_ACK if delivered else OutcomeState.UNKNOWN
+        )
+        conn.execute(
+            """
       INSERT OR IGNORE INTO reward_ledger (
         reward_id, student_id, contract_id, state, reward_token_amount, outcome_state,
         student_acknowledged_at, review_requested_at, created_at, updated_at, notes_json
       ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, ?, ?, ?)
       """,
-      (
-        rid,
-        sid,
-        DEFAULT_CONTRACT_ID,
-        state.value,
-        1,
-        outcome.value,
-        now,
-        now,
-        json.dumps({"migrated_from": "rewards"}, ensure_ascii=False),
-      ),
+            (
+                rid,
+                sid,
+                DEFAULT_CONTRACT_ID,
+                state.value,
+                1,
+                outcome.value,
+                now,
+                now,
+                json.dumps({"migrated_from": "rewards"}, ensure_ascii=False),
+            ),
+        )
+
+
+def _run_migration(conn: sqlite3.Connection, version: str, sql: str) -> bool:
+    """Apply a one-time schema migration if it hasn't been recorded yet.
+
+    Uses the schema_migrations table as the authoritative migration log.
+    Returns True if the migration was applied this call, False if already recorded.
+    Silently absorbs OperationalError (e.g. duplicate column) so an upgraded DB
+    that already has the column still gets its version recorded.
+    """
+    cur = conn.execute(
+        "SELECT version FROM schema_migrations WHERE version=?", (version,)
     )
+    if cur.fetchone():
+        return False  # already applied
+    try:
+        conn.executescript(sql)
+    except sqlite3.OperationalError:
+        # Migration SQL already partially applied (e.g. column exists).
+        # Record as applied so we don't retry on every startup.
+        pass
+    conn.execute(
+        "INSERT OR IGNORE INTO schema_migrations (version, applied_at) VALUES (?, ?)",
+        (version, _utc_now_iso()),
+    )
+    conn.commit()
+    return True
 
 
 def init_db(conn: sqlite3.Connection) -> None:
-  conn.execute("PRAGMA foreign_keys=ON")
-  conn.executescript(LEGACY_SCHEMA_SQL)
-  conn.executescript(CORE_SCHEMA_SQL)
-  _ensure_default_contract(conn)
-  _migrate_legacy_rewards(conn)
-  conn.commit()
+    conn.execute("PRAGMA foreign_keys=ON")
+    conn.executescript(LEGACY_SCHEMA_SQL)
+    conn.executescript(CORE_SCHEMA_SQL)
+    _ensure_default_contract(conn)
+    _migrate_legacy_rewards(conn)
+    conn.commit()
+    # Additive column migrations — safe to replay (recorded in schema_migrations).
+    _run_migration(
+        conn,
+        "v001_reward_token_json",
+        "ALTER TABLE reward_ledger ADD COLUMN reward_token_json TEXT;",
+    )
 
 
 @contextmanager
 def open_db(db_path: str):
-  conn = sqlite3.connect(db_path)
-  conn.row_factory = sqlite3.Row
-  try:
-    init_db(conn)
-    yield conn
-  finally:
-    conn.close()
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        init_db(conn)
+        yield conn
+    finally:
+        conn.close()
 
 
-def insert_support_signal(*, conn: sqlite3.Connection, kind: str, payload: dict[str, Any]) -> int:
-  cur = conn.execute(
-    """
+def insert_support_signal(
+    *, conn: sqlite3.Connection, kind: str, payload: dict[str, Any]
+) -> int:
+    cur = conn.execute(
+        """
     INSERT INTO support_signals (kind, payload_json, created_at)
     VALUES (?, ?, ?)
     """,
-    (kind, json.dumps(payload, ensure_ascii=False), _utc_now_iso()),
-  )
-  conn.commit()
-  return int(cur.lastrowid)
+        (kind, json.dumps(payload, ensure_ascii=False), _utc_now_iso()),
+    )
+    conn.commit()
+    return int(cur.lastrowid or 0)
 
 
 def list_support_signals(
-  *,
-  conn: sqlite3.Connection,
-  kind: str | None = None,
-  resolved: bool | None = None,
-  limit: int = 50,
+    *,
+    conn: sqlite3.Connection,
+    kind: str | None = None,
+    resolved: bool | None = None,
+    limit: int = 50,
 ) -> list[dict[str, Any]]:
-  """List support signals with optional filters."""
-  where_clauses: list[str] = []
-  params: list[Any] = []
-  
-  if kind is not None:
-    where_clauses.append("kind=?")
-    params.append(kind)
-  
-  if resolved is not None:
-    if resolved:
-      where_clauses.append("resolved_at IS NOT NULL")
-    else:
-      where_clauses.append("resolved_at IS NULL")
-  
-  where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
-  params.append(limit)
-  
-  query = f"""
+    """List support signals with optional filters."""
+    where_clauses: list[str] = []
+    params: list[Any] = []
+
+    if kind is not None:
+        where_clauses.append("kind=?")
+        params.append(kind)
+
+    if resolved is not None:
+        if resolved:
+            where_clauses.append("resolved_at IS NOT NULL")
+        else:
+            where_clauses.append("resolved_at IS NULL")
+
+    where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
+    params.append(limit)
+
+    query = f"""
     SELECT id, kind, payload_json, created_at, resolved_at
     FROM support_signals
     WHERE {where_sql}
     ORDER BY created_at DESC
     LIMIT ?
   """
-  
-  rows = conn.execute(query, params).fetchall()
-  return [
-    {
-      "id": row["id"],
-      "kind": row["kind"],
-      "payload": json.loads(row["payload_json"]),
-      "created_at": row["created_at"],
-      "resolved_at": row["resolved_at"],
-    }
-    for row in rows
-  ]
+
+    rows = conn.execute(query, params).fetchall()
+    return [
+        {
+            "id": row["id"],
+            "kind": row["kind"],
+            "payload": json.loads(row["payload_json"]),
+            "created_at": row["created_at"],
+            "resolved_at": row["resolved_at"],
+        }
+        for row in rows
+    ]
 
 
 def resolve_support_signal(
-  *,
-  conn: sqlite3.Connection,
-  signal_id: int,
-  resolution_note: str,
+    *,
+    conn: sqlite3.Connection,
+    signal_id: int,
+    resolution_note: str,
 ) -> bool:
-  """Mark a support signal as resolved. Returns True if signal was found."""
-  cur = conn.execute(
-    "SELECT id, payload_json FROM support_signals WHERE id=?",
-    (signal_id,),
-  )
-  row = cur.fetchone()
-  if not row:
-    return False
-  
-  payload = json.loads(row["payload_json"])
-  payload["resolution"] = {"resolution_note": resolution_note}
-  
-  conn.execute(
-    """
+    """Mark a support signal as resolved. Returns True if signal was found."""
+    cur = conn.execute(
+        "SELECT id, payload_json FROM support_signals WHERE id=?",
+        (signal_id,),
+    )
+    row = cur.fetchone()
+    if not row:
+        return False
+
+    payload = json.loads(row["payload_json"])
+    payload["resolution"] = {"resolution_note": resolution_note}
+
+    conn.execute(
+        """
     UPDATE support_signals
     SET resolved_at=?, payload_json=?
     WHERE id=?
     """,
-    (_utc_now_iso(), json.dumps(payload, ensure_ascii=False), signal_id),
-  )
-  conn.commit()
-  return True
+        (_utc_now_iso(), json.dumps(payload, ensure_ascii=False), signal_id),
+    )
+    conn.commit()
+    return True
 
 
 def create_reward_draft(
-  *,
-  conn: sqlite3.Connection,
-  reward_id: str,
-  student_id: str,
-  contract_id: str = DEFAULT_CONTRACT_ID,
-  reward_token_amount: int = 1,
+    *,
+    conn: sqlite3.Connection,
+    reward_id: str,
+    student_id: str,
+    contract_id: str = DEFAULT_CONTRACT_ID,
+    reward_token_amount: int = 1,
 ) -> None:
-  now = _utc_now_iso()
-  conn.execute(
-    """
+    now = _utc_now_iso()
+    conn.execute(
+        """
     INSERT INTO reward_ledger (
       reward_id, student_id, contract_id, state, reward_token_amount, outcome_state,
       student_acknowledged_at, review_requested_at, created_at, updated_at, notes_json
     ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, ?, ?, NULL)
     ON CONFLICT(reward_id) DO NOTHING
     """,
-    (
-      reward_id,
-      student_id,
-      contract_id,
-      RewardState.DRAFTED.value,
-      reward_token_amount,
-      OutcomeState.UNKNOWN.value,
-      now,
-      now,
-    ),
-  )
-  conn.commit()
+        (
+            reward_id,
+            student_id,
+            contract_id,
+            RewardState.DRAFTED.value,
+            reward_token_amount,
+            OutcomeState.UNKNOWN.value,
+            now,
+            now,
+        ),
+    )
+    conn.commit()
 
 
 def append_evidence(
-  *,
-  conn: sqlite3.Connection,
-  student_id: str,
-  session_id: str | None,
-  reward_id: str | None,
-  evidence_type: EvidenceType,
-  payload: dict[str, Any],
-  provenance: str,
+    *,
+    conn: sqlite3.Connection,
+    student_id: str,
+    session_id: str | None,
+    reward_id: str | None,
+    evidence_type: EvidenceType,
+    payload: dict[str, Any],
+    provenance: str,
 ) -> int:
-  cur = conn.execute(
-    """
+    cur = conn.execute(
+        """
     INSERT INTO evidence_ledger (
       reward_id, student_id, session_id, evidence_type, payload_json, provenance, created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?)
     """,
-    (
-      reward_id,
-      student_id,
-      session_id,
-      evidence_type.value,
-      json.dumps(payload, ensure_ascii=False),
-      provenance,
-      _utc_now_iso(),
-    ),
-  )
-  conn.commit()
-  return int(cur.lastrowid)
+        (
+            reward_id,
+            student_id,
+            session_id,
+            evidence_type.value,
+            json.dumps(payload, ensure_ascii=False),
+            provenance,
+            _utc_now_iso(),
+        ),
+    )
+    conn.commit()
+    return int(cur.lastrowid or 0)
 
 
 def _load_reward_row(conn: sqlite3.Connection, reward_id: str) -> sqlite3.Row | None:
-  cur = conn.execute("SELECT * FROM reward_ledger WHERE reward_id=?", (reward_id,))
-  return cur.fetchone()
+    cur = conn.execute("SELECT * FROM reward_ledger WHERE reward_id=?", (reward_id,))
+    return cur.fetchone()
 
 
 def _apply_transition(
-  conn: sqlite3.Connection,
-  *,
-  reward_id: str,
-  result: TransitionResult,
-  extra_notes: list[str] | None = None,
+    conn: sqlite3.Connection,
+    *,
+    reward_id: str,
+    result: TransitionResult,
+    extra_notes: list[str] | None = None,
 ) -> None:
-  row = _load_reward_row(conn, reward_id)
-  if not row:
-    return
-  prior = json.loads(row["notes_json"]) if row["notes_json"] else {}
-  log = list(prior.get("transition_log", []))
-  entry = {"at": _utc_now_iso(), "notes": list(result.notes)}
-  if extra_notes:
-    entry["notes"].extend(extra_notes)
-  log.append(entry)
-  prior["transition_log"] = log
-  now = _utc_now_iso()
-  ack_at = row["student_acknowledged_at"]
-  if result.new_state is RewardState.STUDENT_ACKNOWLEDGED:
-    ack_at = now
-  review_at = row["review_requested_at"]
-  if result.new_state is RewardState.REVIEW_REQUESTED:
-    review_at = now
-  conn.execute(
-    """
+    row = _load_reward_row(conn, reward_id)
+    if not row:
+        return
+    prior = json.loads(row["notes_json"]) if row["notes_json"] else {}
+    log = list(prior.get("transition_log", []))
+    entry_notes: list[str] = list(result.notes)
+    if extra_notes:
+        entry_notes.extend(extra_notes)
+    entry = {"at": _utc_now_iso(), "notes": entry_notes}
+    log.append(entry)
+    prior["transition_log"] = log
+    now = _utc_now_iso()
+    ack_at = row["student_acknowledged_at"]
+    if result.new_state is RewardState.STUDENT_ACKNOWLEDGED:
+        ack_at = now
+    review_at = row["review_requested_at"]
+    if result.new_state is RewardState.REVIEW_REQUESTED:
+        review_at = now
+    conn.execute(
+        """
     UPDATE reward_ledger SET
       state=?,
       outcome_state=?,
@@ -404,211 +467,223 @@ def _apply_transition(
       notes_json=?
     WHERE reward_id=?
     """,
-    (
-      result.new_state.value,
-      result.new_outcome.value,
-      ack_at,
-      review_at,
-      now,
-      json.dumps(prior, ensure_ascii=False),
-      reward_id,
-    ),
-  )
+        (
+            result.new_state.value,
+            result.new_outcome.value,
+            ack_at,
+            review_at,
+            now,
+            json.dumps(prior, ensure_ascii=False),
+            reward_id,
+        ),
+    )
 
 
 def apply_evidence_to_reward(
-  *,
-  conn: sqlite3.Connection,
-  reward_id: str,
-  evidence_type: EvidenceType,
-  ingest_payload: dict[str, Any],
+    *,
+    conn: sqlite3.Connection,
+    reward_id: str,
+    evidence_type: EvidenceType,
+    ingest_payload: dict[str, Any],
 ) -> TransitionResult | None:
-  row = _load_reward_row(conn, reward_id)
-  if not row:
-    return None
-  current = RewardState(str(row["state"]))
-  outcome = OutcomeState(str(row["outcome_state"]))
-  proposal = next_state_after_glass_evidence(
-    current=current,
-    outcome=outcome,
-    evidence_type=evidence_type,
-    ingest_payload=ingest_payload,
-  )
-  if proposal:
-    _apply_transition(conn, reward_id=reward_id, result=proposal)
-  return proposal
+    row = _load_reward_row(conn, reward_id)
+    if not row:
+        return None
+    current = RewardState(str(row["state"]))
+    outcome = OutcomeState(str(row["outcome_state"]))
+    proposal = next_state_after_glass_evidence(
+        current=current,
+        outcome=outcome,
+        evidence_type=evidence_type,
+        ingest_payload=ingest_payload,
+    )
+    if proposal:
+        _apply_transition(conn, reward_id=reward_id, result=proposal)
+    return proposal
 
 
-def upsert_session(*, conn: sqlite3.Connection, session_id: str, student_id: str, payload: dict[str, Any]) -> None:
-  now = _utc_now_iso()
-  conn.execute(
-    """
+def upsert_session(
+    *,
+    conn: sqlite3.Connection,
+    session_id: str,
+    student_id: str,
+    payload: dict[str, Any],
+) -> None:
+    now = _utc_now_iso()
+    conn.execute(
+        """
     INSERT INTO sessions (session_id, student_id, created_at, payload_json)
     VALUES (?, ?, ?, ?)
     ON CONFLICT(session_id) DO UPDATE SET
       student_id=excluded.student_id,
       payload_json=excluded.payload_json
     """,
-    (session_id, student_id, now, json.dumps(payload, ensure_ascii=False)),
-  )
-  conn.commit()
+        (session_id, student_id, now, json.dumps(payload, ensure_ascii=False)),
+    )
+    conn.commit()
 
 
 def record_failure(
-  *,
-  conn: sqlite3.Connection,
-  session_id: str,
-  student_id: str,
-  failure: dict[str, Any],
+    *,
+    conn: sqlite3.Connection,
+    session_id: str,
+    student_id: str,
+    failure: dict[str, Any],
 ) -> FailureSnapshot:
-  now = failure.get("failure_at") or _utc_now_iso()
-  command = failure.get("command")
-  exit_code = failure.get("exit_code")
-  stdout_text = failure.get("stdout")
-  stderr_text = failure.get("stderr")
+    now = failure.get("failure_at") or _utc_now_iso()
+    command = failure.get("command")
+    exit_code = failure.get("exit_code")
+    stdout_text = failure.get("stdout")
+    stderr_text = failure.get("stderr")
 
-  conn.execute(
-    """
+    conn.execute(
+        """
     INSERT INTO failures (session_id, student_id, command, exit_code, stdout_text, stderr_text, failure_at, payload_json)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """,
-    (
-      session_id,
-      student_id,
-      command,
-      exit_code,
-      stdout_text,
-      stderr_text,
-      now,
-      json.dumps(failure, ensure_ascii=False),
-    ),
-  )
-  conn.commit()
-  return FailureSnapshot(
-    command=command,
-    exit_code=exit_code,
-    stdout_text=stdout_text,
-    stderr_text=stderr_text,
-    failure_at=now,
-    payload=failure,
-  )
+        (
+            session_id,
+            student_id,
+            command,
+            exit_code,
+            stdout_text,
+            stderr_text,
+            now,
+            json.dumps(failure, ensure_ascii=False),
+        ),
+    )
+    conn.commit()
+    return FailureSnapshot(
+        command=command,
+        exit_code=exit_code,
+        stdout_text=stdout_text,
+        stderr_text=stderr_text,
+        failure_at=now,
+        payload=failure,
+    )
 
 
-def latest_failure_for_student(conn: sqlite3.Connection, *, student_id: str) -> FailureSnapshot | None:
-  cur = conn.execute(
-    """
+def latest_failure_for_student(
+    conn: sqlite3.Connection, *, student_id: str
+) -> FailureSnapshot | None:
+    cur = conn.execute(
+        """
     SELECT command, exit_code, stdout_text, stderr_text, failure_at, payload_json
     FROM failures
     WHERE student_id=?
     ORDER BY failure_at DESC
     LIMIT 1
     """,
-    (student_id,),
-  )
-  row = cur.fetchone()
-  if not row:
-    return None
-  payload = json.loads(row["payload_json"])
-  return FailureSnapshot(
-    command=row["command"],
-    exit_code=row["exit_code"],
-    stdout_text=row["stdout_text"],
-    stderr_text=row["stderr_text"],
-    failure_at=row["failure_at"],
-    payload=payload,
-  )
+        (student_id,),
+    )
+    row = cur.fetchone()
+    if not row:
+        return None
+    payload = json.loads(row["payload_json"])
+    return FailureSnapshot(
+        command=row["command"],
+        exit_code=row["exit_code"],
+        stdout_text=row["stdout_text"],
+        stderr_text=row["stderr_text"],
+        failure_at=row["failure_at"],
+        payload=payload,
+    )
 
 
 def ingest_glass_session(
-  *,
-  conn: sqlite3.Connection,
-  session_id: str,
-  student_id: str,
-  payload: dict[str, Any],
+    *,
+    conn: sqlite3.Connection,
+    session_id: str,
+    student_id: str,
+    payload: dict[str, Any],
 ) -> dict[str, Any]:
-  """Persist session + evidence and optionally transition reward state."""
+    """Persist session + evidence and optionally transition reward state."""
 
-  upsert_session(conn=conn, session_id=session_id, student_id=student_id, payload=payload)
-
-  reward_id = payload.get("reward_id")
-  rid = str(reward_id) if reward_id else None
-
-  append_evidence(
-    conn=conn,
-    student_id=student_id,
-    session_id=session_id,
-    reward_id=rid,
-    evidence_type=EvidenceType.GLASS_SESSION_EVENT,
-    payload=payload,
-    provenance="glass_ingest",
-  )
-
-  transition: TransitionResult | None = None
-  if rid:
-    transition = apply_evidence_to_reward(
-      conn=conn,
-      reward_id=rid,
-      evidence_type=EvidenceType.GLASS_SESSION_EVENT,
-      ingest_payload=payload,
+    upsert_session(
+        conn=conn, session_id=session_id, student_id=student_id, payload=payload
     )
 
-  failure = payload.get("failure")
-  if isinstance(failure, dict):
-    record_failure(conn=conn, session_id=session_id, student_id=student_id, failure=failure)
+    reward_id = payload.get("reward_id")
+    rid = str(reward_id) if reward_id else None
+
     append_evidence(
-      conn=conn,
-      student_id=student_id,
-      session_id=session_id,
-      reward_id=rid,
-      evidence_type=EvidenceType.FAILURE_SNAPSHOT,
-      payload=failure,
-      provenance="glass_ingest",
-    )
-    if rid:
-      t2 = apply_evidence_to_reward(
         conn=conn,
+        student_id=student_id,
+        session_id=session_id,
         reward_id=rid,
-        evidence_type=EvidenceType.FAILURE_SNAPSHOT,
-        ingest_payload=payload,
-      )
-      transition = t2 or transition
-
-  if rid and ingest_bool(payload, "student_ack"):
-    # DEPRECATED: Use POST /v0/rewards/<reward_id>/acknowledge instead.
-    # This path kept for backward compatibility.
-    t3 = apply_evidence_to_reward(
-      conn=conn,
-      reward_id=rid,
-      evidence_type=EvidenceType.STUDENT_CONFIRMATION,
-      ingest_payload=payload,
+        evidence_type=EvidenceType.GLASS_SESSION_EVENT,
+        payload=payload,
+        provenance="glass_ingest",
     )
-    transition = t3 or transition
 
-  conn.commit()
-  out: dict[str, Any] = {"ok": True, "evidence_recorded": True}
-  if transition:
-    out["transition"] = {
-      "new_state": transition.new_state.value,
-      "new_outcome": transition.new_outcome.value,
-      "notes": list(transition.notes),
-    }
-  return out
+    transition: TransitionResult | None = None
+    if rid:
+        transition = apply_evidence_to_reward(
+            conn=conn,
+            reward_id=rid,
+            evidence_type=EvidenceType.GLASS_SESSION_EVENT,
+            ingest_payload=payload,
+        )
+
+    failure = payload.get("failure")
+    if isinstance(failure, dict):
+        record_failure(
+            conn=conn, session_id=session_id, student_id=student_id, failure=failure
+        )
+        append_evidence(
+            conn=conn,
+            student_id=student_id,
+            session_id=session_id,
+            reward_id=rid,
+            evidence_type=EvidenceType.FAILURE_SNAPSHOT,
+            payload=failure,
+            provenance="glass_ingest",
+        )
+        if rid:
+            t2 = apply_evidence_to_reward(
+                conn=conn,
+                reward_id=rid,
+                evidence_type=EvidenceType.FAILURE_SNAPSHOT,
+                ingest_payload=payload,
+            )
+            transition = t2 or transition
+
+    if rid and ingest_bool(payload, "student_ack"):
+        # DEPRECATED: Use POST /v0/rewards/<reward_id>/acknowledge instead.
+        # This path kept for backward compatibility.
+        t3 = apply_evidence_to_reward(
+            conn=conn,
+            reward_id=rid,
+            evidence_type=EvidenceType.STUDENT_CONFIRMATION,
+            ingest_payload=payload,
+        )
+        transition = t3 or transition
+
+    conn.commit()
+    out: dict[str, Any] = {"ok": True, "evidence_recorded": True}
+    if transition:
+        out["transition"] = {
+            "new_state": transition.new_state.value,
+            "new_outcome": transition.new_outcome.value,
+            "notes": list(transition.notes),
+        }
+    return out
 
 
 def upsert_reward_delivery(
-  *,
-  conn: sqlite3.Connection,
-  reward_id: str,
-  student_id: str,
-  stripe_event_id: str,
-  stripe_payment_intent_id: str | None,
-  payload: dict[str, Any],
+    *,
+    conn: sqlite3.Connection,
+    reward_id: str,
+    student_id: str,
+    stripe_event_id: str,
+    stripe_payment_intent_id: str | None,
+    payload: dict[str, Any],
 ) -> None:
-  """Legacy mirror: keep rewards table updated for transitional readers."""
+    """Legacy mirror: keep rewards table updated for transitional readers."""
 
-  now = _utc_now_iso()
-  conn.execute(
-    """
+    now = _utc_now_iso()
+    conn.execute(
+        """
     INSERT INTO rewards (reward_id, student_id, delivered, delivered_at, stripe_event_id, stripe_payment_intent_id, last_payload_json)
     VALUES (?, ?, 1, ?, ?, ?, ?)
     ON CONFLICT(reward_id) DO UPDATE SET
@@ -619,334 +694,572 @@ def upsert_reward_delivery(
       stripe_payment_intent_id=excluded.stripe_payment_intent_id,
       last_payload_json=excluded.last_payload_json
     """,
-    (
-      reward_id,
-      student_id,
-      now,
-      stripe_event_id,
-      stripe_payment_intent_id,
-      json.dumps(payload, ensure_ascii=False),
-    ),
-  )
-  conn.commit()
+        (
+            reward_id,
+            student_id,
+            now,
+            stripe_event_id,
+            stripe_payment_intent_id,
+            json.dumps(payload, ensure_ascii=False),
+        ),
+    )
+    conn.commit()
 
 
 def process_stripe_payment_intent_succeeded(
-  *,
-  conn: sqlite3.Connection,
-  stripe_event_id: str,
-  stripe_payment_intent_id: str | None,
-  reward_id: str,
-  student_id: str,
-  raw_event: dict[str, Any],
+    *,
+    conn: sqlite3.Connection,
+    stripe_event_id: str,
+    stripe_payment_intent_id: str | None,
+    reward_id: str,
+    student_id: str,
+    raw_event: dict[str, Any],
 ) -> dict[str, Any]:
-  """Idempotent payment confirmation row + reward transition. Returns summary for HTTP layer."""
+    """Idempotent payment confirmation row + reward transition. Returns summary for HTTP layer."""
 
-  now = _utc_now_iso()
-  try:
-    conn.execute(
-      """
+    now = _utc_now_iso()
+    try:
+        conn.execute(
+            """
       INSERT INTO payment_confirmations (
         stripe_event_id, stripe_payment_intent_id, reward_id, student_id,
         raw_event_json, status, applied_at, provenance, created_at
       ) VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?)
       """,
-      (
-        stripe_event_id,
-        stripe_payment_intent_id,
-        reward_id,
-        student_id,
-        json.dumps(raw_event, ensure_ascii=False),
-        PaymentConfirmationStatus.RECEIVED.value,
-        "stripe_webhook",
-        now,
-      ),
-    )
-  except sqlite3.IntegrityError:
-    conn.rollback()
-    return {"duplicate": True, "stripe_event_id": stripe_event_id}
+            (
+                stripe_event_id,
+                stripe_payment_intent_id,
+                reward_id,
+                student_id,
+                json.dumps(raw_event, ensure_ascii=False),
+                PaymentConfirmationStatus.RECEIVED.value,
+                "stripe_webhook",
+                now,
+            ),
+        )
+    except sqlite3.IntegrityError:
+        conn.rollback()
+        return {"duplicate": True, "stripe_event_id": stripe_event_id}
 
-  row = _load_reward_row(conn, reward_id)
-  if not row:
-    insert_support_signal(
-      conn=conn,
-      kind="stripe_reward_missing",
-      payload={"reward_id": reward_id, "student_id": student_id, "stripe_event_id": stripe_event_id},
-    )
-    conn.execute(
-      """
+    row = _load_reward_row(conn, reward_id)
+    if not row:
+        insert_support_signal(
+            conn=conn,
+            kind="stripe_reward_missing",
+            payload={
+                "reward_id": reward_id,
+                "student_id": student_id,
+                "stripe_event_id": stripe_event_id,
+            },
+        )
+        conn.execute(
+            """
       UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
       """,
-      (PaymentConfirmationStatus.NOT_APPLIED_MISMATCH.value, now, stripe_event_id),
-    )
-    conn.commit()
-    return {"applied": False, "reason": "reward_missing", "stripe_event_id": stripe_event_id}
+            (
+                PaymentConfirmationStatus.NOT_APPLIED_MISMATCH.value,
+                now,
+                stripe_event_id,
+            ),
+        )
+        conn.commit()
+        return {
+            "applied": False,
+            "reason": "reward_missing",
+            "stripe_event_id": stripe_event_id,
+        }
 
-  ledger_student = str(row["student_id"])
-  if ledger_student != student_id:
-    insert_support_signal(
-      conn=conn,
-      kind="stripe_student_mismatch",
-      payload={
-        "reward_id": reward_id,
-        "metadata_student_id": student_id,
-        "ledger_student_id": ledger_student,
+    ledger_student = str(row["student_id"])
+    if ledger_student != student_id:
+        insert_support_signal(
+            conn=conn,
+            kind="stripe_student_mismatch",
+            payload={
+                "reward_id": reward_id,
+                "metadata_student_id": student_id,
+                "ledger_student_id": ledger_student,
+                "stripe_event_id": stripe_event_id,
+            },
+        )
+        conn.execute(
+            """
+      UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
+      """,
+            (
+                PaymentConfirmationStatus.NOT_APPLIED_MISMATCH.value,
+                now,
+                stripe_event_id,
+            ),
+        )
+        conn.commit()
+        return {
+            "applied": False,
+            "reason": "student_mismatch",
+            "stripe_event_id": stripe_event_id,
+        }
+
+    current = RewardState(str(row["state"]))
+    outcome = OutcomeState(str(row["outcome_state"]))
+    proposal = next_state_after_stripe_payment(
+        current=current,
+        outcome=outcome,
+        reward_student_id=ledger_student,
+        payment_student_id=student_id,
+    )
+    if proposal is None:
+        insert_support_signal(
+            conn=conn,
+            kind="stripe_student_mismatch",
+            payload={"reward_id": reward_id, "stripe_event_id": stripe_event_id},
+        )
+        conn.execute(
+            """
+      UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
+      """,
+            (
+                PaymentConfirmationStatus.NOT_APPLIED_MISMATCH.value,
+                now,
+                stripe_event_id,
+            ),
+        )
+        conn.commit()
+        return {
+            "applied": False,
+            "reason": "student_mismatch",
+            "stripe_event_id": stripe_event_id,
+        }
+
+    became_confirmed = (
+        proposal.new_state is RewardState.PAYMENT_CONFIRMED
+        and current
+        in (
+            RewardState.EARNED,
+            RewardState.PAYMENT_PENDING,
+        )
+    )
+
+    if proposal.new_state is RewardState.PAYMENT_CONFIRMED:
+        _apply_transition(conn, reward_id=reward_id, result=proposal)
+        pay_status = (
+            PaymentConfirmationStatus.APPLIED.value
+            if became_confirmed
+            else PaymentConfirmationStatus.DUPLICATE_IGNORED.value
+        )
+        conn.execute(
+            """
+      UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
+      """,
+            (pay_status, now, stripe_event_id),
+        )
+        if became_confirmed:
+            upsert_reward_delivery(
+                conn=conn,
+                reward_id=reward_id,
+                student_id=ledger_student,
+                stripe_event_id=stripe_event_id,
+                stripe_payment_intent_id=stripe_payment_intent_id,
+                payload=raw_event,
+            )
+    else:
+        conn.execute(
+            """
+      UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
+      """,
+            (
+                PaymentConfirmationStatus.NOT_APPLIED_MISMATCH.value,
+                now,
+                stripe_event_id,
+            ),
+        )
+    conn.commit()
+    return {
+        "applied": became_confirmed,
         "stripe_event_id": stripe_event_id,
-      },
-    )
-    conn.execute(
-      """
-      UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
-      """,
-      (PaymentConfirmationStatus.NOT_APPLIED_MISMATCH.value, now, stripe_event_id),
-    )
-    conn.commit()
-    return {"applied": False, "reason": "student_mismatch", "stripe_event_id": stripe_event_id}
-
-  current = RewardState(str(row["state"]))
-  outcome = OutcomeState(str(row["outcome_state"]))
-  proposal = next_state_after_stripe_payment(
-    current=current,
-    outcome=outcome,
-    reward_student_id=ledger_student,
-    payment_student_id=student_id,
-  )
-  if proposal is None:
-    insert_support_signal(
-      conn=conn,
-      kind="stripe_student_mismatch",
-      payload={"reward_id": reward_id, "stripe_event_id": stripe_event_id},
-    )
-    conn.execute(
-      """
-      UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
-      """,
-      (PaymentConfirmationStatus.NOT_APPLIED_MISMATCH.value, now, stripe_event_id),
-    )
-    conn.commit()
-    return {"applied": False, "reason": "student_mismatch", "stripe_event_id": stripe_event_id}
-
-  became_confirmed = proposal.new_state is RewardState.PAYMENT_CONFIRMED and current in (
-    RewardState.EARNED,
-    RewardState.PAYMENT_PENDING,
-  )
-
-  if proposal.new_state is RewardState.PAYMENT_CONFIRMED:
-    _apply_transition(conn, reward_id=reward_id, result=proposal)
-    pay_status = (
-      PaymentConfirmationStatus.APPLIED.value
-      if became_confirmed
-      else PaymentConfirmationStatus.DUPLICATE_IGNORED.value
-    )
-    conn.execute(
-      """
-      UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
-      """,
-      (pay_status, now, stripe_event_id),
-    )
-    if became_confirmed:
-      upsert_reward_delivery(
-        conn=conn,
-        reward_id=reward_id,
-        student_id=ledger_student,
-        stripe_event_id=stripe_event_id,
-        stripe_payment_intent_id=stripe_payment_intent_id,
-        payload=raw_event,
-      )
-  else:
-    conn.execute(
-      """
-      UPDATE payment_confirmations SET status=?, applied_at=? WHERE stripe_event_id=?
-      """,
-      (PaymentConfirmationStatus.NOT_APPLIED_MISMATCH.value, now, stripe_event_id),
-    )
-  conn.commit()
-  return {
-    "applied": became_confirmed,
-    "stripe_event_id": stripe_event_id,
-    "new_state": proposal.new_state.value,
-    "notes": list(proposal.notes),
-  }
+        "new_state": proposal.new_state.value,
+        "notes": list(proposal.notes),
+    }
 
 
-def get_reward_state(conn: sqlite3.Connection, *, reward_id: str) -> dict[str, Any] | None:
-  row = _load_reward_row(conn, reward_id)
-  if not row:
-    return None
+def get_reward_state(
+    conn: sqlite3.Connection, *, reward_id: str
+) -> dict[str, Any] | None:
+    row = _load_reward_row(conn, reward_id)
+    if not row:
+        return None
 
-  evidence = conn.execute(
-    """
+    evidence = conn.execute(
+        """
     SELECT id, evidence_type, provenance, created_at, payload_json
     FROM evidence_ledger
     WHERE reward_id=?
     ORDER BY id ASC
     """,
-    (reward_id,),
-  ).fetchall()
+        (reward_id,),
+    ).fetchall()
 
-  evidence_out: list[dict[str, Any]] = []
-  for er in evidence:
-    evidence_out.append(
-      {
-        "id": er["id"],
-        "evidence_type": er["evidence_type"],
-        "provenance": er["provenance"],
-        "created_at": er["created_at"],
-        "payload": json.loads(er["payload_json"]) if er["payload_json"] else None,
-      }
-    )
+    evidence_out: list[dict[str, Any]] = []
+    for er in evidence:
+        evidence_out.append(
+            {
+                "id": er["id"],
+                "evidence_type": er["evidence_type"],
+                "provenance": er["provenance"],
+                "created_at": er["created_at"],
+                "payload": json.loads(er["payload_json"])
+                if er["payload_json"]
+                else None,
+            }
+        )
 
-  payments = conn.execute(
-    """
+    payments = conn.execute(
+        """
     SELECT stripe_event_id, status, created_at, applied_at
     FROM payment_confirmations
     WHERE reward_id=?
     ORDER BY id ASC
     """,
-    (reward_id,),
-  ).fetchall()
+        (reward_id,),
+    ).fetchall()
 
-  legacy = conn.execute("SELECT * FROM rewards WHERE reward_id=?", (reward_id,)).fetchone()
+    legacy = conn.execute(
+        "SELECT * FROM rewards WHERE reward_id=?", (reward_id,)
+    ).fetchone()
 
-  return {
-    "reward_id": row["reward_id"],
-    "student_id": row["student_id"],
-    "contract_id": row["contract_id"],
-    "state": row["state"],
-    "reward_token_amount": int(row["reward_token_amount"]),
-    "outcome_state": row["outcome_state"],
-    "student_acknowledged_at": row["student_acknowledged_at"],
-    "review_requested_at": row["review_requested_at"],
-    "updated_at": row["updated_at"],
-    "notes": json.loads(row["notes_json"]) if row["notes_json"] else None,
-    "evidence": evidence_out,
-    "payment_confirmations": [dict(pr) for pr in payments],
-    "legacy_rewards_row": dict(legacy) if legacy else None,
-  }
+    return {
+        "reward_id": row["reward_id"],
+        "student_id": row["student_id"],
+        "contract_id": row["contract_id"],
+        "state": row["state"],
+        "reward_token_amount": int(row["reward_token_amount"]),
+        "reward_token": json.loads(row["reward_token_json"])
+        if row["reward_token_json"]
+        else None,
+        "outcome_state": row["outcome_state"],
+        "student_acknowledged_at": row["student_acknowledged_at"],
+        "review_requested_at": row["review_requested_at"],
+        "updated_at": row["updated_at"],
+        "notes": json.loads(row["notes_json"]) if row["notes_json"] else None,
+        "evidence": evidence_out,
+        "payment_confirmations": [dict(pr) for pr in payments],
+        "legacy_rewards_row": dict(legacy) if legacy else None,
+    }
 
 
 def acknowledge_reward(
-  *,
-  conn: sqlite3.Connection,
-  reward_id: str,
-  student_id: str,
-  notes: str | None = None,
+    *,
+    conn: sqlite3.Connection,
+    reward_id: str,
+    student_id: str,
+    notes: str | None = None,
 ) -> dict[str, Any]:
-  """Apply student acknowledgement evidence and transition reward state.
-  
-  Returns:
-    dict with "ok", "error", "current_state", or "transition" keys.
-  """
-  row = _load_reward_row(conn, reward_id)
-  if not row:
-    return {"error": "reward_not_found"}
-  
-  current_state = RewardState(str(row["state"]))
-  ledger_student_id = str(row["student_id"])
-  
-  # Always validate student_id first
-  if ledger_student_id != student_id:
-    insert_support_signal(
-      conn=conn,
-      kind="ack_student_mismatch",
-      payload={
-        "reward_id": reward_id,
-        "request_student_id": student_id,
-        "ledger_student_id": ledger_student_id,
-      },
+    """Apply student acknowledgement evidence and transition reward state.
+
+    Returns:
+      dict with "ok", "error", "current_state", or "transition" keys.
+    """
+    row = _load_reward_row(conn, reward_id)
+    if not row:
+        return {"error": "reward_not_found"}
+
+    current_state = RewardState(str(row["state"]))
+    ledger_student_id = str(row["student_id"])
+
+    # Always validate student_id first
+    if ledger_student_id != student_id:
+        insert_support_signal(
+            conn=conn,
+            kind="ack_student_mismatch",
+            payload={
+                "reward_id": reward_id,
+                "request_student_id": student_id,
+                "ledger_student_id": ledger_student_id,
+            },
+        )
+        return {
+            "error": "ack_student_mismatch",
+            "current_state": current_state.value,
+        }
+
+    # Idempotent: already acknowledged is ok
+    if current_state is RewardState.STUDENT_ACKNOWLEDGED:
+        return {"ok": True, "already_acknowledged": True}
+
+    if current_state is not RewardState.PAYMENT_CONFIRMED:
+        return {
+            "error": "ack_requires_payment_confirmed",
+            "current_state": current_state.value,
+        }
+
+    append_evidence(
+        conn=conn,
+        student_id=student_id,
+        session_id=None,
+        reward_id=reward_id,
+        evidence_type=EvidenceType.STUDENT_CONFIRMATION,
+        payload={"notes": notes} if notes else {},
+        provenance="ack_api",
     )
-    return {
-      "error": "ack_student_mismatch",
-      "current_state": current_state.value,
-    }
-  
-  # Idempotent: already acknowledged is ok
-  if current_state is RewardState.STUDENT_ACKNOWLEDGED:
-    return {"ok": True, "already_acknowledged": True}
-  
-  if current_state is not RewardState.PAYMENT_CONFIRMED:
-    return {
-      "error": "ack_requires_payment_confirmed",
-      "current_state": current_state.value,
-    }
-  
-  append_evidence(
-    conn=conn,
-    student_id=student_id,
-    session_id=None,
-    reward_id=reward_id,
-    evidence_type=EvidenceType.STUDENT_CONFIRMATION,
-    payload={"notes": notes} if notes else {},
-    provenance="ack_api",
-  )
-  
-  transition = apply_evidence_to_reward(
-    conn=conn,
-    reward_id=reward_id,
-    evidence_type=EvidenceType.STUDENT_CONFIRMATION,
-    ingest_payload={"student_ack": True, "notes": notes} if notes else {"student_ack": True},
-  )
-  
-  conn.commit()
-  
-  result: dict[str, Any] = {"ok": True}
-  if transition:
-    result["transition"] = {
-      "new_state": transition.new_state.value,
-      "new_outcome": transition.new_outcome.value,
-      "notes": list(transition.notes),
-    }
-  return result
+
+    transition = apply_evidence_to_reward(
+        conn=conn,
+        reward_id=reward_id,
+        evidence_type=EvidenceType.STUDENT_CONFIRMATION,
+        ingest_payload={"student_ack": True, "notes": notes}
+        if notes
+        else {"student_ack": True},
+    )
+
+    conn.commit()
+
+    result: dict[str, Any] = {"ok": True}
+    if transition:
+        result["transition"] = {
+            "new_state": transition.new_state.value,
+            "new_outcome": transition.new_outcome.value,
+            "notes": list(transition.notes),
+        }
+    return result
 
 
 def create_nudge(
-  *,
-  conn: sqlite3.Connection,
-  student_id: str,
-  reward_id: str | None,
-  failure_command: str | None,
-  suggestion: str,
+    *,
+    conn: sqlite3.Connection,
+    student_id: str,
+    reward_id: str | None,
+    failure_command: str | None,
+    suggestion: str,
 ) -> None:
-  now = _utc_now_iso()
-  conn.execute(
-    """
+    now = _utc_now_iso()
+    conn.execute(
+        """
     INSERT INTO nudges (student_id, reward_id, created_at, failure_command, suggestion)
     VALUES (?, ?, ?, ?, ?)
     """,
-    (student_id, reward_id, now, failure_command, suggestion),
-  )
-  conn.commit()
+        (student_id, reward_id, now, failure_command, suggestion),
+    )
+    conn.commit()
 
 
 def get_outcome_summary(
-  conn: sqlite3.Connection,
-  *,
-  student_id: str | None = None,
+    conn: sqlite3.Connection,
+    *,
+    student_id: str | None = None,
 ) -> dict[str, Any]:
-  where = ""
-  params: list[Any] = []
-  if student_id:
-    where = "WHERE student_id=?"
-    params.append(student_id)
+    where = ""
+    params: list[Any] = []
+    if student_id:
+        where = "WHERE student_id=?"
+        params.append(student_id)
 
-  cur = conn.execute(
-    f"SELECT state, COUNT(*) as cnt FROM reward_ledger {where} GROUP BY state",
-    params,
-  )
-  by_state: dict[str, int] = {}
-  total = 0
-  for row in cur.fetchall():
-    by_state[row["state"]] = row["cnt"]
-    total += row["cnt"]
+    cur = conn.execute(
+        f"SELECT state, COUNT(*) as cnt FROM reward_ledger {where} GROUP BY state",
+        params,
+    )
+    by_state: dict[str, int] = {}
+    total = 0
+    for row in cur.fetchall():
+        by_state[row["state"]] = row["cnt"]
+        total += row["cnt"]
 
-  cur2 = conn.execute(
-    f"SELECT COUNT(DISTINCT student_id) as n FROM reward_ledger {where}",
-    params,
-  )
-  student_count = cur2.fetchone()["n"]
+    cur2 = conn.execute(
+        f"SELECT COUNT(DISTINCT student_id) as n FROM reward_ledger {where}",
+        params,
+    )
+    student_count = cur2.fetchone()["n"]
 
-  return {
-    "total_rewards": total,
-    "by_state": by_state,
-    "student_count": student_count,
-  }
+    return {
+        "total_rewards": total,
+        "by_state": by_state,
+        "student_count": student_count,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Epistemic token helpers
+# ---------------------------------------------------------------------------
+
+
+def _reward_token_to_dict(token: RewardToken) -> dict[str, Any]:
+    """Serialize a RewardToken to a JSON-safe dict."""
+    return {
+        "insight_tier": token.insight_tier.value,
+        "base_bank_depth": token.base_bank_depth,
+        "inferential_richness": token.inferential_richness,
+        "trend_position": token.trend_position,
+        "rarity_score": token.rarity_score,
+        "issuance_trigger": token.issuance_trigger,
+        "issued_at": token.issued_at,
+        "amount": token.amount,
+    }
+
+
+def _reward_token_from_dict(d: dict[str, Any]) -> RewardToken:
+    """Deserialize a RewardToken from a stored dict."""
+    return RewardToken(
+        insight_tier=InsightTier(d["insight_tier"]),
+        base_bank_depth=int(d["base_bank_depth"]),
+        inferential_richness=float(d["inferential_richness"]),
+        trend_position=float(d["trend_position"]),
+        rarity_score=float(d["rarity_score"]),
+        issuance_trigger=str(d["issuance_trigger"]),
+        issued_at=str(d["issued_at"]),
+    )
+
+
+def issue_reward_token(
+    *,
+    conn: sqlite3.Connection,
+    reward_id: str,
+    token: RewardToken,
+) -> dict[str, Any]:
+    """Stamp an epistemic RewardToken onto an existing reward row.
+
+    Idempotent by reward_id: re-issuing overwrites the previous token.
+    Updates reward_token_amount to the tier-derived backward-compat integer.
+    Returns the serialized token dict on success, or an error key.
+    """
+    row = _load_reward_row(conn, reward_id)
+    if not row:
+        return {"error": "reward_not_found"}
+
+    token_dict = _reward_token_to_dict(token)
+    conn.execute(
+        """
+        UPDATE reward_ledger
+        SET reward_token_json=?, reward_token_amount=?, updated_at=?
+        WHERE reward_id=?
+        """,
+        (
+            json.dumps(token_dict, ensure_ascii=False),
+            token.amount,
+            _utc_now_iso(),
+            reward_id,
+        ),
+    )
+    conn.commit()
+    return {"ok": True, "reward_id": reward_id, "token": token_dict}
+
+
+# ---------------------------------------------------------------------------
+# Exchange request helpers
+# ---------------------------------------------------------------------------
+
+
+def _exchange_result_to_dict(result: ExchangeResult) -> dict[str, Any]:
+    """Serialize an ExchangeResult to a JSON-safe dict for storage."""
+    return {
+        "request_id": result.request_id,
+        "approved": result.approved,
+        "evaluated_at": result.evaluated_at,
+        "final_approved_scope": result.final_approved_scope,
+        "layers": [
+            {
+                "layer": lr.layer.value,
+                "passed": lr.passed,
+                "approved_scope": lr.approved_scope,
+                "blocked_keys": list(lr.blocked_keys),
+                "notes": list(lr.notes),
+            }
+            for lr in result.layers
+        ],
+    }
+
+
+def store_exchange_request(
+    *,
+    conn: sqlite3.Connection,
+    request: ExchangeRequest,
+    result: ExchangeResult,
+    constraint_config_snapshot: dict[str, Any],
+) -> dict[str, Any]:
+    """Persist an exchange request and its evaluation result.
+
+    ON CONFLICT(request_id) DO NOTHING — idempotent by request_id.
+    Returns the persisted record summary.
+    """
+    result_dict = _exchange_result_to_dict(result)
+    try:
+        conn.execute(
+            """
+            INSERT INTO exchange_requests (
+                request_id, reward_id, student_id, requested_scope_json,
+                constraint_config_json, constraint_result_json, approved, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(request_id) DO NOTHING
+            """,
+            (
+                request.request_id,
+                request.reward_id,
+                request.student_id,
+                json.dumps(request.requested_scope, ensure_ascii=False),
+                json.dumps(constraint_config_snapshot, ensure_ascii=False),
+                json.dumps(result_dict, ensure_ascii=False),
+                1 if result.approved else 0,
+                _utc_now_iso(),
+            ),
+        )
+    except sqlite3.IntegrityError:
+        return {"duplicate": True, "request_id": request.request_id}
+    conn.commit()
+    return {
+        "ok": True,
+        "request_id": request.request_id,
+        "reward_id": request.reward_id,
+        "approved": result.approved,
+        "final_approved_scope": result.final_approved_scope,
+        "layers": result_dict["layers"],
+    }
+
+
+def list_exchange_requests(
+    *,
+    conn: sqlite3.Connection,
+    student_id: str | None = None,
+    reward_id: str | None = None,
+    approved: bool | None = None,
+    limit: int = 50,
+) -> list[dict[str, Any]]:
+    """List exchange requests with optional filters."""
+    where_clauses: list[str] = []
+    params: list[Any] = []
+
+    if student_id is not None:
+        where_clauses.append("student_id=?")
+        params.append(student_id)
+
+    if reward_id is not None:
+        where_clauses.append("reward_id=?")
+        params.append(reward_id)
+
+    if approved is not None:
+        where_clauses.append("approved=?")
+        params.append(1 if approved else 0)
+
+    where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
+    params.append(limit)
+
+    rows = conn.execute(
+        f"""
+        SELECT id, request_id, reward_id, student_id,
+               requested_scope_json, constraint_result_json, approved, created_at
+        FROM exchange_requests
+        WHERE {where_sql}
+        ORDER BY created_at DESC
+        LIMIT ?
+        """,
+        params,
+    ).fetchall()
+
+    return [
+        {
+            "id": row["id"],
+            "request_id": row["request_id"],
+            "reward_id": row["reward_id"],
+            "student_id": row["student_id"],
+            "requested_scope": json.loads(row["requested_scope_json"]),
+            "constraint_result": json.loads(row["constraint_result_json"]),
+            "approved": bool(row["approved"]),
+            "created_at": row["created_at"],
+        }
+        for row in rows
+    ]
