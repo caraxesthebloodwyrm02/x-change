@@ -1,14 +1,14 @@
 {
   "proof_type": "circuit_close_gate2",
-  "generated_at": "2026-05-06T21:24:34.409675+00:00",
+  "generated_at": "2026-05-06T22:27:06.791474+00:00",
   "reward": {
     "reward_id": "reward-circuit-close-001",
     "student_id": "prince",
     "contract_id": "psc-circuit-close-001",
     "state": "student_acknowledged",
-    "reward_token_amount": 1,
+    "reward_token_amount": 3,
     "outcome_state": "acknowledged",
-    "updated_at": "2026-05-06T21:24:23.701984+00:00",
+    "updated_at": "2026-05-06T21:30:03.861759+00:00",
     "transition_log": [
       {
         "at": "2026-05-06T05:59:53.998903+00:00",
@@ -108,7 +108,7 @@
   "verification": {
     "live_evidence": true,
     "staleness_bypassed": false,
-    "policy_transition": false,
+    "policy_transition": true,
     "transition_reason": [
       "contract_satisfied: drafted -> earned"
     ]

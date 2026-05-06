@@ -1,6 +1,6 @@
 # Circuit Close — Proof Artifact
 
-Generated: 2026-05-07T00:00:00+00:00 (final — scope layer active)
+Generated: 2026-05-06T22:27:06.791474+00:00
 
 ## Trust Signal
 
@@ -17,12 +17,8 @@ Generated: 2026-05-07T00:00:00+00:00 (final — scope layer active)
 | Recipient | `prince` |
 | Service contract | `psc-circuit-close-001` |
 | Token amount | 3 |
-| Token insight tier | `structural` |
-| Token rarity band | `rare` |
-| Issuance trigger | `contract_close` |
-| Token issued at | 2026-05-06T21:30:03Z |
 | Delivery outcome | acknowledged |
-| Last updated | 2026-05-06T21:24:23.701984+00:00 |
+| Last updated | 2026-05-06T21:30:03.861759+00:00 |
 
 ## Transition History
 
@@ -54,25 +50,12 @@ Total rewards: 1
 
 - `ACKNOWLEDGED`: 1
 
-## Token Scope
-
-| Field | Value |
-|-------|-------|
-| Insight tier | `structural` |
-| Rarity band | `rare` |
-| Issuance trigger | `contract_close` |
-| Evidence provenance | `glass_ingest` |
-| Evidence type | `glass_session_event` |
-| Source system | Glass |
-| Produces transitions | yes |
-
 ## Verification Checklist
 
 - [x] Live evidence (non-demo session)
 - [x] No staleness bypass (default 6h freshness gate)
-- [x] Policy transition occurred — full 4-step lifecycle: `drafted → earned → payment_pending → payment_confirmed → student_acknowledged`
-- [x] Token issued: 3 units, structural tier, rare rarity band
-- [x] Scope resolved: glass_ingest provenance, organic emergence confirmed
+- [x] Policy satisfied (earned or later lifecycle stage)
+- Transition reason: contract_satisfied: drafted -> earned
 
 ## Lifecycle Reference
 
