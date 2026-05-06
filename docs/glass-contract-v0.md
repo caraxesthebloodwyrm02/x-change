@@ -2,7 +2,7 @@
 
 **Contract version:** `glass-contract-v0`
 **Tied to:** `policy-core-v0`
-**Status:** Interface specification. No live integration exists yet.
+**Status:** Interface specification. Spike complete — see `INTEGRATION-SPIKE.md` for typed payload trace, failure paths, operator dev loop, and Phase 4 tickets. No live automation yet (passive Glass tooling decision documented in `INTEGRATION-SPIKE.md §3`).
 
 ---
 
