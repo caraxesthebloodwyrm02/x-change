@@ -88,3 +88,8 @@ scripts/deploy-managed-agent.sh <agent-name>
 ```
 
 Use upstream `managed-agent-cookbooks/<agent>/` for `agent.yaml`, subagent layout, and security notes before deploying in your environment.
+
+## See also
+
+- [`evaluation/README.md`](evaluation/README.md) — dual audits (x-change + FSI), complement matrix, combo trial scores, `fsi-asset-index.json`
+- [`glass-xchange-fsi-release-audit.md`](glass-xchange-fsi-release-audit.md) — Glass on the ingest pipeline, audit vs installed FSI agents, relevancy scoring with Glass included

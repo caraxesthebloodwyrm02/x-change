@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluation>
+  <!-- Read-only / tool-discovery checks for x-change MCP (docs/mcp-server.md). -->
+  <qa_pair>
+    <question>What is the FastMCP server name registered in x-change’s stdio MCP module?</question>
+    <answer>xchange_mcp</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Which environment variable selects the SQLite file for x-change MCP tools?</question>
+    <answer>XCHANGE_DB_PATH</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the default database filename if XCHANGE_DB_PATH is unset?</question>
+    <answer>xchange.sqlite</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Which MCP tool lists rows from the support_signals exception queue?</question>
+    <answer>xchange_list_support_signals</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Which MCP tool returns aggregate reward_ledger counts grouped by lifecycle state?</question>
+    <answer>xchange_get_outcome_summary</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Which MCP tool returns one reward’s ledger row plus linked evidence and payment summaries?</question>
+    <answer>xchange_get_reward_state</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What JSON key does read_reward_state use when reward_id is missing from the ledger?</question>
+    <answer>error</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What string value pairs with the error key when a reward_id is not found?</question>
+    <answer>reward_not_found</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Which payment_confirmations field is intentionally omitted from xchange_list_payment_confirmations rows?</question>
+    <answer>raw_event_json</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the maximum page size (limit) enforced by mcp_read.clamp_limit?</question>
+    <answer>100</answer>
+  </qa_pair>
+</evaluation>

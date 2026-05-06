@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What is x-change
 
-A reward-delivery service that accepts session telemetry (Glass sessions with failure snapshots), processes Stripe `payment_intent.succeeded` webhooks, and generates nudge records for students. Pure Python, stdlib `http.server`, SQLite storage, zero external dependencies.
+A reward-delivery service that accepts session telemetry (Glass sessions with failure snapshots), processes Stripe `payment_intent.succeeded` webhooks, and generates nudge records for students. Pure Python, stdlib `http.server`, SQLite storage; **no PyPI deps on the HTTP server**. Optional read-only MCP over SQLite uses uv dependency group `mcp` (`docs/mcp-server.md`).
 
 ## Run / Test / Lint
 
@@ -19,8 +19,15 @@ PYTHONPATH="$PWD/src" uv run python -m xchange
 # Run tests
 PYTHONPATH="$PWD/src" uv run python -m unittest discover -s tests -v
 
+# MCP stdio server (read-only ledger tools; installs dependency group `mcp`)
+export XCHANGE_DB_PATH="$PWD/xchange.sqlite"
+PYTHONPATH="$PWD/src" uv run --group mcp python -m xchange.xchange_mcp
+
 # Run a single test
 PYTHONPATH="$PWD/src" uv run python -m unittest tests.test_stripe_signature -v
+
+# Read-only Stripe ↔ ledger drift check (SQLite only; no Stripe API)
+XCHANGE_DB_PATH="$PWD/xchange.sqlite" uv run python scripts/stripe_ledger_verify.py --student <student_id>
 ```
 
 No build step. No linter configured yet. `pyproject.toml` + `uv.lock` are intentional for reproducible local execution; PYTHONPATH must include `src/` for direct module runs.

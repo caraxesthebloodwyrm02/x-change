@@ -4,6 +4,10 @@ Canonical **policy**: [`docs/policy-core-v0.md`](docs/policy-core-v0.md) — `Pr
 
 **Anthropic Financial Services (Claude plugins / agents):** not a Python dependency — install via Claude Code or Cowork and wire MCP per upstream. See [`docs/anthropic-financial-services-integration.md`](docs/anthropic-financial-services-integration.md) and run `./scripts/bootstrap-financial-services-ref.sh` for a local reference clone.
 
+**Post-integration evaluation (audits + complement matrix + combo trial):** [`docs/evaluation/README.md`](docs/evaluation/README.md) — executive verdict: [`docs/evaluation/assessment.md`](docs/evaluation/assessment.md).
+
+**Operator MCP (read-only):** [`docs/mcp-server.md`](docs/mcp-server.md) — stdio MCP over SQLite (`uv run --group mcp python -m xchange.xchange_mcp`).
+
 ## What this does (v0)
 
 1. **`POST /v0/rewards/draft`** (auth) — create a `drafted` reward on the **reward ledger**.

@@ -4,7 +4,7 @@
 This document outlines the strategic roadmap to evolve `x-change` from a deterministic, rule-based webhook receiver into an AI-augmented financial operations system. It aligns the existing `x-change` architecture with the **Anthropic Finance Agents** paradigm, specifically focusing on back-office automation (Support Signal Auditing and Ledger Reconciliation) via the Model Context Protocol (MCP).
 
 ## 2. The Anthropic Finance Agents Paradigm
-Anthropic's Finance Agents framework introduces ready-to-run agent templates for time-consuming financial tasks (e.g., General Ledger Reconciler, KYC Screener, Month-End Closer). 
+Anthropic's Finance Agents framework introduces ready-to-run agent templates for time-consuming financial tasks (e.g., General Ledger Reconciler, KYC Screener, Month-End Closer).
 
 The core architecture of this paradigm consists of three pillars:
 1.  **Skills:** Strict instructions and domain knowledge for specific financial tasks.
@@ -33,11 +33,11 @@ To close this gap, we must systematically upgrade `x-change` by building an MCP 
 
 ### Phase 1: Establish the MCP Boundary (x-change MCP Server)
 To allow AI agents to interact with the system, `x-change` must become an MCP App.
-1.  **Wrap the Storage Layer:** Create an MCP server adapter (e.g., `src/xchange/mcp_server.py`) alongside the HTTP server.
-2.  **Expose Read Tools:** Implement tools allowing agents to query state without modifying it.
-    *   `get_support_signals()`
-    *   `query_reward_ledger(state="payment_pending")`
-    *   `get_payment_confirmations()`
+
+**Status (partial):** Read-only stdio MCP is implemented as `src/xchange/xchange_mcp.py` with helpers in `src/xchange/mcp_read.py`. See [`mcp-server.md`](mcp-server.md) for tools and Cursor wiring. Governed write tools remain future work.
+
+1.  **Wrap the Storage Layer:** MCP adapter runs alongside (not inside) the HTTP server; optional uv dependency group `mcp`.
+2.  **Expose Read Tools:** Implemented tools (prefixed `xchange_`) mirror operator visibility: support signals, outcome summary, reward bundle, exchange requests, payment confirmation summaries (no raw Stripe JSON).
 3.  **Expose Governed Write Tools:** Create a tool to resolve anomalies.
     *   `resolve_support_signal(signal_id, resolution_notes)`
     *   *Constraint:* This tool must require human-in-the-loop confirmation before the MCP server executes the database write.
@@ -49,7 +49,7 @@ The AI needs an omniscient view of both internal state (`x-change`) and external
 
 ### Phase 3: Build the "Support Signal Auditor" Agent
 Package the logic into a Claude Code Plugin or Managed Agent Cookbook.
-1.  **Define the Skill (`SKILL.md`):** 
+1.  **Define the Skill (`SKILL.md`):**
     *   Instruct the agent to routinely poll the `x-change` MCP for open support signals.
     *   When a signal indicates a metadata mismatch, extract the provided `payment_intent` ID.
     *   Query the Stripe MCP to retrieve the raw webhook payload that Stripe originally sent.
@@ -60,7 +60,7 @@ Package the logic into a Claude Code Plugin or Managed Agent Cookbook.
 ### Phase 4: Implement the "Month-End Closer" Routine
 Automate the month-end reconciliation process.
 1.  **Scheduled Trigger:** Configure the agent to run on the 1st of every month.
-2.  **Execution Flow:** 
+2.  **Execution Flow:**
     *   Query `x-change` for all `payment_confirmed` rewards in the prior 30 days.
     *   Query the Stripe MCP for actual settled payouts.
     *   Perform a diff on the expected funds vs. settled funds.

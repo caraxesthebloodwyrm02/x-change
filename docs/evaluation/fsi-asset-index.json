@@ -1,0 +1,239 @@
+{
+  "generated": "2026-05-07",
+  "marketplace": "claude-for-financial-services",
+  "plugins": [
+    {
+      "id": "financial-analysis",
+      "version": "0.1.0",
+      "file_count": 40,
+      "files": [
+        {
+          "path": ".claude-plugin/plugin.json",
+          "kind": "manifest"
+        },
+        {
+          "path": ".mcp.json",
+          "kind": "mcp_config"
+        },
+        {
+          "path": "commands/3-statement-model.md",
+          "kind": "command"
+        },
+        {
+          "path": "commands/competitive-analysis.md",
+          "kind": "command"
+        },
+        {
+          "path": "commands/comps.md",
+          "kind": "command"
+        },
+        {
+          "path": "commands/dcf.md",
+          "kind": "command"
+        },
+        {
+          "path": "commands/debug-model.md",
+          "kind": "command"
+        },
+        {
+          "path": "commands/lbo.md",
+          "kind": "command"
+        },
+        {
+          "path": "commands/ppt-template.md",
+          "kind": "command"
+        },
+        {
+          "path": "hooks/hooks.json",
+          "kind": "hook"
+        },
+        {
+          "path": "skills/3-statement-model/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/3-statement-model/references/formatting.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/3-statement-model/references/formulas.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/3-statement-model/references/sec-filings.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/audit-xls/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/clean-data-xls/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/competitive-analysis/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/competitive-analysis/references/frameworks.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/competitive-analysis/references/schemas.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/comps-analysis/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/dcf-model/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/dcf-model/TROUBLESHOOTING.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/dcf-model/requirements.txt",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/dcf-model/scripts/validate_dcf.py",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/deck-refresh/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/ib-check-deck/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/ib-check-deck/references/ib-terminology.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/ib-check-deck/references/report-format.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/ib-check-deck/scripts/extract_numbers.py",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/lbo-model/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/ppt-template-creator/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/pptx-author/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/skill-creator/LICENSE.txt",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/skill-creator/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/skill-creator/references/output-patterns.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/skill-creator/references/workflows.md",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/skill-creator/scripts/init_skill.py",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/skill-creator/scripts/package_skill.py",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/skill-creator/scripts/quick_validate.py",
+          "kind": "skill_asset"
+        },
+        {
+          "path": "skills/xlsx-author/SKILL.md",
+          "kind": "skill"
+        }
+      ]
+    },
+    {
+      "id": "gl-reconciler",
+      "version": "0.1.0",
+      "file_count": 6,
+      "files": [
+        {
+          "path": ".claude-plugin/plugin.json",
+          "kind": "manifest"
+        },
+        {
+          "path": "agents/gl-reconciler.md",
+          "kind": "agent"
+        },
+        {
+          "path": "skills/audit-xls/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/break-trace/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/gl-recon/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/xlsx-author/SKILL.md",
+          "kind": "skill"
+        }
+      ]
+    },
+    {
+      "id": "month-end-closer",
+      "version": "0.1.0",
+      "file_count": 7,
+      "files": [
+        {
+          "path": ".claude-plugin/plugin.json",
+          "kind": "manifest"
+        },
+        {
+          "path": "agents/month-end-closer.md",
+          "kind": "agent"
+        },
+        {
+          "path": "skills/accrual-schedule/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/audit-xls/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/roll-forward/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/variance-commentary/SKILL.md",
+          "kind": "skill"
+        },
+        {
+          "path": "skills/xlsx-author/SKILL.md",
+          "kind": "skill"
+        }
+      ]
+    }
+  ]
+}

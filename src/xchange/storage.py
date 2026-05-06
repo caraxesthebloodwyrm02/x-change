@@ -401,6 +401,7 @@ def list_support_signals(
     kind: str | None = None,
     resolved: bool | None = None,
     limit: int = 50,
+    offset: int = 0,
 ) -> list[dict[str, Any]]:
     """List support signals with optional filters."""
     where_clauses: list[str] = []
@@ -418,13 +419,14 @@ def list_support_signals(
 
     where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
     params.append(limit)
+    params.append(offset)
 
     query = f"""
     SELECT id, kind, payload_json, created_at, resolved_at
     FROM support_signals
     WHERE {where_sql}
     ORDER BY created_at DESC
-    LIMIT ?
+    LIMIT ? OFFSET ?
   """
 
     rows = conn.execute(query, params).fetchall()
@@ -1078,6 +1080,50 @@ def get_reward_state(
     }
 
 
+def list_payment_confirmations(
+    *,
+    conn: sqlite3.Connection,
+    reward_id: str | None = None,
+    student_id: str | None = None,
+    status: str | None = None,
+    limit: int = 50,
+    offset: int = 0,
+) -> list[dict[str, Any]]:
+    """List payment confirmations without raw Stripe JSON (operator-safe summaries)."""
+    where_clauses: list[str] = []
+    params: list[Any] = []
+
+    if reward_id is not None:
+        where_clauses.append("reward_id=?")
+        params.append(reward_id)
+
+    if student_id is not None:
+        where_clauses.append("student_id=?")
+        params.append(student_id)
+
+    if status is not None:
+        where_clauses.append("status=?")
+        params.append(status)
+
+    where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
+    params.append(limit)
+    params.append(offset)
+
+    rows = conn.execute(
+        f"""
+        SELECT id, stripe_event_id, stripe_payment_intent_id, reward_id, student_id,
+               status, applied_at, provenance, created_at
+        FROM payment_confirmations
+        WHERE {where_sql}
+        ORDER BY id DESC
+        LIMIT ? OFFSET ?
+        """,
+        params,
+    ).fetchall()
+
+    return [dict(r) for r in rows]
+
+
 def acknowledge_reward(
     *,
     conn: sqlite3.Connection,
@@ -1508,6 +1554,7 @@ def list_exchange_requests(
     reward_id: str | None = None,
     approved: bool | None = None,
     limit: int = 50,
+    offset: int = 0,
 ) -> list[dict[str, Any]]:
     """List exchange requests with optional filters."""
     where_clauses: list[str] = []
@@ -1527,6 +1574,7 @@ def list_exchange_requests(
 
     where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
     params.append(limit)
+    params.append(offset)
 
     rows = conn.execute(
         f"""
@@ -1535,7 +1583,7 @@ def list_exchange_requests(
         FROM exchange_requests
         WHERE {where_sql}
         ORDER BY created_at DESC
-        LIMIT ?
+        LIMIT ? OFFSET ?
         """,
         params,
     ).fetchall()

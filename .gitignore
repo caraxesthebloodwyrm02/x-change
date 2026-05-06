@@ -24,3 +24,6 @@ htmlcov/
 *.code-workspace
 coverage.json
 .claude/
+
+# Local clone from scripts/bootstrap-financial-services-ref.sh (upstream is large)
+third_party/anthropic-financial-services/

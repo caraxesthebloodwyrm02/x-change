@@ -6,6 +6,9 @@
 # Server (listens on 0.0.0.0:8788 by default)
 PYTHONPATH="$PWD/src" uv run python -m xchange
 
+# MCP read-only server (stdio; optional dependency group `mcp`)
+PYTHONPATH="$PWD/src" uv run --group mcp python -m xchange.xchange_mcp
+
 # All tests
 PYTHONPATH="$PWD/src" uv run python -m unittest discover -s tests -v
 
@@ -36,13 +39,15 @@ Missing `XCHANGE_INGEST_TOKEN` or `STRIPE_WEBHOOK_SECRET` causes requests to be 
 
 ```
 src/xchange/
-  __main__.py   — entrypoint: reads env, calls run_server()
-  main.py       — HTTP handler (stdlib BaseHTTPRequestHandler), routing, auth, rate limiting
-  domain.py     — pure policy: RewardState lifecycle, transition functions (no I/O)
-  storage.py    — SQLite schema + all DB operations
+  __main__.py      — entrypoint: reads env, calls run_server()
+  xchange_mcp.py   — optional stdio MCP server (read-only tools; uv group `mcp`)
+  mcp_read.py      — stdlib helpers backing MCP tools (tested without MCP SDK)
+  main.py          — HTTP handler (stdlib BaseHTTPRequestHandler), routing, auth, rate limiting
+  domain.py        — pure policy: RewardState lifecycle, transition functions (no I/O)
+  storage.py       — SQLite schema + all DB operations
   glass_adapter.py — maps Glass bridge telemetry to ingest payload
-  stripe_sig.py — HMAC-SHA256 Stripe signature verification (no Stripe SDK)
-  nudge.py      — deterministic nudge text generation
+  stripe_sig.py    — HMAC-SHA256 Stripe signature verification (no Stripe SDK)
+  nudge.py         — deterministic nudge text generation
 ```
 
 **Request flow:** HTTP → `AppHandler` (main.py) → auth/rate-limit → storage read/write → optional domain transition → response
@@ -51,7 +56,7 @@ src/xchange/
 
 ## Key Facts
 
-- Pure Python, stdlib `http.server`, zero external dependencies (verify via `uv.lock`)
+- Pure Python, stdlib `http.server`, **no PyPI runtime deps on the HTTP server**; optional MCP uses dependency group `mcp` (see `docs/mcp-server.md`)
 - `uv` manages the environment; `pyproject.toml` + `uv.lock` are intentional for reproducible local execution
 - SQLite via `sqlite3` stdlib module; schema auto-created on first `open_db()` call
 - `RewardToken` is x-change governance only — not related to signal-rate tokens elsewhere
