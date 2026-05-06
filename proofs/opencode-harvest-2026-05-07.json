@@ -1,0 +1,5373 @@
+{
+  "source_db": "/home/irfankabir/.local/share/opencode/opencode.db",
+  "sessions": [
+    {
+      "id": "ses_201106a4effeI3Z1d3RTYcUyGY",
+      "title": "@renovation/ audit for ranking candidates",
+      "directory": "/home/irfankabir",
+      "message_count": 263,
+      "extracts": [
+        {
+          "message_row_id": "msg_dfeef95b5001Zs7COrnn4eXnOs",
+          "time_created": 1778098607552,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeef95e2002bTGghvid7PNJUM",
+          "time_created": 1778098607586,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeefd386001Sgduuicmy2zDYO",
+          "time_created": 1778098623366,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeeff1400027JO2XvwF0bYIsX",
+          "time_created": 1778098630976,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef04399002Adk7R4vNd03auR",
+          "time_created": 1778098652057,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef052ec002yi7ImYqNbnrFdJ",
+          "time_created": 1778098655980,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef1aeee0021pBn77xNs8FnHW",
+          "time_created": 1778098745070,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef1d2b9002qfSYZ14MWbfLEV",
+          "time_created": 1778098754233,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef1e8da0025QIuqxPu7l8YBY",
+          "time_created": 1778098759898,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef20676002cLCgKoSz9zoYRw",
+          "time_created": 1778098767478,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef21cf7002VGt4S63ADBkWZJ",
+          "time_created": 1778098773239,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef231d0002DQAI2u3jP1iOtn",
+          "time_created": 1778098778576,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef3e8ab001N4F1Ft8HBIhxXM",
+          "time_created": 1778098890929,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef3e8b7002JlUdKaHNCMZD7K",
+          "time_created": 1778098890935,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef444b1002ifXJZPlyCxoZ27",
+          "time_created": 1778098914481,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef45b77002OkkDM3TWUBYw74",
+          "time_created": 1778098920311,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef493410027X90IUmpuFnuc4",
+          "time_created": 1778098934593,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef4a861002EHIOLlYJ3ZjmoE",
+          "time_created": 1778098940001,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef52e3b002gy8ZiUwlUX2zd5",
+          "time_created": 1778098974267,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef550e1002459Fp6e2UT6sOp",
+          "time_created": 1778098983137,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef564ce001mIVfFU777Yv77O",
+          "time_created": 1778098988238,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5b9c90023k6KbMmL608iJP",
+          "time_created": 1778099009993,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5d913002KdT3DoXeM7wrWb",
+          "time_created": 1778099018003,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef601d3002D01TymmT60Eqze",
+          "time_created": 1778099028435,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef62ee2002OvVhNAThCRqm7h",
+          "time_created": 1778099039970,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef6598b001yqcSC05lHSFMEC",
+          "time_created": 1778099050891,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef671de002LGyuA76EGUY7QY",
+          "time_created": 1778099057118,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef687d6002Q3KW4olMSp26OX",
+          "time_created": 1778099062742,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef6997e002BRT8UkzJTlwGdt",
+          "time_created": 1778099067262,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef6c90a0027kK33dFfvV96wB",
+          "time_created": 1778099079434,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef73684002ZgwsY25UCF30PR",
+          "time_created": 1778099107460,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef7554b0020tOgxeyjRfHnpl",
+          "time_created": 1778099115339,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef7886e002UW7lsfgD1A8hOw",
+          "time_created": 1778099128430,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef7ab1c002CKhlueDKjf8PD1",
+          "time_created": 1778099137308,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef7c49600264Bp5hqPanDry0",
+          "time_created": 1778099143830,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef87da8001XrwaFFvKXZFt7H",
+          "time_created": 1778099191208,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef87dba001Z2OCJEuHvIEM0i",
+          "time_created": 1778099191227,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef909a6001AELWgBNmJ2oLth",
+          "time_created": 1778099227046,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef909ae0012X19aEnNowLBkb",
+          "time_created": 1778099227054,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef93446001yUDbLomAKFnhUf",
+          "time_created": 1778099237958,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef94711001C24t0ESRhnNORT",
+          "time_created": 1778099242769,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef956840014puZTcUcvkfFlu",
+          "time_created": 1778099246724,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef96ea8001k1rSYLbLoqQA3j",
+          "time_created": 1778099252904,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef97f150013h6NxYvflKVogb",
+          "time_created": 1778099257109,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef98dda001ZU0I6hw8jH6FMy",
+          "time_created": 1778099260890,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef99c0f001Ohuo7sAS1UUpde",
+          "time_created": 1778099264527,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef9fdbb001CDs5gyI43fDbAU",
+          "time_created": 1778099289531,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefa13e1001vXAtEWAWiNqUcp",
+          "time_created": 1778099295201,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefa7eb900172h9gZbKX7XMCk",
+          "time_created": 1778099322553,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefa91fc001fcsgbpBhqCqdfp",
+          "time_created": 1778099327484,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefacb5d001mXqyNLJtd9zhxd",
+          "time_created": 1778099342173,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefae391001Aee36d2dl5Spwg",
+          "time_created": 1778099348369,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefaf662001vY4Um4lYowz4p5",
+          "time_created": 1778099353186,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb0720001EsqensM5tRLbFT",
+          "time_created": 1778099357472,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb169e001OtOe6Rtdkp4x0z",
+          "time_created": 1778099361438,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb392b001EQM7XNiUxiMnio",
+          "time_created": 1778099370283,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb47dc001UefrcYV4JHifUe",
+          "time_created": 1778099374044,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb5b86001bexSX2lgvh2fNo",
+          "time_created": 1778099379078,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb6ee7001GCVfwk3jurlmQv",
+          "time_created": 1778099384039,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb82d3001NgddJ7O6SzGLAa",
+          "time_created": 1778099389139,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefbde3f001744AnkHfbi7tlq",
+          "time_created": 1778099412543,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc13ba001FniYkhCimSZH1A",
+          "time_created": 1778099426234,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc23bc001BGiANjlOelHAD8",
+          "time_created": 1778099430332,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc42b20014U3Vg7pBlHH7Dm",
+          "time_created": 1778099438258,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc585900117jj5RKCEsuqiw",
+          "time_created": 1778099443801,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc6947001j33tD6Ipy7Awj7",
+          "time_created": 1778099448135,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc9b17001HRZ5vJfDCiHNsL",
+          "time_created": 1778099460887,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefcb2b2001Ync37XS3pxtr9J",
+          "time_created": 1778099466930,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefcc5ef001jitkr5I21n9tDy",
+          "time_created": 1778099471855,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefcdd8b001ucXH7DYHZJMyXn",
+          "time_created": 1778099477899,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefcf06b001qnlbjVHaMrLCyu",
+          "time_created": 1778099482731,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefd0caa001OCNUtnGNHpbfJt",
+          "time_created": 1778099489962,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefd2228001zCe73kPsSmKxMJ",
+          "time_created": 1778099495464,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefd352c001KFqitwfJ53SzVl",
+          "time_created": 1778099500332,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefd44fa001xRpNj7qi8E1twi",
+          "time_created": 1778099504378,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefd5a1f001OsCKeatsgoLY1b",
+          "time_created": 1778099509791,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefdeb23001RQRF0dyPiMOERI",
+          "time_created": 1778099546915,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefe0cd8001n1OIXNYGsCTbjZ",
+          "time_created": 1778099555544,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefe1e1f001KBBNvcdmfwFlhh",
+          "time_created": 1778099559967,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefe2fd7001bZEtGYudhU70Gl",
+          "time_created": 1778099564503,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefe4558001ejD5G6J5A6tZVk",
+          "time_created": 1778099570008,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefe667c001V1iisTn242phGw",
+          "time_created": 1778099578492,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefefaca0019L0OonDXSeCYpx",
+          "time_created": 1778099616458,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeff18190012UyLXwpmYWJa1P",
+          "time_created": 1778099623961,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeff435b001M6Zd5csHPH4vH8",
+          "time_created": 1778099635035,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeff5779001BZt65S0rfmXNSI",
+          "time_created": 1778099640185,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeff9641001aiNbM4hsiRjk42",
+          "time_created": 1778099656257,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeffaa11001be9B32aJdoCM8b",
+          "time_created": 1778099661329,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeffcb6c0013ckRDQ3LeY7okT",
+          "time_created": 1778099669868,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff004930001Yl63c6Gg18Jhg5",
+          "time_created": 1778099702064,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff005d9d001TBdim00fNTQJ5H",
+          "time_created": 1778099707293,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff008124001lcoFabAuVW0PNq",
+          "time_created": 1778099716388,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff010427001JP6pZnX4I514p5",
+          "time_created": 1778099749927,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff012ce70016h5wFzpzklb5lA",
+          "time_created": 1778099760359,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff016b6e0014XaV1N2fN1JwgO",
+          "time_created": 1778099776366,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff01887b001tV5BlI9Y8HCMZ5",
+          "time_created": 1778099783803,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff019d22001LIzRY2STQLjGb3",
+          "time_created": 1778099789090,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff01ea91001zqDoQye48Bin22",
+          "time_created": 1778099808913,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff020fb6001CgcJ5bGSW3HhuR",
+          "time_created": 1778099818422,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0228db001RkzAQFtJiaPtkc",
+          "time_created": 1778099824859,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0239a6001YQKeTmNL1Xft1A",
+          "time_created": 1778099829158,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff024de00015KOCr5boQQL8Jj",
+          "time_created": 1778099834336,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff026361001yLQbVWaZj0ibog",
+          "time_created": 1778099839841,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff02b0ef001WF5FU2lxOasaO9",
+          "time_created": 1778099859696,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff02cc7a001fGodCJgTpnwzLq",
+          "time_created": 1778099866747,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff02e74a00130AiPVPhHyKS69",
+          "time_created": 1778099873610,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff03149d001B2EHJkTbM0scQo",
+          "time_created": 1778099885213,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff03385d001pxQyANIuFYkXbh",
+          "time_created": 1778099894365,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff034c2b001oUrhN88lA19MEb",
+          "time_created": 1778099899435,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff03757e001USrYXfoexdj2rd",
+          "time_created": 1778099910014,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff03a100001W2okjT7KhqHZ7k",
+          "time_created": 1778099921152,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff09622c001y7l57lUDUkoy2P",
+          "time_created": 1778100298291,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff09623f00177Yhyw7iiqS8mV",
+          "time_created": 1778100298303,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff097d79001fiX2bz3uZWz6ex",
+          "time_created": 1778100305273,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff098f78001qTQuHwhAk391B9",
+          "time_created": 1778100309880,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff09a4e1001fZFA2cI0ApfgKr",
+          "time_created": 1778100315361,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff09b99d001QVBrJtaZDhvICp",
+          "time_created": 1778100320669,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff09cdf3001L9UQrtOwF4QKj9",
+          "time_created": 1778100325875,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a10d70011imlh5cKp3zAef",
+          "time_created": 1778100342999,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a24ba001hu56f0zxdOBITQ",
+          "time_created": 1778100348090,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a3927001ZM7ddbXj79M8x6",
+          "time_created": 1778100353319,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a4af4001zbnKLIblmIASJy",
+          "time_created": 1778100357876,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a956b0011xiWxaP3OxJyHH",
+          "time_created": 1778100376939,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ab26a001LscOuH3arIrkDb",
+          "time_created": 1778100384362,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ac5e7001CLckVA91A57vi1",
+          "time_created": 1778100389351,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0af2570012FZCkug8zkP1ev",
+          "time_created": 1778100400727,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0b2854001BT7Pf6DQq4h6xz",
+          "time_created": 1778100414548,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0b3f4b001JnzL8hG47Ti9IP",
+          "time_created": 1778100420427,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0b5c61001X0R8O8smYadtVJ",
+          "time_created": 1778100427873,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0b87490013QodbFY28kYATa",
+          "time_created": 1778100438857,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0bb902001QWhU0Po547ompv",
+          "time_created": 1778100451586,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0bd471001wL89bJtfuKBGeo",
+          "time_created": 1778100458609,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0c5d6d001UexYeQbq3Zt7ss",
+          "time_created": 1778100493677,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0c751b001RoQ9ugHfV8ovog",
+          "time_created": 1778100499739,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0c8cee0014ZqlZn7vjgm1cf",
+          "time_created": 1778100505838,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ca1e6001FkS1ee6AOQ3dm0",
+          "time_created": 1778100511206,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0cb3f00012IRBwBe6YmTHZf",
+          "time_created": 1778100515824,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0cca14001ZudtyxIR0GoIjN",
+          "time_created": 1778100521492,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ce9160015koeHAtOkqYOsJ",
+          "time_created": 1778100529430,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0cfe6d001ui9ViGBC2nD3nV",
+          "time_created": 1778100534893,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d230b001OVbs4IysBcHzcW",
+          "time_created": 1778100544267,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d7103002sgxD0Fln3yPGyJ",
+          "time_created": 1778100564227,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d7116001rTJK3tWpiAmrCR",
+          "time_created": 1778100564246,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e0f1e002zQA3GypTsZ6lT5",
+          "time_created": 1778100604702,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e0f2b001p0pe792ehL6gV9",
+          "time_created": 1778100604715,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e3b03001Y0dHzKkShrQSnM",
+          "time_created": 1778100615939,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e4983001Fvh7gOK6QooWHh",
+          "time_created": 1778100619651,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e611f001OIUFsh8MTByuiR",
+          "time_created": 1778100625695,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e79b9001mSfm9wltnbE6RP",
+          "time_created": 1778100631993,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ed2da001w4UZTryGC6mC64",
+          "time_created": 1778100654818,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ed2e9001hdtw7IYN7aWCOU",
+          "time_created": 1778100654825,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff12da08001nJNgpHq82nFIKx",
+          "time_created": 1778100918797,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff12da14001oZKekOjffyV3j4",
+          "time_created": 1778100918804,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff133511001LUcqnmkLVSFlCX",
+          "time_created": 1778100942097,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff134a8d0018TD38C5Ed7fjrN",
+          "time_created": 1778100947597,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff138deb001fZpTRUNDY4eWpS",
+          "time_created": 1778100964843,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1705f0001gwDhWGObD4n60B",
+          "time_created": 1778101192181,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1705fc001h2XiKYoUkHNXDP",
+          "time_created": 1778101192188,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff171f11001zcmeNDe67qyOPn",
+          "time_created": 1778101198609,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff18cfbb001CFROzjDqWFKjwo",
+          "time_created": 1778101309371,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff19b90f001nGd4xItn3XrtyY",
+          "time_created": 1778101369103,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff19f818001tgFVsKU4pL405x",
+          "time_created": 1778101385244,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff19f8210018WRhLpUPzJYzQd",
+          "time_created": 1778101385249,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1bd8e8001tmpxXDbows06nU",
+          "time_created": 1778101508328,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1f470f001Lx4WLUCMVtxs1m",
+          "time_created": 1778101733140,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1f471b001VDzEuE34lDv3CQ",
+          "time_created": 1778101733147,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff206aae001K5Y8rTexxRMlWU",
+          "time_created": 1778101807790,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff20bee8001edtN3YYOGqcYPZ",
+          "time_created": 1778101829352,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff211e95001Rrk6lHPdsmRas6",
+          "time_created": 1778101853845,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff214cff001vItT2BQ7UWL6sC",
+          "time_created": 1778101865727,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2204c6001OyqxvykJ0znaP7",
+          "time_created": 1778101912774,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff224d0a001MkUXkLseC8lE2U",
+          "time_created": 1778101931274,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff22f083001xZzlcuGa6uBTwh",
+          "time_created": 1778101973123,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff25adfb0010IgxDAQE2er13D",
+          "time_created": 1778102152699,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff25f03e001d5SPwhwb6sJhh8",
+          "time_created": 1778102169662,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff26e67f0019YWB52XPu5JAT7",
+          "time_created": 1778102232703,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff272786001qSYZC7KhzAiRav",
+          "time_created": 1778102249350,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2a2df9001sZRIIwGIlAbOjF",
+          "time_created": 1778102447609,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2aa13f001IImRPdE4s16Opq",
+          "time_created": 1778102477119,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2ac5b7001u3cs5BU8cgLj9l",
+          "time_created": 1778102486455,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b443f001wTJfjpHMWqCrfE",
+          "time_created": 1778102518847,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b9a8e001a01ONNoqKz8PER",
+          "time_created": 1778102540942,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2da611001n0qO5Zhehc0SiV",
+          "time_created": 1778102674961,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2dc96d001djdrgnm36iUSGK",
+          "time_created": 1778102684013,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f77fb001SvoX3tjqTG7SvV",
+          "time_created": 1778102794235,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff302c6d001mfLk4MManEQ2AI",
+          "time_created": 1778102840429,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff30a322001fpRPv59aJJXOqi",
+          "time_created": 1778102870818,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff325ec9001phsb6UYeKH7BAi",
+          "time_created": 1778102984393,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff328d31001lDxZM15n269NX9",
+          "time_created": 1778102996273,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff33c09f001IgiEKZEE5eGVrT",
+          "time_created": 1778103074975,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff33e4dc001JbDHnDmOIwDsDA",
+          "time_created": 1778103084252,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff346107001fa4eik6n0Si8BM",
+          "time_created": 1778103116039,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff348f0c001krVPmCGjXoHU7c",
+          "time_created": 1778103127824,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff348f18001IwSTuaoxwd8pce",
+          "time_created": 1778103127832,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff37821d002DLGC5dcHWCSLT7",
+          "time_created": 1778103321117,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff37822c001WEaDOf9H4hJTzi",
+          "time_created": 1778103321132,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff388b90002RqCO1Kd65VuN2C",
+          "time_created": 1778103389072,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff388b9c001KgGczDYoYzo0HU",
+          "time_created": 1778103389084,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff38f997001MJPnTyNC8jV36N",
+          "time_created": 1778103417239,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff394cfb001FWYVZNW86GnqHp",
+          "time_created": 1778103438587,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3b09930017vbGtkra9Sakfg",
+          "time_created": 1778103552403,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3c2c8e001wlXBu3Bi4bO01g",
+          "time_created": 1778103626894,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3c6b950017VCYPzk2wSldKc",
+          "time_created": 1778103643029,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3ca8fb001mXCuAM5ZkyRF5X",
+          "time_created": 1778103658747,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3cc1d0001jLV0bwbBhc7uC5",
+          "time_created": 1778103665104,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3ce4ab001fARISHfJZdscFk",
+          "time_created": 1778103674027,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3d004b001tT7F1lA6gD6EAN",
+          "time_created": 1778103681099,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3d61a9001pfmV4HJIsDvFGx",
+          "time_created": 1778103706025,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3db58e001A63Y7OkVM2lxQK",
+          "time_created": 1778103727502,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3dd6ce0017FtHUOzcWdvROo",
+          "time_created": 1778103736014,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3defd30012e38HeKBAdX60D",
+          "time_created": 1778103742419,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3e286b001Nw4CUsvPn7hRbg",
+          "time_created": 1778103756907,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3e4cdf001R442F6pHOJnwS5",
+          "time_created": 1778103766239,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3e65dd001KIVJRrkoJMMGvI",
+          "time_created": 1778103772637,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3e8e59001PmFuuGcUvE63Nf",
+          "time_created": 1778103783001,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3ec56f001RUr7AgX0byVETV",
+          "time_created": 1778103797103,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3ee3bc001AQjmTjPsSYGiJl",
+          "time_created": 1778103804860,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f06f8001piYGRYAeF2CTcg",
+          "time_created": 1778103813880,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f1fc0001VgMc1HQnNXyeqG",
+          "time_created": 1778103820224,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f3864001MaNnGRont7FMks",
+          "time_created": 1778103826532,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f51d4001O7DbWY5wurQRQH",
+          "time_created": 1778103833044,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f73e200150d2AxSCl9Fh4F",
+          "time_created": 1778103841762,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f8dae0010fcSbBJByS3THW",
+          "time_created": 1778103848366,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff41995b001pBCoRuvAKqatYT",
+          "time_created": 1778103982433,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4199670012WsOY6giIPRywI",
+          "time_created": 1778103982439,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff41b852001s46keugFlPhxin",
+          "time_created": 1778103990354,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff41d19b001bPi6Vlinlq3YDx",
+          "time_created": 1778103996827,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff41e89a001pDCdaIgoA3bi61",
+          "time_created": 1778104002714,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff41fcda001GqIlJDB2B5gl25",
+          "time_created": 1778104007898,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff420f20001KJZNCWNlgDcNvq",
+          "time_created": 1778104012576,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff423756001ktXHCTup4iQIFI",
+          "time_created": 1778104022870,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff424a84001lNoapPw0wBJCAF",
+          "time_created": 1778104027780,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff426174001s6iTW7IrYGjEHT",
+          "time_created": 1778104033652,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4296a3001kDZf3LVREUlUJ3",
+          "time_created": 1778104047267,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff42af9e001mA9tXgtOX14v4s",
+          "time_created": 1778104053662,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff42c174001lrfWNFGxNWmJho",
+          "time_created": 1778104058228,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff42d89c001bUg3wjpEazIbCj",
+          "time_created": 1778104064156,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff43036c0019M2jS5k7PXApYg",
+          "time_created": 1778104075116,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4326650013hGJNgIvsfL0bg",
+          "time_created": 1778104084074,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff43267200115c1Syhoo3uk5I",
+          "time_created": 1778104084082,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff434b100015mCIBtWH9Wkk73",
+          "time_created": 1778104093456,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff43692f0013HvVDa3rg6esON",
+          "time_created": 1778104101167,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4382b0001Cq06naZMzcZ0Wh",
+          "time_created": 1778104107696,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff43a7c1001v1Dd3CzUHVKNOP",
+          "time_created": 1778104117185,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff43c1c1001A7u0x7r640IfDK",
+          "time_created": 1778104123841,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff43e243001UGk6Elq6XYwoM5",
+          "time_created": 1778104132163,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff44068d001K7JVRT4ifH3idq",
+          "time_created": 1778104141453,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff442e60001fJd6xvM9K7l8D3",
+          "time_created": 1778104151648,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4457fb0010yT3VXBf7Ceh2j",
+          "time_created": 1778104162299,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff447df2001q5PtG5kVFOSYlz",
+          "time_created": 1778104172018,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4496a0001099G7zQu9uWBh9",
+          "time_created": 1778104178336,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff44c48f001jDsnxJMl6Q0nDg",
+          "time_created": 1778104190095,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff44e71e001gCuDtrS9qvhUFB",
+          "time_created": 1778104198942,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff450374001OrS0NvGtRmEwOM",
+          "time_created": 1778104206196,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff457437001MNQYP1m96G49EE",
+          "time_created": 1778104235068,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff457444001kc7YzYv3huPVr6",
+          "time_created": 1778104235076,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff45b2e20010zn5I5T2S7xuPv",
+          "time_created": 1778104251106,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff45d350001nL5PYCO8hpvIC7",
+          "time_created": 1778104259408,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff462500001aLrw0TB7AoKqXm",
+          "time_created": 1778104280320,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4671dd001JXQFWQTn67UtgH",
+          "time_created": 1778104299997,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff46962b00191IsIbaD3BDtsV",
+          "time_created": 1778104309291,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff46a836001ct6c9iNglnWVcv",
+          "time_created": 1778104313910,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff47489b001ct48aN4PBaj1c7",
+          "time_created": 1778104354971,
+          "role": "assistant",
+          "note": "no text parts"
+        }
+      ]
+    },
+    {
+      "id": "ses_2010b82e5ffelPaMnJSMdBslzl",
+      "title": "What are programmable shaders?",
+      "directory": "/mnt/arch_data/home/caraxes/CascadeProjects/Applications/glass",
+      "message_count": 209,
+      "extracts": [
+        {
+          "message_row_id": "msg_dfef47d1f001yr97jJ5LybDGCa",
+          "time_created": 1778098928939,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef47d4600190HYXrKrlkfZyi",
+          "time_created": 1778098928966,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5eec5001zkUx6PQc4A6H3q",
+          "time_created": 1778099023557,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef89d1a001Gy9NGujBr0Lhkc",
+          "time_created": 1778099199265,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef89d2b001glcpdxNCAzSY9d",
+          "time_created": 1778099199275,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef8b82e001n5alZHGUGj8aRY",
+          "time_created": 1778099206190,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef8e01a001tgAwz407Vsn4h2",
+          "time_created": 1778099216410,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeffee04001Y0Krz0OTBunhlr",
+          "time_created": 1778099678724,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff006e9d0017jT4YWNQ4ZF4BN",
+          "time_created": 1778099711645,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff019da4001qLIAR8C40HTPOi",
+          "time_created": 1778099789220,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff028609001ib400Cv5sadP7Q",
+          "time_created": 1778099848718,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff028617001DX8fRBaeQ3PouP",
+          "time_created": 1778099848727,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff02be21001MmwuMI2IvIpoyz",
+          "time_created": 1778099863073,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff04fa78001hpd3vDQUo8IrD9",
+          "time_created": 1778100009592,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff050c32001x3ONfuFM3UyrQE",
+          "time_created": 1778100014130,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0797c3001xMTk9X2BW2rbBQ",
+          "time_created": 1778100180937,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0797d4001S64OJ40pAwf3k7",
+          "time_created": 1778100180948,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a3ec7001nIXAXBLnuwxINu",
+          "time_created": 1778100354765,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a3ed9001fJQ1VKR1EJhQ0R",
+          "time_created": 1778100354777,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ad6f6001vHocXt57m3pMSd",
+          "time_created": 1778100393723,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ad705001Q5daY0O1ZQWMue",
+          "time_created": 1778100393733,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ae88b001r7jCHkYE6ivRjD",
+          "time_created": 1778100398219,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0b14610012x4I1EIdljnatg",
+          "time_created": 1778100409441,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0b2f85001gENaRGahYpU0ma",
+          "time_created": 1778100416389,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0c55500011mDbxv7us0V8tf",
+          "time_created": 1778100491600,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ca50c001J6B59sZhNvmp7u",
+          "time_created": 1778100512012,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0cc0a8001cWjH4kSzbR1av1",
+          "time_created": 1778100519080,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0cdd9f001xuuNiBySOPOECE",
+          "time_created": 1778100526495,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0cf6f0001YGWNjr2bV6lxTE",
+          "time_created": 1778100532976,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d1304001P3Zhz7BjyrG2dZ",
+          "time_created": 1778100540164,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d27ec00155xgZzZ1Y3Aqaf",
+          "time_created": 1778100545516,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d3d68001E0G1w43th8yI44",
+          "time_created": 1778100551016,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d7eab001wIMo2ZE2kG47Bp",
+          "time_created": 1778100567723,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d9cc4001wvjzZyGBZ6Ayrw",
+          "time_created": 1778100575428,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0dc991002Ckk3FgThdC4TLq",
+          "time_created": 1778100586897,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0dc9a5001lM2ogCWfgSNQOx",
+          "time_created": 1778100586917,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e524f002V0mctk24G6NRhc",
+          "time_created": 1778100621903,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e525f001Bsr11HQDFyeXQM",
+          "time_created": 1778100621919,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e7ee2001Zxg0ypqk7D2hxv",
+          "time_created": 1778100633314,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e90c6001CPAUXCmBBHM0ba",
+          "time_created": 1778100637894,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ed6d0001W58348TfDfL8GM",
+          "time_created": 1778100655824,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ee609001f3lfe392B9PCBZ",
+          "time_created": 1778100659721,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f058f001T2MEUxmZH9rCIq",
+          "time_created": 1778100667791,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f1965001qgaRL5c7ftv2go",
+          "time_created": 1778100672869,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f30fa001zP2u0P2iULkL64",
+          "time_created": 1778100678906,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f7616001SOtw1Xw0VikHWt",
+          "time_created": 1778100696598,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f8cb400196cBnrGJwvWvYA",
+          "time_created": 1778100702388,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0fad56001PisOec06lBfFMs",
+          "time_created": 1778100710742,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0fede5001KRRiyQ6qJkVzHO",
+          "time_created": 1778100727269,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff132944001Yng75C20WqZzP9",
+          "time_created": 1778100939082,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff132955002EcskD5OGEO1dhi",
+          "time_created": 1778100939093,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff135097002dRD5Cn368Vebad",
+          "time_created": 1778100949143,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff136e0c002Qqh4pYZeeDoe5I",
+          "time_created": 1778100956684,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff163382002uuJPw05O0v4pJ4",
+          "time_created": 1778101138306,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff165a8b002MkThAnIYq4v3Sh",
+          "time_created": 1778101148299,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff166fb3002xl1tkXhcHI8rgr",
+          "time_created": 1778101153715,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff169686002XeA2I5LE6pg7D2",
+          "time_created": 1778101163654,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff16bc43001PSJqY2u0thcfrH",
+          "time_created": 1778101173315,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff16d574002Sj9VpX69HdbCWb",
+          "time_created": 1778101179764,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1748e1002bTL73gphpaq9zb",
+          "time_created": 1778101209313,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff17d3a40020WGdbHUc5UlH8F",
+          "time_created": 1778101244836,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff189a96001d9PTRZuys26H0P",
+          "time_created": 1778101295770,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff189aa0002egcvB3VwWuJXax",
+          "time_created": 1778101295776,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1b8c5e001Sbg44GDP3Yx97h",
+          "time_created": 1778101488739,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1b8c6a002fKJIvJzfPhrHgb",
+          "time_created": 1778101488746,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1bb976001fsh6jozM0GARZv",
+          "time_created": 1778101500282,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1bb97f002RNAD33ihKrvoBu",
+          "time_created": 1778101500287,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1c2d7a002bgcIDpz1SlffCs",
+          "time_created": 1778101529978,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1cb271002i0B70Dkjw5U7QV",
+          "time_created": 1778101564017,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1df450002XSvyh35fiFsItl",
+          "time_created": 1778101646416,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1e2ac4002MFI0TsZy3A3mvC",
+          "time_created": 1778101660356,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1eb4af002hZl0HonaMIPuQ4",
+          "time_created": 1778101695663,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1f068a002IMehNpCns3TNwf",
+          "time_created": 1778101716618,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1f26e0002SYEdUhsJf2zmF3",
+          "time_created": 1778101724896,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1f7f5d002IosPkHzxVKv4w5",
+          "time_created": 1778101747549,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1fa8d10022flwicNMr6atzo",
+          "time_created": 1778101758161,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2009dc002gO5gkw2WrODqda",
+          "time_created": 1778101783004,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff202a94002RnmBW1wwQPu9u3",
+          "time_created": 1778101791380,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2062cb002B5hkl5e2MVIjGP",
+          "time_created": 1778101805771,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff21df33001iYO1Ddthnz0JHj",
+          "time_created": 1778101903159,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff21df43002AZffQ3xcPDeenx",
+          "time_created": 1778101903171,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff225642002QVcOCGS0g0ZH4k",
+          "time_created": 1778101933634,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff228f38002j87w9GDF6cGY7S",
+          "time_created": 1778101948216,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2301ce002sl13XdCKOMqUOF",
+          "time_created": 1778101977550,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2357ba002E196moKHWAR4z8",
+          "time_created": 1778101999546,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff23db93002TQESIdrC4S1SON",
+          "time_created": 1778102033299,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff24b03d0027S8HCxYYXm603H",
+          "time_created": 1778102087741,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff24ee8a002ZTvzgJXibx7DQ3",
+          "time_created": 1778102103690,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff25f499002Zxb5quH73Kgi15",
+          "time_created": 1778102170777,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff264d34002s0fIIlZYwEkbbp",
+          "time_created": 1778102193460,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff26a7400022NrexguxzeeX9U",
+          "time_created": 1778102216512,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2723c9002A1IS6TT9guf9DT",
+          "time_created": 1778102248393,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2843b3002oZzjEROfxREMGw",
+          "time_created": 1778102322099,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff28b1e4002oP5HAGNjXE7N2W",
+          "time_created": 1778102350308,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2918610021YSAsLKnvHf7ps",
+          "time_created": 1778102376545,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2a6591002nyjcKRpsEH3KAk",
+          "time_created": 1778102461841,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2ba4900023hOCQOIs1K8RP9",
+          "time_created": 1778102543504,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2c1cff002JKMaso07NHMGZ7",
+          "time_created": 1778102574335,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2c3dbf002YlC8tRdCetkVaE",
+          "time_created": 1778102582719,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2cdeaa002y9C4ceVxTwyRLr",
+          "time_created": 1778102623914,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2d74dd001gKzgb9yviY71Li",
+          "time_created": 1778102662369,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2d74ed0028Dd0tDxnhXH2lt",
+          "time_created": 1778102662381,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2da5810013hXNNcaxpO6JXy",
+          "time_created": 1778102674817,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2da58f001kIdJ4D9LPOaSiP",
+          "time_created": 1778102674831,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e5b69002XLPVxPpQkGyoQ1",
+          "time_created": 1778102721385,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e5b75001fspkWTloUhCFg1",
+          "time_created": 1778102721397,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2ee608001Srt8iSs6hCafz5",
+          "time_created": 1778102756872,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f07b2001A3O1fp3ahSgcRw",
+          "time_created": 1778102765490,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f425a001Kq8bVMK2M6ncOG",
+          "time_created": 1778102780506,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f6d520017psgKL3Zd7wohQ",
+          "time_created": 1778102791506,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f9be1001CobMZ7CeEO2sSf",
+          "time_created": 1778102803425,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2fb18c0017tw0oqHugg96e6",
+          "time_created": 1778102808972,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2feeaa001M9W3v1Rzp2rZaS",
+          "time_created": 1778102824618,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3010a60016I268ahYOvAwv5",
+          "time_created": 1778102833318,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff302cba0017w31m4zdZlNcQu",
+          "time_created": 1778102840506,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff306ad1001m3XfhuIQO0SXXk",
+          "time_created": 1778102856401,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3085bc001dfJZAEpdlbg4y5",
+          "time_created": 1778102863292,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff30dabd001UoUfi82v7a8e0v",
+          "time_created": 1778102885053,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3102c6001uRvE6Ocqfikzq0",
+          "time_created": 1778102895302,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3146eb0014qTB3M2f1myx0H",
+          "time_created": 1778102912747,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff31638f001U7lsXX3XSJumht",
+          "time_created": 1778102920079,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff31a7dc001hx7Y97i4OUfRpB",
+          "time_created": 1778102937564,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff31c881001CRgaqmBB5YOo6y",
+          "time_created": 1778102945921,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3204ae001ladTCH9Z7p1Iv5",
+          "time_created": 1778102961326,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff322490001BUVtWgYLMKi1mZ",
+          "time_created": 1778102969488,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff323f5e001njwFcxfs1Ey4el",
+          "time_created": 1778102976350,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff326a09001QGvSBGa4eo4Yve",
+          "time_created": 1778102987273,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff328384001jSZlhHzzcUUxt2",
+          "time_created": 1778102993796,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff32a932001734X48wVa50ys5",
+          "time_created": 1778103003442,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff32c1c2001KiE9B86VAMI7vc",
+          "time_created": 1778103009730,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff330b92001pxYHCJIExOKvKN",
+          "time_created": 1778103028626,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff332805001c4DW8SjtcHJy3z",
+          "time_created": 1778103035909,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff334cd7001KEwRjPea9JOkx5",
+          "time_created": 1778103045335,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff336cc1001sDP02LRc3Iz1Kr",
+          "time_created": 1778103053505,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff339f0e001ljYYLg5uistT1n",
+          "time_created": 1778103066382,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff33c2bf001UuUlBnOaMQo5Ce",
+          "time_created": 1778103075519,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff33e673001h4iZVdCrcr2kRu",
+          "time_created": 1778103084659,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff340def001Ni0pj9fDeHa5RL",
+          "time_created": 1778103094767,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff342b50001xLRAXRV8SZXa8m",
+          "time_created": 1778103102288,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3447360019VCaJEFnQlprZ7",
+          "time_created": 1778103109430,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3467e1001vY72pIUVCPRtpF",
+          "time_created": 1778103117793,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff348bbe0014DeV1jkivCafGz",
+          "time_created": 1778103126974,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff34bd2e001qlGxjtNWi4bi2N",
+          "time_created": 1778103139630,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff34dd990010tGdxj23EA0ONQ",
+          "time_created": 1778103147929,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff34f8f5001cLxvdU07Jo6TbD",
+          "time_created": 1778103154933,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3519ab001ADybIZ6yTQDhNs",
+          "time_created": 1778103163307,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff35323f001pt2q1hPKSGeQ6u",
+          "time_created": 1778103169599,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff355399001D8DdB67nSgO3Zx",
+          "time_created": 1778103178137,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff357155001tiTXoPCWisSVSV",
+          "time_created": 1778103185749,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff35a30b0019l2rFuMFrzidD1",
+          "time_created": 1778103198476,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff37e6f7001tQcWlwHYmgpqD1",
+          "time_created": 1778103346941,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff37e707001mFPkqn2fGatsCv",
+          "time_created": 1778103346951,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3814700012t7dmM8JkDH4wN",
+          "time_created": 1778103358576,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff384cf0001FbkNO0ZBtfCJ1Y",
+          "time_created": 1778103373040,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3862ef001h5VlNEqfQvspug",
+          "time_created": 1778103378671,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff387345001kfX3q9DsOx5SUP",
+          "time_created": 1778103382853,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff38ede2001KHhLXxSEeuZgia",
+          "time_created": 1778103414242,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff390ea9001eh6mucaCw9jW62",
+          "time_created": 1778103422633,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff395a67001pTi58wQICce1cu",
+          "time_created": 1778103442023,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff396e7e001YmA67DDpZMQfK6",
+          "time_created": 1778103447166,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff397dec001mZHwhbJuDsV2fn",
+          "time_created": 1778103451116,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff399189001wl9ny4otWYSYh4",
+          "time_created": 1778103456137,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff39afd60018V4nCOu0UPSFam",
+          "time_created": 1778103463894,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff39c9f10014IsCsFB14Akrkl",
+          "time_created": 1778103470577,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff39e41a001BpOzASm3fYmLv1",
+          "time_created": 1778103477274,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3a2443001Mv0UKY2mzwIuxd",
+          "time_created": 1778103493699,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3a3633001cxOSwMOpJMEoz0",
+          "time_created": 1778103498291,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3a4bbd0017dd8HXLHk6MzYU",
+          "time_created": 1778103503805,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3a9bef001nfKzTavV0m2HJ5",
+          "time_created": 1778103524336,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3ab58a001QN1bW0F7S4BusX",
+          "time_created": 1778103530890,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3b04bd001PHN5AnR5HkbS1H",
+          "time_created": 1778103551165,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3b1c88001jOsqbS7zoJZnF1",
+          "time_created": 1778103557256,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3b3447001J9ucG2o6wH76S4",
+          "time_created": 1778103563335,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3c21d6001YjH5bf7N4ByUnL",
+          "time_created": 1778103624150,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3c39de001DdXP6aRaOvgqhy",
+          "time_created": 1778103630302,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3c4f44001OEVUh0terH6xY4",
+          "time_created": 1778103635780,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3ccd90001G9nRLrLiIWVNT9",
+          "time_created": 1778103668112,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3ccd9e001aSfzWlQ9Bi1FRz",
+          "time_created": 1778103668126,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3d8603001uNJ68trwPjWZe9",
+          "time_created": 1778103715331,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3d8612001CSrAEC5id4tDvO",
+          "time_created": 1778103715346,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3dcb7d001DRDcqfET1hsfCf",
+          "time_created": 1778103733117,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3de4490016SfD8YUhtaWhas",
+          "time_created": 1778103739465,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3df8ff001LR7ca2iLnklSXv",
+          "time_created": 1778103744767,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3e1548001l7zATGKrKyOkr0",
+          "time_created": 1778103752008,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3e2ae6001Eh2O4mXgdxxTlb",
+          "time_created": 1778103757542,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3e40d6001W6Tu5XPDdA3OMu",
+          "time_created": 1778103763158,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3e5c2d001V1qAq9B4O3kfiY",
+          "time_created": 1778103770157,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f21920014VtgQGx7s6c94x",
+          "time_created": 1778103820690,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f34b4001ifbiyAzHHxWhLd",
+          "time_created": 1778103825588,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3f68070017Ng1TyQYErl4ei",
+          "time_created": 1778103838727,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4005bb001qOgtjhGolPb5u0",
+          "time_created": 1778103879099,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4063cf001OWCb7Jk6pNUKxl",
+          "time_created": 1778103903183,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff407f250010yAiicPVObvsnk",
+          "time_created": 1778103910181,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff409541001pWerZRgWPYbxpX",
+          "time_created": 1778103915841,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff40c477001rYz2hIe4jcfcPM",
+          "time_created": 1778103927927,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff40d9e7001WYZ48f8LVIuW3c",
+          "time_created": 1778103933415,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff40ed74001mraTir11HASFgb",
+          "time_created": 1778103938420,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4108fd001C40lgRn2HJb8b3",
+          "time_created": 1778103945469,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff411ec2001hZt07CIZqD3UCe",
+          "time_created": 1778103951042,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4134ad001270hTZ8KsIR1df",
+          "time_created": 1778103956653,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff4149cd0018UTIHrQq6f02B8",
+          "time_created": 1778103962061,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff416b83001iFVq01N6rYufEo",
+          "time_created": 1778103970691,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff42b157001dhx2c1UzQX8CAP",
+          "time_created": 1778104054103,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff42c704001uzdXyski7q9NAt",
+          "time_created": 1778104059652,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff42f77c001GAusX1xio6U74I",
+          "time_created": 1778104072060,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff43126c001rv6KaHvXHqnA8e",
+          "time_created": 1778104078956,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff432fe10016EGkdKLI6qOwjM",
+          "time_created": 1778104086497,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff434cb5001hkm1oTcB31GEdA",
+          "time_created": 1778104093877,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff438690001pgi52lL1guPJaR",
+          "time_created": 1778104108688,
+          "role": "assistant",
+          "note": "no text parts"
+        }
+      ]
+    },
+    {
+      "id": "ses_2010af5a6ffeU3Wgaa2LbNMak8",
+      "title": "Emergence of ->. for agentic development workflows",
+      "directory": "/mnt/arch_data/home/caraxes/CascadeProjects",
+      "message_count": 163,
+      "extracts": [
+        {
+          "message_row_id": "msg_dfef50a5e001QmlpvRZ2a5wBV6",
+          "time_created": 1778098965097,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef50a78001JS4ISoCdbv9E4A",
+          "time_created": 1778098965112,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef62499001M22WHVm2eQzz5O",
+          "time_created": 1778099037344,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef624a7002JE2NGGynl8276I",
+          "time_created": 1778099037351,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefe172e002hw7YaqUASylKBz",
+          "time_created": 1778099558190,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeff14110010JYt57bBqj7eEw",
+          "time_created": 1778099622936,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeff141e002CcqWBxyYNKrb30",
+          "time_created": 1778099622942,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeff3dec002PJVv9Iq1P8161u",
+          "time_created": 1778099633644,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeff9d20002sdw6Kul22u8tlK",
+          "time_created": 1778099658016,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeffc203002ew8dfdjzqTPEmv",
+          "time_created": 1778099667459,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefff4d700256Q01SjYnmhK21",
+          "time_created": 1778099680471,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff000eb5002e2BKVer9cEb3r6",
+          "time_created": 1778099687093,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff00b572002KlgVE9IL8natGQ",
+          "time_created": 1778099729778,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff00f6aa002src1McBXBSOeTJ",
+          "time_created": 1778099746474,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0129a1002MZw1Kes7kEbjzu",
+          "time_created": 1778099759521,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff01752a0022ioWV3zXK7YkwY",
+          "time_created": 1778099778858,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff019d210026iy7oAugRV4eij",
+          "time_created": 1778099789089,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff01c644002TbTu3qSUcMfV3K",
+          "time_created": 1778099799620,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff01f0090029EYZ0JiAmhUjcj",
+          "time_created": 1778099810313,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff022e2c00242otssFpilXaBV",
+          "time_created": 1778099826220,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff025116002dgkWzEF6vLsZ3g",
+          "time_created": 1778099835158,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff028bc2002hUeAhMdwXro19b",
+          "time_created": 1778099850178,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff02cf570021F2bsAmYbL8gKk",
+          "time_created": 1778099867479,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff03d53f001tl9j66kLnC1lsi",
+          "time_created": 1778099934534,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff03d550002RJNbL0icY0SHjP",
+          "time_created": 1778099934544,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff04cd760013j4aWWdMuZGQWf",
+          "time_created": 1778099998076,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff04cd840021UuNBEpgwImvkH",
+          "time_created": 1778099998084,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff05d0a6002TGitV0hLuWk7O8",
+          "time_created": 1778100064422,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff05d6ce001OdNYNUqvVTIzZd",
+          "time_created": 1778100066003,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff05f567002p352M3gHtmGDW9",
+          "time_created": 1778100073831,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0657ad002DoeWQdrmEQdZaP",
+          "time_created": 1778100098989,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff07501f001HyAfFvmU7gE6va",
+          "time_created": 1778100162598,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff078dbb002OVg4pO7IlCVLVm",
+          "time_created": 1778100178363,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff08dfd7002ZEKQV87N3cEK6F",
+          "time_created": 1778100264919,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff090b9e002ELNNzU6ciIY2R0",
+          "time_created": 1778100276126,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff096519002a7bMHTI955ofzj",
+          "time_created": 1778100299033,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a3876002cG9jI2rKQ8XBKY",
+          "time_created": 1778100353142,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a6380002U6GigfIPjR1GL0",
+          "time_created": 1778100364160,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ae3ff002qeKg8FalCMLgjR",
+          "time_created": 1778100397055,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0b0e0a002CJ5C47KbNu709N",
+          "time_created": 1778100407818,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d9ea4001PGKU6IYEoUI0OW",
+          "time_created": 1778100575914,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d9eb4002WR25paYUXiEgzt",
+          "time_created": 1778100575924,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0dd30d002ZnNt37XXMjE4ut",
+          "time_created": 1778100589325,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e0e57002z6pp45zroh3ZkU",
+          "time_created": 1778100604503,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e5ac3002TOEwx5bks5UUs7",
+          "time_created": 1778100624067,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0eb7ab0021xhdqryxup17lo",
+          "time_created": 1778100647851,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ef7d8002T5FRknNZq5O1VN",
+          "time_created": 1778100664280,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f1501002tC2Z4t2P2xIoYX",
+          "time_created": 1778100671745,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f58ca002jpfjh9d2c2w3ja",
+          "time_created": 1778100689098,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ff208001tzgxnb6Lor6ERs",
+          "time_created": 1778100728337,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0ff21b0029OBxQ590e9dms1",
+          "time_created": 1778100728347,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1138a3002EeTe1HpKZOBfX7",
+          "time_created": 1778100811939,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff11701c002HufaByKEHMQXQJ",
+          "time_created": 1778100826140,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff11a4a3002P1grgE7udr0Zik",
+          "time_created": 1778100839587,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff11c5ed002aB9UL6qUzBo6fH",
+          "time_created": 1778100848109,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1235fc002PvxmU81T1LdBM7",
+          "time_created": 1778100876796,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff125e03002i1ME231IQhB1Mn",
+          "time_created": 1778100887043,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff12ad20002mKljAYFk4IH7nw",
+          "time_created": 1778100907296,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff12f483002kLTxykzojdwfZl",
+          "time_created": 1778100925571,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff131135002gZCe78JplwEtHS",
+          "time_created": 1778100932917,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff134023002c2SJWBeML4XRvV",
+          "time_created": 1778100944931,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff135f5b002l30Su0uUXXAlzm",
+          "time_created": 1778100952923,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff13a244002ZT2abvqgfds3AO",
+          "time_created": 1778100970052,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff13c5f1002zMbnfNrXVvNEL1",
+          "time_created": 1778100979185,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff13e347002WpG6yLz0lhWTNy",
+          "time_created": 1778100986695,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff162415001eyWEag6qk1sxox",
+          "time_created": 1778101134363,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff162427002dXcWVy7MOB7nQy",
+          "time_created": 1778101134375,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1829c6001hCdwd7KW4d4q7H",
+          "time_created": 1778101266892,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1829d5002VsK2ReJ4pWqN5J",
+          "time_created": 1778101266901,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff185ab1002o4Rh7HP9muE6sH",
+          "time_created": 1778101279410,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff18b000002Du765vWCOhtusW",
+          "time_created": 1778101301248,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff19469d001ZhtaFHjz6TvKle",
+          "time_created": 1778101339810,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1946ac002bmtC1MgCdFa5cu",
+          "time_created": 1778101339820,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff19fe1e0029t6d8yCc0rFzLn",
+          "time_created": 1778101386782,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1a3850002TmNv4e19gTRljB",
+          "time_created": 1778101401680,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1a5eb9002Xw9mRYfSfW1iBo",
+          "time_created": 1778101411513,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1b638f002CKSCEH2PHp1ikZ",
+          "time_created": 1778101478287,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1b89b30025AhnQlBdQoYzWc",
+          "time_created": 1778101488051,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1bbba0002FlMw1Tc4DErB1Y",
+          "time_created": 1778101500832,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1be31c002J2D3sgRur0aGi6",
+          "time_created": 1778101510940,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1c0de2002Lc2E1k5oyfyzWO",
+          "time_created": 1778101521890,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1c4a8a002Lw4CSokQRn5vxw",
+          "time_created": 1778101537418,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1ca2cd001v1tW3TJeK7R91Y",
+          "time_created": 1778101560018,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1ca343002tfIeGdilLnqzkF",
+          "time_created": 1778101560131,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1f73ff002C7Ny9IRT8LaZOo",
+          "time_created": 1778101744639,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1fa0ee002IGUtMpQODhqwwp",
+          "time_created": 1778101756142,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1ffd1a002QIIbUbMSMEGzkX",
+          "time_created": 1778101779738,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff20516a0023kcE9nP8nR6CE8",
+          "time_created": 1778101801322,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff207beb0025XPRkup88vnA5p",
+          "time_created": 1778101812203,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff20a62e002ZhFeVHdfmNZk16",
+          "time_created": 1778101823022,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff20c8c1002HguQZWAilOs82J",
+          "time_created": 1778101831873,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff21330f002Gu24KQpr0Xvxmm",
+          "time_created": 1778101859087,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff215c61002iG44doQQs2bTv7",
+          "time_created": 1778101869665,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2180ae002pPJOU4Lup0C7GU",
+          "time_created": 1778101878958,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff21bb05002oTfXAqneNX7Dot",
+          "time_created": 1778101893893,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff21e85a002Vng3IvUtQUXoUw",
+          "time_created": 1778101905498,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff223ac3002nxre02M0KgizTr",
+          "time_created": 1778101926595,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff22cf8e001Xta6UN3kj0H6lx",
+          "time_created": 1778101964691,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff22cf9f002B7ChAgovxFMF7P",
+          "time_created": 1778101964703,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff23879d002UYoCLbKuVu7Hnh",
+          "time_created": 1778102011805,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff24eea0002624g4n674ica0y",
+          "time_created": 1778102103712,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff256423002b1ZXEzLmdrbH4Z",
+          "time_created": 1778102133795,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff25c883002cWBS6PlTeAawxE",
+          "time_created": 1778102159491,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2697b300276fD4m305c31EZ",
+          "time_created": 1778102212531,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff272ce3002L9VGS045kCjFQx",
+          "time_created": 1778102250723,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff28038d002Itc3tx74Cwn5OQ",
+          "time_created": 1778102305677,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2849280025pVbeXA93W7IaF",
+          "time_created": 1778102323496,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff28b02f002j1MKVSAUZr8cOc",
+          "time_created": 1778102349871,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff29478f0027IDbecJzp4EdcK",
+          "time_created": 1778102388623,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff29e86b002csZPj6sVrtUu8N",
+          "time_created": 1778102429803,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2a6eb0002TWOYnHTZoT0Yr1",
+          "time_created": 1778102464176,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2aaf07002pUw86ViRNeBTet",
+          "time_created": 1778102480647,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b35580024Npgq3qR134x5F",
+          "time_created": 1778102515032,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2bac5f002XVliGyrtu7RolU",
+          "time_created": 1778102545503,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2c7f300025xIjvhg57aVJas",
+          "time_created": 1778102599472,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2d2044002QF6UnY1j4CnDCD",
+          "time_created": 1778102640708,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2d6bf0002cPGg8WH3i6JwAp",
+          "time_created": 1778102660080,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2db328002qJ466dFePbXqmR",
+          "time_created": 1778102678313,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e9836002QG9gHHNA6ZhRzz",
+          "time_created": 1778102736950,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2ec996002UrwphBchQcEOIY",
+          "time_created": 1778102749590,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2eea63002mcRyweNOS8sSA5",
+          "time_created": 1778102757987,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2fbdbd00258vLT4cpZiDsyJ",
+          "time_created": 1778102812093,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff304085002c6te0LLZnfsUcN",
+          "time_created": 1778102845573,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3131d0001l0XdN0UnFYXlsY",
+          "time_created": 1778102907348,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3131df001VtauTpQuo3Juml",
+          "time_created": 1778102907359,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3131f3001EYpzMNtq26iMrS",
+          "time_created": 1778102907379,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff322592002umr7rG84GgE3ZY",
+          "time_created": 1778102969746,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff32259e001C6MM3hGyx744Nl",
+          "time_created": 1778102969758,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff326aac001BJxEe40haKE2Ha",
+          "time_created": 1778102987436,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff327a11001rTNEyshRXljTCY",
+          "time_created": 1778102991377,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff328e36001wTLo9t4KCnkdcS",
+          "time_created": 1778102996534,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff32aa3f00160zCqwJG7n8kOY",
+          "time_created": 1778103003711,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff32bb5a001DlxbWPoD2HFTG7",
+          "time_created": 1778103008090,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff32d0f1001bzHaCL3razs48z",
+          "time_created": 1778103013617,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff32e585001jhmXwgxmxksI52",
+          "time_created": 1778103018885,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff32fb10001prypJVZnK1Q9Ko",
+          "time_created": 1778103024400,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff330df0001IV3nhgvkcyepjj",
+          "time_created": 1778103029232,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff331e7600174xHhtjKWBjmYp",
+          "time_created": 1778103033462,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff333f6e001POWuOh8krDpjcK",
+          "time_created": 1778103041902,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff335092001SBBWLAje10QMVc",
+          "time_created": 1778103046290,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff336083001bShU77Nk8zxEis",
+          "time_created": 1778103050371,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3370c0001eKEbRbGrtbDRxy",
+          "time_created": 1778103054528,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff338818001YUvb8x0GS57FWF",
+          "time_created": 1778103060504,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff339b3d001L6GCSc3HzbKYWs",
+          "time_created": 1778103065405,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff33ae120013l71cy1miYGTIk",
+          "time_created": 1778103070226,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff33c46e001nnhT3loMXJy37n",
+          "time_created": 1778103075950,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff33d941001b9JzAoIk6yEFm0",
+          "time_created": 1778103081281,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff33f874001rFUX5k3fGsHWep",
+          "time_created": 1778103089268,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff343b3b001AHlSB7oSGAGZSl",
+          "time_created": 1778103106363,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff344aad001U7yDMvFar1gA71",
+          "time_created": 1778103110317,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff346d3a001YShlhvgd70Hfm3",
+          "time_created": 1778103119162,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff347f9d0015Xed3xQqBj5HZp",
+          "time_created": 1778103123869,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff348ed9001QGJQw4kChbJ9JD",
+          "time_created": 1778103127769,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff34c67a001WIHIrRQkD12hHi",
+          "time_created": 1778103142010,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3509cf001J0FmtIol5a2hYd",
+          "time_created": 1778103159247,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff3538c2001PxYrNNsoiTqLna",
+          "time_created": 1778103171266,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff355fbe001GtiE5OJlPWu94b",
+          "time_created": 1778103181246,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff357527001VjqlPZ7ESMpR80",
+          "time_created": 1778103186727,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff35a07d001bBU1CcV4a0Ia6X",
+          "time_created": 1778103197821,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff35b622001BhQnrwkzZgSspY",
+          "time_created": 1778103203362,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff35fcc3001Mul68lJ3pvhN4a",
+          "time_created": 1778103221443,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff36119e001cPBIONvnLzxNZM",
+          "time_created": 1778103226782,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff363ace001dYplmjovNSZqQq",
+          "time_created": 1778103237326,
+          "role": "assistant",
+          "note": "no text parts"
+        }
+      ]
+    },
+    {
+      "id": "ses_2010bcc19ffejrUOvRgvD8BUyV",
+      "title": "Prompts for subagents general and explore",
+      "directory": "/mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main",
+      "message_count": 132,
+      "extracts": [
+        {
+          "message_row_id": "msg_dfef433ed001aLVpZ2rU5VdwrZ",
+          "time_created": 1778098910200,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef4340d001tjns3HZLgooUkG",
+          "time_created": 1778098910221,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef6a05d001VSZ7eA1kJdqniN",
+          "time_created": 1778099069021,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef94b45001V35nGA5TxZCbMv",
+          "time_created": 1778099243852,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef94b53001odMWEN6YRl5Xjo",
+          "time_created": 1778099243859,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef972430012UwXVRJc5vVQ4H",
+          "time_created": 1778099253827,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefa689b0010OjmQw1NYusPPg",
+          "time_created": 1778099316910,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefa68b6001feP6mueNE6Woid",
+          "time_created": 1778099316918,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefa8ce1001xlb51E8lZTWIvx",
+          "time_created": 1778099326177,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefab4dd001FjYmx5KAOTamzN",
+          "time_created": 1778099336413,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefade7a001m6NJDNjPjCgdfJ",
+          "time_created": 1778099347066,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb0965001mOwFeUwWTyGaSk",
+          "time_created": 1778099358053,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb3c27001I407b5WZiBbQPA",
+          "time_created": 1778099371047,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb6630001gNMDRiiDI6mg4D",
+          "time_created": 1778099381808,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb7d6a001c69g65sQLFTdZt",
+          "time_created": 1778099387759,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefb8986001b2okSW3SwxsmLc",
+          "time_created": 1778099390854,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefbb3f3001vrEZ7mom1eks1f",
+          "time_created": 1778099401715,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefbe2ec001PRvgCGKpf0zIz5",
+          "time_created": 1778099413740,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc1671001DKVPidqsKhPox5",
+          "time_created": 1778099426929,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeffcc6c001gfKR34B0v8O3ya",
+          "time_created": 1778099670129,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeffcc760023yw2Y7GO52J4eq",
+          "time_created": 1778099670134,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff000bbe002tMNCcGw2U5Fi4j",
+          "time_created": 1778099686334,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff005aa8002n8MQ66BSVeLt58",
+          "time_created": 1778099706536,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0075eb002360hdbxqCBfOxY",
+          "time_created": 1778099713515,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff00aa96002xTYDhdoF35Qzl6",
+          "time_created": 1778099726998,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff00c798002Qm4ijY37HzNdPR",
+          "time_created": 1778099734424,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0107ce002bMfJZPkJjawm6z",
+          "time_created": 1778099750862,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0127ed002dxJyi5Y671ayPu",
+          "time_created": 1778099759085,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff017571002cozgD02DMCi8od",
+          "time_created": 1778099778929,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0633c9002VN2d5PMKHxGVbA",
+          "time_created": 1778100089801,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0667e30025aYXf2HclDfX7S",
+          "time_created": 1778100103139,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff07b16b001RWT557k6RvhkDh",
+          "time_created": 1778100187505,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff07b17a002IQOI9eZEDW9Znc",
+          "time_created": 1778100187514,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0814450025LfpjXm799JYls",
+          "time_created": 1778100212805,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff08bec6002aV7rtQqDaxvLGs",
+          "time_created": 1778100256454,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff08f936002kY2ajuB7RbaAio",
+          "time_created": 1778100271414,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff091f73002ZTyamtGuYX2w78",
+          "time_created": 1778100281203,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff096c54002ZcCgwKszaIiBEK",
+          "time_created": 1778100300884,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a2d4c002H73GmARyXKe3iz",
+          "time_created": 1778100350284,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0a9b250029MA5a6Q0Ywbb4p",
+          "time_created": 1778100378405,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0af47e002o3hW5QcCflQflm",
+          "time_created": 1778100401278,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0bcd0a002k96UmR09835Tlb",
+          "time_created": 1778100456714,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0c5cd0002La6KbrGF0TbgXx",
+          "time_created": 1778100493521,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d3500002RCmtWRBNzNWHzi",
+          "time_created": 1778100548864,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0d6738002H38Z4inaKstzOd",
+          "time_created": 1778100561720,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0dee36002ZM3lYQZBAYOAZp",
+          "time_created": 1778100596278,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e1436002ZBtVq0HwfO4l7D",
+          "time_created": 1778100606006,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e5a390023jGn0zqIT5mC7Z",
+          "time_created": 1778100623929,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e7511002qOCq7XBhCJHsOd",
+          "time_created": 1778100630801,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f2f1b002270EWzR3EuvOKb",
+          "time_created": 1778100678427,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f53e0002ykstm2IP6aU4D1",
+          "time_created": 1778100687840,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f8c23002Qgk3xDhesPLilO",
+          "time_created": 1778100702243,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0fc6cb002ndkm1A4XMnz4bF",
+          "time_created": 1778100717259,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff11f4e5001eqfjRQeiWyvcEE",
+          "time_created": 1778100860140,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff11f4fd002YTLvuuOQ2YC6e8",
+          "time_created": 1778100860157,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff123ea5002no2xYJEYx0JRB9",
+          "time_created": 1778100879013,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff16c0c4001q0ZqoHf1kYbYkM",
+          "time_created": 1778101174473,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff16c0d8001rD1pzJQxG64VZn",
+          "time_created": 1778101174488,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff16c0fb001XmtqCBDbU4nnMz",
+          "time_created": 1778101174523,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff176d18002S1VEpIZ5hX7HA9",
+          "time_created": 1778101218584,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff176d2a0024Q7t8NustHcW1n",
+          "time_created": 1778101218602,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff179a780029Vjzf3v211dBlT",
+          "time_created": 1778101230200,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff18c32a001zm3o4yoAGfOugJ",
+          "time_created": 1778101306158,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff18c33b0025WUpXDm5V5QdOq",
+          "time_created": 1778101306171,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff21239f002uXpoeH4CQe7PeV",
+          "time_created": 1778101855135,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff234656002oYO8JEhdMqE94I",
+          "time_created": 1778101995094,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff237435002uA6vU50599z04J",
+          "time_created": 1778102006837,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2583130019kcnF9YsHRfX99",
+          "time_created": 1778102141719,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff258324002PQWqjpHzhH46kb",
+          "time_created": 1778102141732,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff25bcf50025RrQRqmU4VsKNR",
+          "time_created": 1778102156533,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff26cc7d001asNKuvCwkMOkYi",
+          "time_created": 1778102226049,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff26cc8e002brgxFxeKKFYBDn",
+          "time_created": 1778102226062,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff26f6b5002QvdCdE8Npn1wWf",
+          "time_created": 1778102236853,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff27158b002zdWTEToMNOEl1A",
+          "time_created": 1778102244747,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2741db002J9Fz65v3lt30vG",
+          "time_created": 1778102256091,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff278b0e002A0Qs11hhp5s7Vo",
+          "time_created": 1778102274830,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff27a8b50021xFIEa62MbiIP8",
+          "time_created": 1778102282421,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff27be30002H4u3kYQDwdK18i",
+          "time_created": 1778102287920,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff27d67f0021zou8OEdUU51FT",
+          "time_created": 1778102294143,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff27fd09002bxNOZGfzh6d1N4",
+          "time_created": 1778102304009,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff281244002ISO5Gi3BvmOfwa",
+          "time_created": 1778102309444,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff28274f002gfOpmrVj383rYF",
+          "time_created": 1778102314831,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff284024002iNCmvjTc5wXcXP",
+          "time_created": 1778102321188,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2884cb002Y1Dg0OHUO647FJ",
+          "time_created": 1778102338763,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff28b778002tu89cx1XAqZiTK",
+          "time_created": 1778102351736,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff28e32200217CB5C4cIwAXQo",
+          "time_created": 1778102362914,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff28fdcc002VrPAUh84ti9pJ7",
+          "time_created": 1778102369740,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff293165002qshLU9uBEM0gsK",
+          "time_created": 1778102382949,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff29a86d002V0hDm8ya5ypFZy",
+          "time_created": 1778102413421,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff29c0df002QjPAgu033NVe4F",
+          "time_created": 1778102419680,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff29d3b40023DROeqiXgML0oU",
+          "time_created": 1778102424500,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2a20e9002G3Rp2t4l5FhS74",
+          "time_created": 1778102444265,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2a48ab002jBLUqETfJPG6Fq",
+          "time_created": 1778102454443,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2a66a7002NefZesiWc24KX0",
+          "time_created": 1778102462119,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2a97c7002b0GLQbbJoXTaKD",
+          "time_created": 1778102474695,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2ab9f5002P2QvTmN1d7Ptis",
+          "time_created": 1778102483445,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2ad5d6002jiClUZBnBlwd0T",
+          "time_created": 1778102490582,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2af6d0002EFSJGprscfe7l2",
+          "time_created": 1778102499024,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b1fff002nRc2vUAx10Hlmo",
+          "time_created": 1778102509567,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b3493002G7rWmAQY3tPElY",
+          "time_created": 1778102514835,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b52b2002wVb88FktuOF11C",
+          "time_created": 1778102522546,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b6895002GS0HRIzlhHEK0c",
+          "time_created": 1778102528149,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b810d002kt0dgC3gt4qqTA",
+          "time_created": 1778102534413,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2b98fd002D1KP8Idb38e5Fa",
+          "time_created": 1778102540541,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2bc40c0021CusP6lJBgP9vT",
+          "time_created": 1778102551564,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2bf921002KwSIKSE6x0MiV2",
+          "time_created": 1778102565153,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2c4178002m3L5JPnkQlvaY6",
+          "time_created": 1778102583672,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2c9a6e001iJsXGZwMOnTdBV",
+          "time_created": 1778102606446,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2cbb2c002wkFV5bIw5tEBOT",
+          "time_created": 1778102614828,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2cd81a002iKzH2963BhXYTm",
+          "time_created": 1778102622234,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2cfc2e002AsNK7HANr81TlB",
+          "time_created": 1778102631470,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2d273b002E6905E2txnNfHd",
+          "time_created": 1778102642491,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2d5a01002vVOfPxZDXgVtic",
+          "time_created": 1778102655489,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2d8382002aYXi9QXoTBmfKP",
+          "time_created": 1778102666114,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2da2ad002vP34dsP58GsPaU",
+          "time_created": 1778102674093,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2dbb71002Zma9vCsTtHJntm",
+          "time_created": 1778102680433,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2dcf11002cy7FOPQAlNse30",
+          "time_created": 1778102685457,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2de88c002dpowCA1UCJGEBF",
+          "time_created": 1778102691980,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e006d002wQhGIGyO7wy3XF",
+          "time_created": 1778102698093,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e173b002OyNP51Cwj9X6fn",
+          "time_created": 1778102703931,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e3450002JEslnbOABEuuKw",
+          "time_created": 1778102711376,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e4935002Qg6SRBsdGDyTSh",
+          "time_created": 1778102716725,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e7467002IaXuMSqRM7L6Jh",
+          "time_created": 1778102727783,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2e8a0e002IWc0NjPVfoshXA",
+          "time_created": 1778102733326,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2ea818002F6PrG6YqI8vKBW",
+          "time_created": 1778102741016,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2ec1b40024hu1DhY3viO4fl",
+          "time_created": 1778102747572,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2edb12002Tfg5Zp2mtK0TWI",
+          "time_created": 1778102754066,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2eeecf002sNDMZbHV1n7B44",
+          "time_created": 1778102759119,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f03b1002JP2ShFtB81fv5B",
+          "time_created": 1778102764465,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f4d86002s0qyhiR2pxLk8Z",
+          "time_created": 1778102783366,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f8273002jIFkh1WmPxh7m9",
+          "time_created": 1778102796915,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff2f9f7c0026l9dEuWftOaEHy",
+          "time_created": 1778102804348,
+          "role": "assistant",
+          "note": "no text parts"
+        }
+      ]
+    },
+    {
+      "id": "ses_20119003dffeVw0h2RLNyWHBLo",
+      "title": "Project review",
+      "directory": "/home/irfankabir/x-change",
+      "message_count": 121,
+      "extracts": [
+        {
+          "message_row_id": "msg_dfee6ffc6001kfcpsagw5uFmhp",
+          "time_created": 1778098044877,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee6ffd9001kVya7FRYqeWY0I",
+          "time_created": 1778098044889,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee727fd001C4434GtyM53HgR",
+          "time_created": 1778098055165,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee7b61b001Ewyv9gI2Kfg4e0",
+          "time_created": 1778098091555,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee7b62e001QbP30wY2p0DSnh",
+          "time_created": 1778098091566,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee7de56001uWdLU6M4NRMo85",
+          "time_created": 1778098101846,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee7f71d0010ND4bLDaeOHwaG",
+          "time_created": 1778098108189,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee83745001nHXreauSSVz7ct",
+          "time_created": 1778098124613,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee86f14001T90J6GW0VI7tgB",
+          "time_created": 1778098138995,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee86fe1001q7bi4UYh8md5rL",
+          "time_created": 1778098139105,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee924e9001zsLoSf24FyWDsO",
+          "time_created": 1778098185449,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee945fb001VUhkCk1SM4Y44U",
+          "time_created": 1778098193915,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfee99246001MtyHYwZAaZd2QW",
+          "time_created": 1778098213446,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeea2e8b001quw5UZavlw1Pl3",
+          "time_created": 1778098253451,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeeb37ba001zDc62Tr7m0D2FN",
+          "time_created": 1778098321345,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeeb37c8001UCDfBKkiNc4J8W",
+          "time_created": 1778098321352,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeeb4f14001txlnFELGbweTtJ",
+          "time_created": 1778098327316,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeeb691c0010abr37nAldJ3zc",
+          "time_created": 1778098333980,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeebe6e8001zDIZS6n15NFF6S",
+          "time_created": 1778098366184,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeed3884001OLLS52CbHhm63l",
+          "time_created": 1778098452617,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeed3897001ErnOhubYtAttMi",
+          "time_created": 1778098452631,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeed7d86001hjYxgxpTVVHD24",
+          "time_created": 1778098470278,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeee1704001oixt3rSv7SQWEf",
+          "time_created": 1778098509572,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeef01a4001yQCezImbg42Dff",
+          "time_created": 1778098569636,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeef01b1001GEGkpFSVLuE6sp",
+          "time_created": 1778098569649,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeef7b0e001gMLkRxTJeKnw1w",
+          "time_created": 1778098600718,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeef7b16001Ku5P75u56uG7ga",
+          "time_created": 1778098600726,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeefa30f001KwVCQTcrnDWBLC",
+          "time_created": 1778098610959,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeefb6bc001AZiYBjgOCSa7bx",
+          "time_created": 1778098615996,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfeefdeec001AsxOVseixzh9ki",
+          "time_created": 1778098626284,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef00206001f6d0jkPgvxEO53",
+          "time_created": 1778098635270,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef06c280017pO2bpnFWJ44iV",
+          "time_created": 1778098662440,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef27db5001ad14xUX1Rq3gzg",
+          "time_created": 1778098798005,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef2aeca001GgGkIPHKgiwcIo",
+          "time_created": 1778098810570,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef2ed7c0019ZHgn02m2yWwo5",
+          "time_created": 1778098826620,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef3088e001YSHVOTbq7Ywhku",
+          "time_created": 1778098833550,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef3216f001b97xQTXbg78qAI",
+          "time_created": 1778098839920,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef33b14001jXTa33Z38xy10s",
+          "time_created": 1778098846484,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef35933001sW3rO4cqFQcDNI",
+          "time_created": 1778098854195,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef3d4fa001scowGKqTN1drd1",
+          "time_created": 1778098885882,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef3eefb0019sXzDZqhUxzHe6",
+          "time_created": 1778098892539,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef405ef001MgHQbgcDirxR47",
+          "time_created": 1778098898415,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef47315001vd9LyMWGAoUtqW",
+          "time_created": 1778098926357,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef4bcea001a3YWcyT0IOCQ62",
+          "time_created": 1778098945258,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef4dcef001bsLt4SZ6HhPvCJ",
+          "time_created": 1778098953455,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef4f806001VS6qmJ4YM6znkw",
+          "time_created": 1778098960390,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5120f001eq6LVfuXChAwA4",
+          "time_created": 1778098967055,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef525ec001yhGOFUDFbki0as",
+          "time_created": 1778098972140,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef54083001RBowb17jXgl2ha",
+          "time_created": 1778098978947,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5524e0019BFFR8QjnAYnit",
+          "time_created": 1778098983502,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef565e5001at78J50KWGJcTo",
+          "time_created": 1778098988517,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef57d78001smfOn27V7wYbb2",
+          "time_created": 1778098994552,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef59305001creTs6UouSlNRB",
+          "time_created": 1778099000069,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5ac00001h60UsBBVmB0GSg",
+          "time_created": 1778099006464,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5bf85001dHsjzyWXT2kaNG",
+          "time_created": 1778099011461,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5dafb001vxqRwVilxLyS80",
+          "time_created": 1778099018491,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef5ef87001dtoUTsfyUIEX3j",
+          "time_created": 1778099023751,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef670ce001CmVvG2Unt0br0t",
+          "time_created": 1778099056846,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef68d750010aRFuu3EFlMWfQ",
+          "time_created": 1778099064181,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef6a2a8001qpZKYAVQadkZIr",
+          "time_created": 1778099069608,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef6b680001TJetzM1ewvkaDu",
+          "time_created": 1778099074688,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef6c8f30013CsM4XbfxrEmc0",
+          "time_created": 1778099079411,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef6e100001S3agXWudEOqxz6",
+          "time_created": 1778099085568,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef74ecd001KqgjtAAhoSKJJU",
+          "time_created": 1778099113677,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef76f180011kolzqJ5B1yw33",
+          "time_created": 1778099121944,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef9e8ac001pVqbmWS9TBwiir",
+          "time_created": 1778099284153,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfef9e8c30019th4NCw2lr5dAI",
+          "time_created": 1778099284163,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefaa787001ahNat4zFzN1I6G",
+          "time_created": 1778099333000,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc4165001mPGR9F4IHMOVjH",
+          "time_created": 1778099437931,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefc4175001LHiEu2IPRUEjyi",
+          "time_created": 1778099437941,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefca173001ZKkoIHIkRMqa06",
+          "time_created": 1778099462515,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefcb518001IisGz5ZEPz2uME",
+          "time_created": 1778099467544,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefcea9c001TvWE4avJQiboy1",
+          "time_created": 1778099481244,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefee415001VUEqX6yT9PdoAQ",
+          "time_created": 1778099610668,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefee43a0011OaOP9zt3q8uBY",
+          "time_created": 1778099610682,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dfefff1d3001ZdNwGFGoWJXUAs",
+          "time_created": 1778099679699,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff001313001BFwOHmy2QZYVDA",
+          "time_created": 1778099688211,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff00377f001IOTll1m9R1RhYB",
+          "time_created": 1778099697535,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff004979001WzMFPeKj92ljtg",
+          "time_created": 1778099702137,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff005fcb001w4pEi2DtT64u3H",
+          "time_created": 1778099707851,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff021c9e001u5gXugmLRnCjNm",
+          "time_created": 1778099821726,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff059c87001W0kvpqhPRs8qRM",
+          "time_created": 1778100051079,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff059c9b001qE7XcHh6XNllFx",
+          "time_created": 1778100051099,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff06297b001XSYZRrxQPXP7ey",
+          "time_created": 1778100087163,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff062988001DUdmhjDRRvmME5",
+          "time_created": 1778100087176,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0642cd0017YeYbkiz4hVYNN",
+          "time_created": 1778100093645,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff065498001ZDkGucETAObzj3",
+          "time_created": 1778100098200,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff06618f001pTbKZGN1jQxBeY",
+          "time_created": 1778100101519,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0670c4001jnUq97TBQX4n95",
+          "time_created": 1778100105412,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0682a40013al0w7oMjbGmG7",
+          "time_created": 1778100109988,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff06919c001QXl3Uouq5wNlHs",
+          "time_created": 1778100113820,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff06a96c001TG6KJMImLXk2rE",
+          "time_created": 1778100119916,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff06ba7e001W0jXxq1f0qws7M",
+          "time_created": 1778100124286,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff06cb3e001u6Y1IvgZF2Oj6b",
+          "time_created": 1778100128574,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff06d8c8001rzTMTBeY9TOM63",
+          "time_created": 1778100132040,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff06ebd2001TGc8wcT9Z8bxSa",
+          "time_created": 1778100136914,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff072c22001RLQgLee2wo566v",
+          "time_created": 1778100153378,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff075110001ERv4oBHRtI1F4j",
+          "time_created": 1778100162832,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff075f2b001YPSP09efDBLODA",
+          "time_created": 1778100166443,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff077169001a8esOe9tkzCjB5",
+          "time_created": 1778100171113,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0780c4001GuVHBk9XBXRPMz",
+          "time_created": 1778100175044,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0791570019kNyxTdWUOoev2",
+          "time_created": 1778100179287,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff07af4d001prqYCqZip8JMdo",
+          "time_created": 1778100186957,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff08402f0015nMotWtWuzfqR3",
+          "time_created": 1778100224047,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0859f80015VG1W435Cjn0lg",
+          "time_created": 1778100230648,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e44f2001UMF8tl7uXUmEDx",
+          "time_created": 1778100618488,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0e4502001mI7psh07TNYALG",
+          "time_created": 1778100618498,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f7d4d001FZ1UvPyebyj1mp",
+          "time_created": 1778100698453,
+          "role": "user",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f7d61001f72FUkXqw9zOKn",
+          "time_created": 1778100698465,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0f9e240017V79G18OA15l1Q",
+          "time_created": 1778100706852,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0fb1f1001UBm52xgeA76vML",
+          "time_created": 1778100711921,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0fc850001X5aao2zFEuadBt",
+          "time_created": 1778100717648,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0fe7b3001AFD7knl4GmNB55",
+          "time_created": 1778100725683,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff0fff62001N2xfNW8pRfXXaq",
+          "time_created": 1778100731746,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff101d14001p3ZlVj0VPsjWnv",
+          "time_created": 1778100739348,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff10751e0012ReiXraUd2GBSL",
+          "time_created": 1778100761886,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff1164d8001j4ElXSOrJTqtGx",
+          "time_created": 1778100823256,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff118d87001GHH62emZ3xAysE",
+          "time_created": 1778100833671,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff119eaa00114iV0mzIBN38QT",
+          "time_created": 1778100838058,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff11b729001o9QGv3WtnmICYQ",
+          "time_created": 1778100844329,
+          "role": "assistant",
+          "note": "no text parts"
+        },
+        {
+          "message_row_id": "msg_dff11d9ca001kKhBc6mIHiaT3f",
+          "time_created": 1778100853194,
+          "role": "assistant",
+          "note": "no text parts"
+        }
+      ]
+    }
+  ]
+}
