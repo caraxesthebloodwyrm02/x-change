@@ -1,0 +1,42 @@
+name: Validation Gate
+
+on:
+  repository_dispatch:
+    types: [cascade-sync]
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --group dev --group test
+
+      - name: Lint with Pyright
+        run: uv run pyright --strict
+
+      - name: Run Pytest and Coverage
+        # Ensures coverage floor of 99%
+        run: uv run pytest tests/ --cov=. --cov-fail-under=99
+
+      - name: Epistemic Verification (Dry Run)
+        # Execute integration spike / dry run evaluation to ensure logic behaves correctly
+        run: uv run python -m pytest tests/test_dry_run.py
