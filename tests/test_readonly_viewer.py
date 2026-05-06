@@ -163,6 +163,7 @@ class ReadonlyViewerTests(unittest.TestCase):
 
         evidence = payload.get("evidence")
         self.assertIsInstance(evidence, list)
+        assert evidence is not None  # Type guard for Pyright
         self.assertGreaterEqual(len(evidence), 1)
         ev0 = evidence[0]
         self.assertIsInstance(ev0, dict)
