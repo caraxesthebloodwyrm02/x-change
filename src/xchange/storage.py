@@ -1114,13 +1114,25 @@ def issue_reward_token(
 ) -> dict[str, Any]:
     """Stamp an epistemic RewardToken onto an existing reward row.
 
-    Idempotent by reward_id: re-issuing overwrites the previous token.
-    Updates reward_token_amount to the tier-derived backward-compat integer.
+    Idempotent by reward_id: if a token is already issued, return it unchanged.
+    On first issue, writes reward_token_json and reward_token_amount.
     Returns the serialized token dict on success, or an error key.
     """
     row = _load_reward_row(conn, reward_id)
     if not row:
         return {"error": "reward_not_found"}
+
+    existing_raw = row["reward_token_json"]
+    if existing_raw:
+        existing_dict = json.loads(existing_raw)
+        existing_token = _reward_token_from_dict(existing_dict)
+        return {
+            "ok": True,
+            "reward_id": reward_id,
+            "token": _reward_token_to_dict(existing_token),
+            "immutable": True,
+            "note": "token_already_issued",
+        }
 
     token_dict = _reward_token_to_dict(token)
     conn.execute(

@@ -309,16 +309,29 @@ class IssueTokenApiTests(_BaseApiTests):
         self.assertEqual(status, 401)
         self.assertEqual(payload["error"], "unauthorized")
 
-    def test_issue_token_idempotent_re_issue(self) -> None:
-        """Re-issuing a token on the same reward overwrites the previous one."""
+    def test_issue_token_reissue_returns_original_token(self) -> None:
+        """Re-issuing a token on the same reward returns the first stamped token."""
         self._seed_reward()
         p = self._minimal_token_payload()
         s1, r1 = self._post("/v0/tokens/issue", p)
-        s2, r2 = self._post("/v0/tokens/issue", {**p, "issuance_trigger": "second"})
+        s2, r2 = self._post(
+            "/v0/tokens/issue",
+            {
+                **p,
+                "insight_tier": "theoretical",
+                "issuance_trigger": "second",
+                "inferential_richness": 1.0,
+                "trend_position": 0.0,
+            },
+        )
 
         self.assertEqual(s1, 200)
         self.assertEqual(s2, 200)
-        self.assertEqual(r2["token"]["issuance_trigger"], "second")
+        self.assertEqual(r2["token"]["issuance_trigger"], "test_trigger")
+        self.assertEqual(r2["token"]["insight_tier"], "surface")
+        self.assertEqual(r2["token"]["issued_at"], r1["token"]["issued_at"])
+        self.assertEqual(r2["token"]["rarity_score"], r1["token"]["rarity_score"])
+        self.assertTrue(r2.get("immutable"))
 
 
 # ---------------------------------------------------------------------------
