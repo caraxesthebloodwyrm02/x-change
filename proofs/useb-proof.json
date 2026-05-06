@@ -1,0 +1,20 @@
+{
+  "feature": "Unified Session Evidence Bundle",
+  "version": "v1",
+  "sample_receipt": {
+    "ok": true,
+    "session_id": "useb-demo-session",
+    "evidence_recorded": true,
+    "transition": null,
+    "bundle_hash": "sha256:sample"
+  },
+  "policy_assertions": [
+    "Glass bridge data is persisted as evidence only.",
+    "GRID substantiation data is persisted as evidence only.",
+    "Reward state advances only through explicit x-change policy booleans and existing domain rules."
+  ],
+  "expected_failure_path": {
+    "case": "stale_bridge",
+    "result": "collector exits non-zero unless --allow-stale is set"
+  }
+}

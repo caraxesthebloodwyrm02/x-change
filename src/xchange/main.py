@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
+import logging
 import math
 import os
 import time
@@ -10,7 +12,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Lock
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from xchange.domain import (
     ConstraintConfig,
@@ -36,11 +38,17 @@ from xchange.storage import (
     list_exchange_requests,
     list_support_signals,
     open_db,
+    patch_evidence_reward_id,
     process_stripe_payment_intent_succeeded,
+    record_webhook_event,
     resolve_support_signal,
+    resolve_token_scope,
+    resolve_tool_scope,
     store_exchange_request,
 )
 from xchange.stripe_sig import verify_stripe_signature
+
+_useb_log = logging.getLogger("xchange.useb")
 
 
 class BodyTooLargeError(Exception):
@@ -104,25 +112,36 @@ def _read_json_body(handler: BaseHTTPRequestHandler) -> dict[str, Any]:
         BodyTooLargeError: Content-Length header exceeds ``XCHANGE_MAX_BODY_BYTES``.
         ValueError: Body is not valid UTF-8 JSON.
     """
+    raw = _read_request_body_bytes(handler)
+    try:
+        return json.loads(raw.decode("utf-8"))
+    except Exception as e:
+        raise ValueError(f"Invalid JSON: {e}") from e
+
+
+def _read_request_body_bytes(
+    handler: BaseHTTPRequestHandler,
+    *,
+    reject_invalid_content_length: bool = False,
+) -> bytes:
     max_bytes = _max_body_bytes()
     length_str = handler.headers.get("Content-Length")
     if length_str is not None:
         try:
             length = int(length_str)
-        except ValueError:
+        except ValueError as e:
+            if reject_invalid_content_length:
+                raise ValueError("Invalid Content-Length header") from e
             length = 0
         if length > max_bytes:
             raise BodyTooLargeError(
                 f"body exceeds limit: {length} bytes (max {max_bytes})"
             )
+        length = max(0, length)
     else:
         length = 0
     # Always cap the actual read — guards against absent / spoofed Content-Length.
-    raw = handler.rfile.read(min(length, max_bytes)) if length > 0 else b"{}"
-    try:
-        return json.loads(raw.decode("utf-8"))
-    except Exception as e:
-        raise ValueError(f"Invalid JSON: {e}") from e
+    return handler.rfile.read(min(length, max_bytes)) if length > 0 else b"{}"
 
 
 def _parse_body(handler: BaseHTTPRequestHandler) -> dict[str, Any] | None:
@@ -156,11 +175,22 @@ def _require_ingest_token(handler: BaseHTTPRequestHandler) -> bool:
         return False
     auth = handler.headers.get("Authorization", "")
     expected = f"Bearer {token}"
-    if auth == expected:
+    if auth and hmac.compare_digest(auth, expected):
         return True
     x_token = handler.headers.get("X-Ingest-Token")
-    if x_token and x_token == token:
+    if x_token and hmac.compare_digest(x_token, token):
         return True
+    # Grace window: accept XCHANGE_INGEST_TOKEN_PREV during token rotation overlap.
+    # The operator sets this env var at rotation time and removes it after the
+    # overlap window has elapsed (typically ~5 minutes). The server accepts
+    # both tokens simultaneously while XCHANGE_INGEST_TOKEN_PREV is set.
+    prev_token = os.environ.get("XCHANGE_INGEST_TOKEN_PREV")
+    if prev_token:
+        prev_expected = f"Bearer {prev_token}"
+        if auth and hmac.compare_digest(auth, prev_expected):
+            return True
+        if x_token and hmac.compare_digest(x_token, prev_token):
+            return True
     return False
 
 
@@ -181,6 +211,11 @@ def _rate_limit_settings() -> tuple[int, float]:
 def _operator_rate_limit_key() -> str:
     token = os.environ.get("XCHANGE_INGEST_TOKEN", "")
     return hashlib.sha256(token.encode("utf-8")).hexdigest()[:16]
+
+
+def _failed_auth_rate_limit_key(handler: BaseHTTPRequestHandler) -> str:
+    client_host = getattr(handler, "client_address", ("unknown", 0))[0]
+    return hashlib.sha256(str(client_host).encode("utf-8")).hexdigest()[:16]
 
 
 def _check_rate_limit(*, route_class: str, key: str) -> tuple[bool, int]:
@@ -216,8 +251,26 @@ def _enforce_operator_rate_limit(handler: BaseHTTPRequestHandler) -> bool:
     return False
 
 
+def _enforce_failed_auth_rate_limit(handler: BaseHTTPRequestHandler) -> bool:
+    allowed, retry_after = _check_rate_limit(
+        route_class="operator_auth_fail",
+        key=_failed_auth_rate_limit_key(handler),
+    )
+    if allowed:
+        return True
+    _json_response(
+        handler,
+        status=HTTPStatus.TOO_MANY_REQUESTS,
+        payload={"error": "rate_limited", "retry_after_seconds": retry_after},
+        headers={"Retry-After": str(retry_after)},
+    )
+    return False
+
+
 def _require_operator_access(handler: BaseHTTPRequestHandler) -> bool:
     if not _require_ingest_token(handler):
+        if not _enforce_failed_auth_rate_limit(handler):
+            return False
         _json_response(
             handler, status=HTTPStatus.UNAUTHORIZED, payload={"error": "unauthorized"}
         )
@@ -288,8 +341,6 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
         return
 
     parsed = urlparse(handler.path)
-    from urllib.parse import parse_qs
-
     qs = parse_qs(parsed.query)
     reward_id = (qs.get("reward_id", [""])[0] or "").strip()
 
@@ -509,6 +560,14 @@ class AppHandler(BaseHTTPRequestHandler):
             self._handle_list_exchange_requests()
             return
 
+        if parsed.path.startswith("/v0/scope/token/"):
+            self._handle_get_token_scope()
+            return
+
+        if parsed.path.startswith("/v0/scope/tool"):
+            self._handle_get_tool_scope()
+            return
+
         _json_response(
             self, status=HTTPStatus.NOT_FOUND, payload={"error": "not_found"}
         )
@@ -547,14 +606,90 @@ class AppHandler(BaseHTTPRequestHandler):
             self, status=HTTPStatus.NOT_FOUND, payload={"error": "not_found"}
         )
 
+    def do_PATCH(self) -> None:  # noqa: N802
+        parsed = urlparse(self.path)
+        if parsed.path.startswith("/v0/evidence/"):
+            self._handle_patch_evidence()
+            return
+        _json_response(
+            self, status=HTTPStatus.NOT_FOUND, payload={"error": "not_found"}
+        )
+
+    def _handle_patch_evidence(self) -> None:
+        """PATCH /v0/evidence/<id> — retroactively link an evidence row to a reward.
+
+        Body: {"reward_id": "<reward_id>"}
+
+        Allows evidence recorded without a reward_id (evidence-only ingest path) to
+        be associated with a reward row after the reward has been drafted.
+        """
+        if not _require_operator_access(self):
+            return
+
+        parsed = urlparse(self.path)
+        parts = parsed.path.split("/")
+        # path: /v0/evidence/<id>  → parts = ['', 'v0', 'evidence', '<id>']
+        evidence_id_str = parts[3] if len(parts) > 3 else None
+        if not evidence_id_str:
+            _json_response(
+                self,
+                status=HTTPStatus.BAD_REQUEST,
+                payload={"error": "missing_evidence_id"},
+            )
+            return
+
+        try:
+            evidence_id = int(evidence_id_str)
+        except ValueError:
+            _json_response(
+                self,
+                status=HTTPStatus.BAD_REQUEST,
+                payload={"error": "invalid_evidence_id"},
+            )
+            return
+
+        payload = _parse_body(self)
+        if payload is None:
+            return
+
+        reward_id = payload.get("reward_id")
+        if not reward_id:
+            _json_response(
+                self,
+                status=HTTPStatus.BAD_REQUEST,
+                payload={"error": "missing_required_fields", "need": ["reward_id"]},
+            )
+            return
+
+        with open_db(_get_db_path()) as conn:
+            result = patch_evidence_reward_id(
+                conn=conn,
+                evidence_id=evidence_id,
+                reward_id=str(reward_id),
+            )
+
+        error = result.get("error")
+        if error == "evidence_not_found":
+            _json_response(
+                self, status=HTTPStatus.NOT_FOUND, payload=result
+            )
+        elif error == "reward_not_found":
+            _json_response(
+                self, status=HTTPStatus.NOT_FOUND, payload=result
+            )
+        elif error == "already_linked":
+            _json_response(
+                self, status=HTTPStatus.CONFLICT, payload=result
+            )
+        else:
+            _json_response(self, status=HTTPStatus.OK, payload=result)
+
     def _handle_list_support_signals(self) -> None:
         """GET /v0/support-signals - list support signals with filters."""
         if not _require_operator_access(self):
             return
 
         parsed = urlparse(self.path)
-        from urllib.parse import parse_qs
-
         qs = parse_qs(parsed.query)
 
         kind = qs.get("kind", [None])[0]
@@ -586,8 +721,6 @@ class AppHandler(BaseHTTPRequestHandler):
             return
 
         parsed = urlparse(self.path)
-        from urllib.parse import parse_qs
-
         qs = parse_qs(parsed.query)
         student_id = qs.get("student_id", [None])[0]
 
@@ -788,6 +921,25 @@ class AppHandler(BaseHTTPRequestHandler):
             )
             return
 
+        grid_payload: dict[str, Any] | None = None
+        if "grid_substantiation" in payload:
+            grid_raw = payload.get("grid_substantiation")
+            if grid_raw is None:
+                _json_response(
+                    self,
+                    status=HTTPStatus.BAD_REQUEST,
+                    payload={"error": "grid_substantiation cannot be null when present"},
+                )
+                return
+            if not isinstance(grid_raw, dict):
+                _json_response(
+                    self,
+                    status=HTTPStatus.BAD_REQUEST,
+                    payload={"error": "grid_substantiation must be an object"},
+                )
+                return
+            grid_payload = grid_raw
+
         try:
             mapped = map_glass_bridge_to_ingest(
                 bridge,
@@ -802,12 +954,31 @@ class AppHandler(BaseHTTPRequestHandler):
                 failure=payload.get("failure")
                 if isinstance(payload.get("failure"), dict)
                 else None,
+                grid_substantiation=grid_payload,
             )
         except ValueError as e:
             _json_response(
                 self, status=HTTPStatus.BAD_REQUEST, payload={"error": str(e)}
             )
             return
+
+        receipt_core: dict[str, Any] = {
+            "student_id": str(student_id),
+            "reward_id": payload.get("reward_id"),
+            "contract_satisfied": bool(payload.get("contract_satisfied")),
+            "ready_for_payment": bool(payload.get("ready_for_payment")),
+            "request_review": bool(payload.get("request_review")),
+            "bridge": bridge,
+            "grid_substantiation": mapped.get("_grid_substantiation"),
+        }
+        bundle_hash = "sha256:" + hashlib.sha256(
+            json.dumps(
+                receipt_core,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
 
         with open_db(_get_db_path()) as conn:
             summary = ingest_glass_session(
@@ -816,6 +987,23 @@ class AppHandler(BaseHTTPRequestHandler):
                 student_id=mapped["student_id"],
                 payload=mapped,
             )
+        summary["session_id"] = mapped["session_id"]
+        summary["bundle_hash"] = bundle_hash
+
+        transition = summary.get("transition")
+        trans_state = (
+            str(transition.get("new_state", ""))
+            if isinstance(transition, dict)
+            else "none"
+        )
+        _useb_log.info(
+            "useb_submit result=ok session_id=%s reward_id=%s evidence_recorded=%s transition=%s",
+            mapped["session_id"],
+            str(mapped.get("reward_id") or ""),
+            summary.get("evidence_recorded"),
+            trans_state,
+        )
+
         _json_response(self, status=HTTPStatus.OK, payload=summary)
 
     def _handle_stripe_webhook(self) -> None:
@@ -828,16 +1016,25 @@ class AppHandler(BaseHTTPRequestHandler):
             )
             return
 
-        max_bytes = _max_body_bytes()
-        length = int(self.headers.get("Content-Length", "0"))
-        if length > max_bytes:
+        try:
+            raw = _read_request_body_bytes(
+                self,
+                reject_invalid_content_length=True,
+            )
+        except BodyTooLargeError:
             _json_response(
                 self,
                 status=HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
                 payload={"error": "body_too_large"},
             )
             return
-        raw = self.rfile.read(min(length, max_bytes)) if length > 0 else b"{}"
+        except ValueError as e:
+            _json_response(
+                self,
+                status=HTTPStatus.BAD_REQUEST,
+                payload={"error": str(e)},
+            )
+            return
         sig_header = self.headers.get("Stripe-Signature")
         tolerance_seconds = int(
             os.environ.get("XCHANGE_STRIPE_TOLERANCE_SECONDS", "300")
@@ -886,6 +1083,24 @@ class AppHandler(BaseHTTPRequestHandler):
                         "event_livemode": event_livemode,
                         "expected_livemode": expected_livemode,
                     },
+                )
+                return
+
+        # Idempotency dedup: record every verified event before any processing.
+        # Returns 200 (not 4xx) so Stripe does not reschedule retries.
+        if event_id:
+            with open_db(_get_db_path()) as conn:
+                is_new = record_webhook_event(
+                    conn,
+                    stripe_event_id=str(event_id),
+                    event_type=str(event_type or "unknown"),
+                    livemode=bool(event.get("livemode")),
+                )
+            if not is_new:
+                _json_response(
+                    self,
+                    status=HTTPStatus.OK,
+                    payload={"duplicate": True, "stripe_event_id": str(event_id)},
                 )
                 return
 
@@ -1118,8 +1333,6 @@ class AppHandler(BaseHTTPRequestHandler):
             return
 
         parsed = urlparse(self.path)
-        from urllib.parse import parse_qs
-
         qs = parse_qs(parsed.query)
 
         student_id = qs.get("student_id", [None])[0]
@@ -1150,6 +1363,60 @@ class AppHandler(BaseHTTPRequestHandler):
             status=HTTPStatus.OK,
             payload={"exchange_requests": rows, "count": len(rows)},
         )
+
+    def _handle_get_token_scope(self) -> None:
+        """GET /v0/scope/token/<reward_id> — resolve token scope for a reward.
+
+        Returns the organic scope that emerges from the token's properties
+        and the earliest evidence row linked to the reward.
+        """
+        if not _require_operator_access(self):
+            return
+
+        parsed = urlparse(self.path)
+        parts = parsed.path.split("/")
+        reward_id = parts[4] if len(parts) > 4 else None
+        if not reward_id:
+            _json_response(
+                self,
+                status=HTTPStatus.BAD_REQUEST,
+                payload={"error": "missing_reward_id"},
+            )
+            return
+
+        with open_db(_get_db_path()) as conn:
+            result = resolve_token_scope(conn=conn, reward_id=str(reward_id))
+
+        if result.get("error"):
+            _json_response(
+                self, status=HTTPStatus.NOT_FOUND, payload=result
+            )
+            return
+
+        _json_response(self, status=HTTPStatus.OK, payload=result)
+
+    def _handle_get_tool_scope(self) -> None:
+        """GET /v0/scope/tool?provenance=<provenance> — resolve tool scope for a provenance.
+
+        Returns the known tool scope if the provenance is recognised,
+        or a note explaining that new tools add provenance strings organically.
+        """
+        if not _require_operator_access(self):
+            return
+
+        parsed = urlparse(self.path)
+        qs = parse_qs(parsed.query)
+        provenance = qs.get("provenance", [None])[0]
+        if not provenance:
+            _json_response(
+                self,
+                status=HTTPStatus.BAD_REQUEST,
+                payload={"error": "missing_provenance", "need": ["provenance"]},
+            )
+            return
+
+        result = resolve_tool_scope(provenance=str(provenance))
+        _json_response(self, status=HTTPStatus.OK, payload=result)
 
 
 def _default_constraint_config() -> ConstraintConfig:

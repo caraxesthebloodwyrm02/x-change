@@ -11,7 +11,7 @@ from typing import Final
 # Header format:
 #   t=149999... , v1= 888... , v0= 777...
 #
-# We treat any v1 match as valid.
+# We require a v1 match.
 #
 # This is strict fail-closed when the secret is missing.
 
@@ -58,19 +58,13 @@ def verify_stripe_signature(
   # Stripe signs: "{t}.{payload_body}"
   signed_payload = f"{t}.".encode("utf-8") + payload_body
 
-  for version_key in ("v1", "v0"):
-    their_sig = sig.get(version_key)
-    if not their_sig:
-      continue
-    digest = hmac.new(
-      stripe_secret.encode("utf-8"),
-      signed_payload,
-      hashlib.sha256,
-    ).hexdigest()
-    if hmac.compare_digest(digest, their_sig):
-      return True
+  their_sig = sig.get("v1")
+  if not their_sig:
+    return False
 
-  # We do not enforce timestamp age in v0 because that depends on header parsing
-  # and upstream time sync.
-  return False
-
+  digest = hmac.new(
+    stripe_secret.encode("utf-8"),
+    signed_payload,
+    hashlib.sha256,
+  ).hexdigest()
+  return hmac.compare_digest(digest, their_sig)

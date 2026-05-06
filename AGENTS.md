@@ -27,6 +27,8 @@ PYTHONPATH="$PWD/src" uv run python -m unittest tests.test_stripe_signature -v
 | `XCHANGE_STRIPE_TOLERANCE_SECONDS` | No | `300` |
 | `XCHANGE_RATE_LIMIT_REQUESTS` | No | `60` |
 | `XCHANGE_RATE_LIMIT_WINDOW_SECONDS` | No | `60` |
+| `XCHANGE_MAX_BODY_BYTES` | No | `65536` |
+| `XCHANGE_GRID_SUB_MAX_BYTES` | No | `65536` |
 
 Missing `XCHANGE_INGEST_TOKEN` or `STRIPE_WEBHOOK_SECRET` causes requests to be rejected (fail-closed).
 
@@ -74,6 +76,9 @@ src/xchange/
 | GET | `/v0/outcomes/summary` | Bearer/X-Ingest-Token | Aggregate reward counts by state |
 | GET | `/v0/support-signals` | Bearer/X-Ingest-Token | List support signals |
 | POST | `/v0/support-signals/<id>/resolve` | Bearer/X-Ingest-Token | Resolve support signal |
+| GET | `/v0/scope/token/<reward_id>` | Bearer/X-Ingest-Token | Resolve token scope for a reward |
+| GET | `/v0/scope/tool?provenance=<prov>` | Bearer/X-Ingest-Token | Resolve tool scope for a provenance |
+| PATCH | `/v0/evidence/<id>` | Bearer/X-Ingest-Token | Retroactively link evidence to reward |
 
 ## See Also
 
@@ -81,3 +86,6 @@ src/xchange/
 - `docs/policy-core-v0.md` — reward lifecycle policy rules
 - `docs/glass-contract-v0.md` — Glass integration contract
 - `docs/stripe-boundary.md` — Stripe integration boundary
+- `docs/token-scope.md` — RewardToken scope characteristics and properties
+- `docs/tool-scope.md` — Tool scope evidence model and validation
+- `docs/scope-integration.md` — Token + Tool + Evidence integration model

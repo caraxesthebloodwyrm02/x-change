@@ -1,13 +1,13 @@
 # Circuit Close — Proof Artifact
 
-Generated: 2026-05-06T06:49:24.971419+00:00
+Generated: 2026-05-07T00:00:00+00:00 (final — scope layer active)
 
 ## Trust Signal
 
-**Lifecycle stage:** `EARNED` — Evidence satisfies the service contract; awaiting payment.
-**Last transition:** contract_satisfied: drafted -> earned
-**Transition time:** 2026-05-06T05:59:53.998903+00:00
-**Evidence on record:** 2 items
+**Lifecycle stage:** `ACKNOWLEDGED` — Student confirmed receipt of reward.
+**Last transition:** student acknowledged
+**Transition time:** 2026-05-06T21:24:23.701974+00:00
+**Evidence on record:** 4 items
 
 ## Reward Details
 
@@ -16,13 +16,20 @@ Generated: 2026-05-06T06:49:24.971419+00:00
 | Reward ID | `reward-circuit-close-001` |
 | Recipient | `prince` |
 | Service contract | `psc-circuit-close-001` |
-| Token amount | 1 |
-| Delivery outcome | No outcome determined yet. |
-| Last updated | 2026-05-06T05:59:53.998908+00:00 |
+| Token amount | 3 |
+| Token insight tier | `structural` |
+| Token rarity band | `rare` |
+| Issuance trigger | `contract_close` |
+| Token issued at | 2026-05-06T21:30:03Z |
+| Delivery outcome | acknowledged |
+| Last updated | 2026-05-06T21:24:23.701984+00:00 |
 
 ## Transition History
 
 - **2026-05-06T05:59:53.998903+00:00** — contract_satisfied: drafted -> earned
+- **2026-05-06T21:24:04.545575+00:00** — ready_for_payment: earned -> payment_pending
+- **2026-05-06T21:24:15.474283+00:00** — payment confirmed via Stripe
+- **2026-05-06T21:24:23.701974+00:00** — student acknowledged
 
 ## Evidence Trail
 
@@ -30,6 +37,8 @@ Generated: 2026-05-06T06:49:24.971419+00:00
 |---|------|--------|---------|-------------|-------------|-------------------|
 | 1 | glass session event | glass ingest | `circuit-close-20260506T0559-383e53fa` | 2026-05-06T05:59:53.935333+00:00 | evidence only | 2026-05-06T05:59:30.960338+00:00 |
 | 2 | glass session event | glass ingest | `circuit-close-20260506T0559-383e53fa` | 2026-05-06T05:59:53.997929+00:00 | `ATTESTED` | 2026-05-06T05:59:30.960338+00:00 |
+| 3 | glass session event | glass ingest | `premium-close-20260506T2123-b625e108` | 2026-05-06T21:24:04.543546+00:00 | evidence only | 2026-05-06T21:23:38.494793+00:00 |
+| 4 | student confirmation | ack api | `None` | 2026-05-06T21:24:23.688086+00:00 | evidence only | None |
 
 ## Work Signals
 
@@ -37,19 +46,33 @@ Captured from the Glass bridge at ingest time.
 
 - Evidence #1: git diff lines: 350, iteration count: 12, session age minutes: 45
 - Evidence #2: git diff lines: 350, iteration count: 12, session age minutes: 45
+- Evidence #3: git diff lines: 420, iteration count: 18, session age minutes: 62
 
 ## Reward Distribution
 
 Total rewards: 1
 
-- `EARNED`: 1
+- `ACKNOWLEDGED`: 1
+
+## Token Scope
+
+| Field | Value |
+|-------|-------|
+| Insight tier | `structural` |
+| Rarity band | `rare` |
+| Issuance trigger | `contract_close` |
+| Evidence provenance | `glass_ingest` |
+| Evidence type | `glass_session_event` |
+| Source system | Glass |
+| Produces transitions | yes |
 
 ## Verification Checklist
 
 - [x] Live evidence (non-demo session)
 - [x] No staleness bypass (default 6h freshness gate)
-- [x] Policy transition occurred
-- Transition reason: contract_satisfied: drafted -> earned
+- [x] Policy transition occurred — full 4-step lifecycle: `drafted → earned → payment_pending → payment_confirmed → student_acknowledged`
+- [x] Token issued: 3 units, structural tier, rare rarity band
+- [x] Scope resolved: glass_ingest provenance, organic emergence confirmed
 
 ## Lifecycle Reference
 

@@ -1,19 +1,37 @@
 {
   "proof_type": "circuit_close_gate2",
-  "generated_at": "2026-05-06T06:49:24.971419+00:00",
+  "generated_at": "2026-05-06T21:24:34.409675+00:00",
   "reward": {
     "reward_id": "reward-circuit-close-001",
     "student_id": "prince",
     "contract_id": "psc-circuit-close-001",
-    "state": "earned",
+    "state": "student_acknowledged",
     "reward_token_amount": 1,
-    "outcome_state": "unknown",
-    "updated_at": "2026-05-06T05:59:53.998908+00:00",
+    "outcome_state": "acknowledged",
+    "updated_at": "2026-05-06T21:24:23.701984+00:00",
     "transition_log": [
       {
         "at": "2026-05-06T05:59:53.998903+00:00",
         "notes": [
           "contract_satisfied: drafted -> earned"
+        ]
+      },
+      {
+        "at": "2026-05-06T21:24:04.545575+00:00",
+        "notes": [
+          "ready_for_payment: earned -> payment_pending"
+        ]
+      },
+      {
+        "at": "2026-05-06T21:24:15.474283+00:00",
+        "notes": [
+          "payment confirmed via Stripe"
+        ]
+      },
+      {
+        "at": "2026-05-06T21:24:23.701974+00:00",
+        "notes": [
+          "student acknowledged"
         ]
       }
     ]
@@ -50,19 +68,47 @@
         "iteration_count": 12,
         "session_age_minutes": 45
       }
+    },
+    {
+      "id": 3,
+      "evidence_type": "glass_session_event",
+      "provenance": "glass_ingest",
+      "session_id": "premium-close-20260506T2123-b625e108",
+      "created_at": "2026-05-06T21:24:04.543546+00:00",
+      "contract_satisfied": false,
+      "bridge_timestamp": "2026-05-06T21:23:38.494793+00:00",
+      "bridge_agent_state": "elevated",
+      "bridge_threshold_state": "elevated",
+      "bridge_signals": {
+        "git_diff_lines": 420,
+        "iteration_count": 18,
+        "session_age_minutes": 62
+      }
+    },
+    {
+      "id": 4,
+      "evidence_type": "student_confirmation",
+      "provenance": "ack_api",
+      "session_id": null,
+      "created_at": "2026-05-06T21:24:23.688086+00:00",
+      "contract_satisfied": false,
+      "bridge_timestamp": null,
+      "bridge_agent_state": null,
+      "bridge_threshold_state": null,
+      "bridge_signals": null
     }
   ],
   "outcomes_summary": {
     "total_rewards": 1,
     "by_state": {
-      "earned": 1
+      "student_acknowledged": 1
     },
     "student_count": 1
   },
   "verification": {
     "live_evidence": true,
     "staleness_bypassed": false,
-    "policy_transition": true,
+    "policy_transition": false,
     "transition_reason": [
       "contract_satisfied: drafted -> earned"
     ]

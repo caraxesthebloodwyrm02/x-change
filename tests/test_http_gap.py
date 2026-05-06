@@ -430,6 +430,90 @@ class GlassBridgeTests(_BaseHttpCase):
         # Exact message comes from the adapter; just confirm it's a 400.
         self.assertIn("error", payload)
 
+    def test_glass_bridge_with_grid_returns_bundle_hash_and_evidence_row(self) -> None:
+        with open_db(self._path) as conn:
+            create_reward_draft(conn=conn, reward_id="r-useb", student_id="s-useb")
+        bridge = {
+            "timestamp": "2026-05-07T12:00:00+00:00",
+            "session_id": "useb-sess-http-1",
+            "agent_state": "idle",
+            "threshold_state": "ground",
+            "progress": 0.0,
+            "blocks": [],
+            "conversation": [],
+            "voices": [],
+            "signals": {"git_diff_lines": 1, "iteration_count": 1, "session_age_minutes": 1},
+        }
+        body_obj = {
+            "student_id": "s-useb",
+            "reward_id": "r-useb",
+            "contract_satisfied": False,
+            "bridge": bridge,
+            "grid_substantiation": {
+                "version": "v1",
+                "captured_at": "2026-05-07T13:00:00+00:00",
+                "source": "grid-lumos-orchestrator",
+                "summary": {
+                    "composite_score": 99.0,
+                    "verdict_tier": "FAST_CLEAR",
+                    "dimensions": {"health": 80.0},
+                },
+            },
+        }
+        body = json.dumps(body_obj).encode("utf-8")
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/ingest/glass-bridge",
+            body=body,
+            headers={"Content-Type": "application/json", **self._auth_headers()},
+        )
+        self.assertEqual(status, 200)
+        self.assertTrue(payload.get("evidence_recorded"))
+        self.assertIn("bundle_hash", payload)
+        self.assertTrue(str(payload["bundle_hash"]).startswith("sha256:"))
+        self.assertEqual(payload.get("transition"), None)
+        self.assertEqual(payload.get("session_id"), "useb-sess-http-1")
+
+        with open_db(self._path) as conn:
+            row = conn.execute(
+                "SELECT payload_json FROM evidence_ledger WHERE session_id=? ORDER BY id DESC LIMIT 1",
+                ("useb-sess-http-1",),
+            ).fetchone()
+            self.assertIsNotNone(row)
+            pj = json.loads(row["payload_json"])
+            self.assertIn("_glass_bridge", pj)
+            self.assertIn("_grid_substantiation", pj)
+            self.assertEqual(
+                pj["_grid_substantiation"]["summary"]["verdict_tier"], "FAST_CLEAR"
+            )
+
+    def test_glass_bridge_bad_grid_returns_400(self) -> None:
+        bridge = {
+            "timestamp": "2026-05-07T12:00:00+00:00",
+            "session_id": "useb-sess-bad-grid",
+            "agent_state": "idle",
+            "threshold_state": "ground",
+            "progress": 0.0,
+            "blocks": [],
+            "conversation": [],
+            "voices": [],
+            "signals": {"git_diff_lines": 1, "iteration_count": 1, "session_age_minutes": 1},
+        }
+        body_obj = {
+            "student_id": "s1",
+            "bridge": bridge,
+            "grid_substantiation": {"version": "v2"},
+        }
+        body = json.dumps(body_obj).encode("utf-8")
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/ingest/glass-bridge",
+            body=body,
+            headers={"Content-Type": "application/json", **self._auth_headers()},
+        )
+        self.assertEqual(status, 400)
+        self.assertIn("error", payload)
+
 
 # ---------------------------------------------------------------------------
 # Group 9: POST /v0/stripe/webhook — varied scenarios

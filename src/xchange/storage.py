@@ -18,8 +18,12 @@ from xchange.domain import (
     PaymentConfirmationStatus,
     RewardState,
     RewardToken,
+    TokenScope,
+    ToolProvenance,
+    ToolScope,
     TransitionResult,
     ingest_bool,
+    infer_token_scope,
     next_state_after_glass_evidence,
     next_state_after_stripe_payment,
 )
@@ -144,11 +148,20 @@ CREATE TABLE IF NOT EXISTS exchange_requests (
   created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS webhook_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  stripe_event_id TEXT NOT NULL UNIQUE,
+  event_type TEXT NOT NULL,
+  livemode INTEGER NOT NULL DEFAULT 0,
+  received_at TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_evidence_reward ON evidence_ledger(reward_id);
 CREATE INDEX IF NOT EXISTS idx_evidence_student ON evidence_ledger(student_id);
 CREATE INDEX IF NOT EXISTS idx_payment_reward ON payment_confirmations(reward_id);
 CREATE INDEX IF NOT EXISTS idx_exchange_reward ON exchange_requests(reward_id);
 CREATE INDEX IF NOT EXISTS idx_exchange_student ON exchange_requests(student_id);
+CREATE INDEX IF NOT EXISTS idx_webhook_events_type ON webhook_events(event_type);
 """
 
 
@@ -706,6 +719,34 @@ def upsert_reward_delivery(
     conn.commit()
 
 
+def record_webhook_event(
+    conn: sqlite3.Connection,
+    *,
+    stripe_event_id: str,
+    event_type: str,
+    livemode: bool,
+) -> bool:
+    """Record an incoming Stripe webhook event for idempotency dedup.
+
+    Uses INSERT OR IGNORE so the call is safe to replay.
+
+    Returns:
+        True  — event was new and has been recorded.
+        False — event_id already seen; caller should return 200 immediately.
+    """
+    now = _utc_now_iso()
+    cur = conn.execute(
+        """
+        INSERT OR IGNORE INTO webhook_events
+          (stripe_event_id, event_type, livemode, received_at)
+        VALUES (?, ?, ?, ?)
+        """,
+        (stripe_event_id, event_type, 1 if livemode else 0, now),
+    )
+    conn.commit()
+    return cur.rowcount == 1
+
+
 def process_stripe_payment_intent_succeeded(
     *,
     conn: sqlite3.Connection,
@@ -1153,6 +1194,110 @@ def issue_reward_token(
 
 
 # ---------------------------------------------------------------------------
+# Scope resolution helpers
+# ---------------------------------------------------------------------------
+
+
+def resolve_token_scope(
+    *,
+    conn: sqlite3.Connection,
+    reward_id: str,
+) -> dict[str, Any]:
+    """Resolve the TokenScope for a reward by inspecting its token and evidence.
+
+    Scope *emerges* from stored data — no separate scope table needed.
+    Returns a dict with token_scope and tool_scope if available.
+    """
+    row = _load_reward_row(conn, reward_id)
+    if not row:
+        return {"error": "reward_not_found"}
+
+    # -- Token scope (from RewardToken if issued) --
+    token_scope_data: dict[str, Any] | None = None
+    raw_token = row["reward_token_json"]
+    if raw_token:
+        token = _reward_token_from_dict(json.loads(raw_token))
+
+        # Find the provenance and evidence_type from the earliest evidence
+        # row linked to this reward.
+        prov_row = conn.execute(
+            "SELECT provenance, evidence_type FROM evidence_ledger "
+            "WHERE reward_id=? ORDER BY created_at ASC LIMIT 1",
+            (reward_id,),
+        ).fetchone()
+        provenance = prov_row["provenance"] if prov_row else "unknown"
+        evidence_type = (
+            EvidenceType(prov_row["evidence_type"])
+            if prov_row
+            else EvidenceType.GLASS_SESSION_EVENT
+        )
+
+        scope = infer_token_scope(
+            token=token,
+            provenance=provenance,
+            evidence_type=evidence_type,
+        )
+        token_scope_data = {
+            "insight_tier": scope.insight_tier.value,
+            "rarity_band": scope.rarity_band,
+            "issuance_trigger": scope.issuance_trigger,
+            "provenance": scope.provenance,
+            "evidence_type": scope.evidence_type.value,
+        }
+
+    # -- Tool scope (from provenance of first evidence row) --
+    tool_scope_data: dict[str, Any] | None = None
+    if raw_token:
+        tool_scope = ToolScope.from_provenance(provenance)
+        if tool_scope:
+            tool_scope_data = {
+                "provenance": tool_scope.provenance,
+                "evidence_type": tool_scope.evidence_type.value,
+                "source_system": tool_scope.source_system,
+                "produces_transitions": tool_scope.produces_transitions,
+                "payload_keys": list(tool_scope.payload_keys),
+            }
+
+    return {
+        "ok": True,
+        "reward_id": reward_id,
+        "token_scope": token_scope_data,
+        "tool_scope": tool_scope_data,
+    }
+
+
+def resolve_tool_scope(
+    *,
+    provenance: str,
+) -> dict[str, Any]:
+    """Resolve the ToolScope for a known provenance string.
+
+    Returns a dict with tool_scope if the provenance is known,
+    or a suggestion to register it if unknown.
+    """
+    tool_scope = ToolScope.from_provenance(provenance)
+    if tool_scope:
+        return {
+            "ok": True,
+            "provenance": provenance,
+            "known": True,
+            "tool_scope": {
+                "provenance": tool_scope.provenance,
+                "evidence_type": tool_scope.evidence_type.value,
+                "source_system": tool_scope.source_system,
+                "produces_transitions": tool_scope.produces_transitions,
+                "payload_keys": list(tool_scope.payload_keys),
+            },
+        }
+    return {
+        "ok": True,
+        "provenance": provenance,
+        "known": False,
+        "note": "Unknown provenance — not an error; new tools add new provenance strings organically.",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Exchange request helpers
 # ---------------------------------------------------------------------------
 
@@ -1221,6 +1366,47 @@ def store_exchange_request(
         "final_approved_scope": result.final_approved_scope,
         "layers": result_dict["layers"],
     }
+
+
+def patch_evidence_reward_id(
+    *,
+    conn: sqlite3.Connection,
+    evidence_id: int,
+    reward_id: str,
+) -> dict[str, Any]:
+    """Retroactively associate an evidence row with a reward.
+
+    Evidence recorded without a reward_id (evidence-only path) can be linked
+    to a reward row after the fact using this function.
+
+    Returns:
+      {"ok": True, "evidence_id": <id>, "reward_id": <id>}  on success
+      {"error": "evidence_not_found"}                        if id not in ledger
+      {"error": "reward_not_found"}                          if reward_id not in ledger
+      {"error": "already_linked", "linked_reward_id": <id>} if row already has a reward_id
+    """
+    cur = conn.execute(
+        "SELECT id, reward_id FROM evidence_ledger WHERE id=?",
+        (evidence_id,),
+    )
+    row = cur.fetchone()
+    if not row:
+        return {"error": "evidence_not_found"}
+
+    existing_reward = row["reward_id"]
+    if existing_reward is not None:
+        return {"error": "already_linked", "linked_reward_id": existing_reward}
+
+    reward_row = _load_reward_row(conn, reward_id)
+    if not reward_row:
+        return {"error": "reward_not_found"}
+
+    conn.execute(
+        "UPDATE evidence_ledger SET reward_id=? WHERE id=?",
+        (reward_id, evidence_id),
+    )
+    conn.commit()
+    return {"ok": True, "evidence_id": evidence_id, "reward_id": reward_id}
 
 
 def list_exchange_requests(

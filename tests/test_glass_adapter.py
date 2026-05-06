@@ -24,6 +24,35 @@ SAMPLE_BRIDGE = {
     "signals": {"git_diff_lines": 10, "iteration_count": 3, "session_age_minutes": 5},
 }
 
+SAMPLE_GRID = {
+    "version": "v1",
+    "captured_at": "2026-05-06T18:00:00+00:00",
+    "workspace_roots": ["/mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main"],
+    "summary": {
+        "composite_score": 99.0,
+        "verdict_tier": "FAST_CLEAR",
+        "dimensions": {
+            "health": 99.0,
+            "trust": 99.0,
+            "drift": 99.0,
+            "fail": 99.0,
+            "momentum": 99.0,
+        },
+    },
+    "repo_fingerprints": [
+        {
+            "name": "GRID",
+            "health_score": 100,
+            "branch": "main",
+            "last_commit": "20 hours ago",
+            "stack": "Python",
+            "uncommitted": 0,
+            "ignored": "not persisted",
+        }
+    ],
+    "source": "grid-lumos-orchestrator",
+}
+
 
 class MapperTests(unittest.TestCase):
     def test_map_minimal_bridge(self) -> None:
@@ -81,6 +110,25 @@ class MapperTests(unittest.TestCase):
         )
         self.assertTrue(result.get("request_review"))
 
+    def test_map_optional_grid_evidence_normalized_key(self) -> None:
+        from xchange.grid_substantiation import normalize_grid_substantiation_evidence
+
+        grid = normalize_grid_substantiation_evidence(
+            {
+                "version": "v1",
+                "captured_at": "2026-05-07T10:00:00+00:00",
+                "source": "grid-lumos-orchestrator",
+                "summary": {
+                    "composite_score": 90.0,
+                    "verdict_tier": "FAST_CLEAR",
+                    "dimensions": {"health": 50.0},
+                },
+            }
+        )
+        result = map_glass_bridge_to_ingest(SAMPLE_BRIDGE, student_id="s1", grid_substantiation=grid)
+        self.assertIsInstance(result["_grid_substantiation"], dict)
+        self.assertEqual(result["_grid_substantiation"]["summary"]["verdict_tier"], "FAST_CLEAR")
+
     def test_map_false_flags_excluded(self) -> None:
         """False-valued optional flags must not appear in the result dict."""
         result = map_glass_bridge_to_ingest(
@@ -95,6 +143,26 @@ class MapperTests(unittest.TestCase):
         self.assertNotIn("request_review", result)
         self.assertNotIn("contract_satisfied", result)
         self.assertNotIn("ready_for_payment", result)
+
+    def test_grid_substantiation_preserved_as_whitelisted_evidence(self) -> None:
+        result = map_glass_bridge_to_ingest(
+            SAMPLE_BRIDGE,
+            student_id="s1",
+            grid_substantiation=SAMPLE_GRID,
+        )
+        grid = result["_grid_substantiation"]
+        self.assertEqual(grid["summary"]["verdict_tier"], "FAST_CLEAR")
+        self.assertNotIn("ignored", grid["repo_fingerprints"][0])
+
+    def test_invalid_grid_substantiation_raises(self) -> None:
+        bad = dict(SAMPLE_GRID)
+        bad["summary"] = {"composite_score": 101, "verdict_tier": "FAST_CLEAR"}
+        with self.assertRaises(ValueError):
+            map_glass_bridge_to_ingest(
+                SAMPLE_BRIDGE,
+                student_id="s1",
+                grid_substantiation=bad,
+            )
 
 
 class EndpointTests(unittest.TestCase):
@@ -124,6 +192,32 @@ class EndpointTests(unittest.TestCase):
             self.assertIsNotNone(state)
             assert state is not None
             self.assertEqual(state["state"], "earned")
+
+    def test_grid_substantiation_alone_does_not_transition_reward(self) -> None:
+        with open_db(self._path) as conn:
+            create_reward_draft(conn=conn, reward_id="r_grid", student_id="s1")
+            mapped = map_glass_bridge_to_ingest(
+                SAMPLE_BRIDGE,
+                student_id="s1",
+                reward_id="r_grid",
+                contract_satisfied=False,
+                ready_for_payment=False,
+                grid_substantiation=SAMPLE_GRID,
+            )
+            result = ingest_glass_session(
+                conn=conn,
+                session_id=mapped["session_id"],
+                student_id=mapped["student_id"],
+                payload=mapped,
+            )
+            self.assertTrue(result["ok"])
+            self.assertNotIn("transition", result)
+            state = get_reward_state(conn, reward_id="r_grid")
+            self.assertIsNotNone(state)
+            assert state is not None
+            self.assertEqual(state["state"], "drafted")
+            evidence = state["evidence"][0]["payload"]
+            self.assertIn("_grid_substantiation", evidence)
 
     def test_endpoint_rejects_missing_bridge(self) -> None:
         with self.assertRaises(ValueError):

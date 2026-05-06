@@ -66,6 +66,137 @@ class ConstraintLayer(StrEnum):
   ECONOMIC_STABILITY = "economic_stability"
 
 
+class ToolProvenance(StrEnum):
+  """Known tool provenance strings — not a closed set; new tools add new values.
+
+  This enum documents the *currently known* provenance strings.
+  Storage and ingest do NOT reject unknown provenance — new tools are
+  free to introduce new provenance strings organically.
+  """
+
+  GLASS_INGEST = "glass_ingest"
+  GRID_SUBSTANTIATION = "grid_substantiation"
+  STUDENT_ACK = "student_ack"
+  FAIL_SNAPSHOT = "fail_snapshot"
+  AGENT_INTERP = "agent_interp"
+  CALCULATOR = "calculator"
+
+
+@dataclass(frozen=True)
+class TokenScope:
+  """Organic scope descriptor for a RewardToken.
+
+  Emerges from the token's properties at issuance time — not pre-declared.
+  Captures what the token *is for* based on its tier, trigger, and evidence.
+  """
+
+  insight_tier: InsightTier
+  rarity_band: str               # "very_rare" / "rare" / "uncommon" / "common"
+  issuance_trigger: str          # cognitive event that triggered issuance
+  provenance: str                # tool provenance string
+  evidence_type: EvidenceType     # evidence row type that led to issuance
+
+  @staticmethod
+  def rarity_band_from_score(score: float) -> str:
+    """Classify a rarity score into a human band."""
+    if score >= 0.75:
+      return "very_rare"
+    if score >= 0.50:
+      return "rare"
+    if score >= 0.25:
+      return "uncommon"
+    return "common"
+
+
+@dataclass(frozen=True)
+class ToolScope:
+  """Organic scope descriptor for a tool evidence source.
+
+  Emerges from what the tool produces — not pre-declared.
+  Captures what the tool *does* based on its evidence type and provenance.
+  """
+
+  provenance: str                # tool provenance string
+  evidence_type: EvidenceType    # evidence row type this tool produces
+  source_system: str            # "glass" / "grid" / "calculator" / other
+  produces_transitions: bool     # whether this tool can propose reward transitions
+  payload_keys: tuple[str, ...]  # expected top-level keys in tool payload
+
+
+  @staticmethod
+  def from_provenance(provenance: str) -> "ToolScope | None":
+    """Infer a ToolScope from a known provenance string.
+
+    Returns None for unrecognised provenance — new tools don't need
+    to be registered here; this is a convenience, not a gate.
+    """
+    _KNOWN: dict[str, ToolScope] = {
+      ToolProvenance.GLASS_INGEST: ToolScope(
+        provenance="glass_ingest",
+        evidence_type=EvidenceType.GLASS_SESSION_EVENT,
+        source_system="glass",
+        produces_transitions=True,
+        payload_keys=("session_id", "student_id", "reward_id", "contract_satisfied", "ready_for_payment"),
+      ),
+      ToolProvenance.GRID_SUBSTANTIATION: ToolScope(
+        provenance="grid_substantiation",
+        evidence_type=EvidenceType.AGENT_INTERPRETATION,
+        source_system="grid",
+        produces_transitions=True,
+        payload_keys=("student_id", "reward_id", "_grid_substantiation"),
+      ),
+      ToolProvenance.FAIL_SNAPSHOT: ToolScope(
+        provenance="fail_snapshot",
+        evidence_type=EvidenceType.FAILURE_SNAPSHOT,
+        source_system="glass",
+        produces_transitions=False,
+        payload_keys=("session_id", "student_id", "command", "exit_code"),
+      ),
+      ToolProvenance.STUDENT_ACK: ToolScope(
+        provenance="student_ack",
+        evidence_type=EvidenceType.STUDENT_CONFIRMATION,
+        source_system="xchange",
+        produces_transitions=True,
+        payload_keys=("student_id", "reward_id"),
+      ),
+      ToolProvenance.AGENT_INTERP: ToolScope(
+        provenance="agent_interp",
+        evidence_type=EvidenceType.AGENT_INTERPRETATION,
+        source_system="grid",
+        produces_transitions=True,
+        payload_keys=("student_id", "reward_id", "summary", "rationale"),
+      ),
+      ToolProvenance.CALCULATOR: ToolScope(
+        provenance="calculator",
+        evidence_type=EvidenceType.AGENT_INTERPRETATION,
+        source_system="calculator",
+        produces_transitions=False,
+        payload_keys=("token_log", "exchange_eval", "summary"),
+      ),
+    }
+    return _KNOWN.get(provenance)
+
+
+def infer_token_scope(
+  *,
+  token: RewardToken,
+  provenance: str,
+  evidence_type: EvidenceType,
+) -> TokenScope:
+  """Build a TokenScope from a RewardToken and its issuance context.
+
+  Scope *emerges* from token properties — this function does not
+  consult any registry or mapping table.
+  """
+  return TokenScope(
+    insight_tier=token.insight_tier,
+    rarity_band=TokenScope.rarity_band_from_score(token.rarity_score),
+    issuance_trigger=token.issuance_trigger,
+    provenance=provenance,
+    evidence_type=evidence_type,
+  )
+
+
 DEFAULT_CONTRACT_ID: Final[str] = "psc-v0-default"
 POLICY_VERSION: Final[str] = "policy-core-v0"
 
@@ -337,10 +468,6 @@ def ingest_bool(payload: dict[str, Any], key: str) -> bool:
   return bool(v)
 
 
-def _boolish(payload: dict[str, Any], key: str) -> bool:
-  return ingest_bool(payload, key)
-
-
 def next_state_after_glass_evidence(
   *,
   current: RewardState,
@@ -348,18 +475,24 @@ def next_state_after_glass_evidence(
   evidence_type: EvidenceType,
   ingest_payload: dict[str, Any],
 ) -> TransitionResult | None:
-  """Apply ingest-derived evidence proposals. Returns None if no change."""
+  """Apply ingest-derived evidence proposals. Returns None if no change.
+
+  Ingest payloads may include evidence attachments such as ``_glass_bridge`` and
+  ``_grid_substantiation``. Those nested blobs are never consulted here — only
+  explicit top-level policy booleans (``contract_satisfied``, ``ready_for_payment``,
+  ``request_review``, ``student_ack``) drive transitions.
+  """
 
   notes: list[str] = []
 
-  if _boolish(ingest_payload, "request_review"):
+  if ingest_bool(ingest_payload, "request_review"):
     return TransitionResult(
       new_state=RewardState.REVIEW_REQUESTED,
       new_outcome=OutcomeState.REVIEW_OPEN,
       notes=("review_requested via ingest",),
     )
 
-  if evidence_type is EvidenceType.STUDENT_CONFIRMATION or _boolish(ingest_payload, "student_ack"):
+  if evidence_type is EvidenceType.STUDENT_CONFIRMATION or ingest_bool(ingest_payload, "student_ack"):
     if current is not RewardState.PAYMENT_CONFIRMED:
       return TransitionResult(
         new_state=current,
@@ -375,13 +508,13 @@ def next_state_after_glass_evidence(
   new_state = current
   new_outcome = outcome
 
-  satisfied = _boolish(ingest_payload, "contract_satisfied")
+  satisfied = ingest_bool(ingest_payload, "contract_satisfied")
   if satisfied and current is RewardState.DRAFTED:
     new_state = RewardState.EARNED
     new_outcome = OutcomeState.UNKNOWN
     notes.append("contract_satisfied: drafted -> earned")
 
-  ready_pay = _boolish(ingest_payload, "ready_for_payment")
+  ready_pay = ingest_bool(ingest_payload, "ready_for_payment")
   if ready_pay and new_state is RewardState.EARNED:
     new_state = RewardState.PAYMENT_PENDING
     notes.append("ready_for_payment: earned -> payment_pending")

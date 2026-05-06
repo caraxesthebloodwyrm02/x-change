@@ -6,7 +6,7 @@ Canonical **policy**: [`docs/policy-core-v0.md`](docs/policy-core-v0.md) — `Pr
 
 1. **`POST /v0/rewards/draft`** (auth) — create a `drafted` reward on the **reward ledger**.
 2. **`POST /v0/ingest/glass-session`** (auth) — writes **evidence** (`glass_session_event`, optional `failure_snapshot`) and **proposes** reward transitions (`contract_satisfied`, `ready_for_payment`, `student_ack`, `request_review`).
-3. **`POST /v0/ingest/glass-bridge`** (auth) — maps caller-enriched Glass bridge telemetry into the existing Glass session ingest flow without inferring policy state.
+3. **`POST /v0/ingest/glass-bridge`** (auth) — maps caller-enriched Glass bridge telemetry into the existing Glass session ingest flow without inferring policy state. Also accepts optional USEB `grid_substantiation` evidence.
 4. **`POST /v0/rewards/<reward_id>/acknowledge`** (auth) — dedicated student acknowledgement endpoint (replaces inline `student_ack` flag).
 5. **`POST /v0/stripe/webhook`** — verifies `Stripe-Signature`, records **`payment_confirmations`** (idempotent on `stripe_event_id`), advances **payment** state when metadata matches an existing reward + student.
 6. **`GET /v0/state/reward/<reward_id>`** (auth) — RewardModel-oriented view: ledger state, evidence tail, payment rows, legacy mirror row.
@@ -24,6 +24,7 @@ Operator endpoints require `Authorization: Bearer <XCHANGE_INGEST_TOKEN>` or `X-
 - Stripe idempotency on `stripe_event_id`.
 - Support signals for missing reward / student mismatch.
 - Glass bridge telemetry preserved as evidence without automatic policy inference.
+- USEB GRID substantiation preserved as evidence without automatic policy inference.
 - Operator read surfaces require ingest-token auth.
 
 Run:
@@ -87,3 +88,7 @@ Rate limit defaults: `XCHANGE_RATE_LIMIT_REQUESTS=60`, `XCHANGE_RATE_LIMIT_WINDO
 ## Token boundary
 
 x-change **`RewardToken`** is the integer `reward_token_amount` on the ledger — **not** signal/EQ tokens from other Cascade packages; see policy doc **Token reference boundary**.
+
+## USEB
+
+Unified Session Evidence Bundle combines a Glass bridge snapshot with optional GRID substantiation and submits both to `POST /v0/ingest/glass-bridge`. GRID data is stored under `_grid_substantiation` as evidence only; it never drives reward state. See [`docs/useb-api-contract.md`](docs/useb-api-contract.md), [`docs/useb-runbook.md`](docs/useb-runbook.md), and the short prompt-oriented [`docs/useb-agent-brief.md`](docs/useb-agent-brief.md).

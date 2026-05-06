@@ -2,7 +2,7 @@
 
 **Contract version:** `glass-contract-v0`
 **Tied to:** `policy-core-v0`
-**Status:** Interface specification. Spike complete — see `INTEGRATION-SPIKE.md` for typed payload trace, failure paths, operator dev loop, and Phase 4 tickets. No live automation yet (passive Glass tooling decision documented in `INTEGRATION-SPIKE.md §3`).
+**Status:** Interface specification. Spike complete — see `INTEGRATION-SPIKE.md` for typed payload trace, failure paths, operator dev loop, and Phase 4 tickets. **Signal automation SHIPPED** (`~/.claude/hooks/glass-signals-update.sh` — PostToolUse/Write|Edit hook updates `signals.git_diff_lines`, `iteration_count`, `session_age_minutes` atomically on every write; passive Glass tooling decision documented in `INTEGRATION-SPIKE.md §3`).
 
 ---
 

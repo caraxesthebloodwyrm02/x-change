@@ -33,6 +33,7 @@ class HttpBoundaryTests(unittest.TestCase):
                 "STRIPE_WEBHOOK_SECRET",
                 "XCHANGE_RATE_LIMIT_REQUESTS",
                 "XCHANGE_RATE_LIMIT_WINDOW_SECONDS",
+                "XCHANGE_GRID_SUB_MAX_BYTES",
             )
         }
         os.environ["XCHANGE_DB_PATH"] = self._path
@@ -114,8 +115,41 @@ class HttpBoundaryTests(unittest.TestCase):
         second, payload, _ = self._request("GET", "/v0/state/reward/missing")
 
         self.assertEqual(first, 401)
-        self.assertEqual(second, 401)
-        self.assertEqual(payload["error"], "unauthorized")
+        self.assertEqual(second, 429)
+        self.assertEqual(payload["error"], "rate_limited")
+
+    def test_authenticated_operator_routes_use_separate_bucket_from_failed_auth(self) -> None:
+        os.environ["XCHANGE_RATE_LIMIT_REQUESTS"] = "1"
+        _reset_rate_limit_for_tests()
+
+        unauthorized, _, _ = self._request("GET", "/v0/state/reward/missing")
+        authorized, payload, _ = self._request(
+            "GET",
+            "/v0/outcomes/summary",
+            headers=self._auth_headers(),
+        )
+
+        self.assertEqual(unauthorized, 401)
+        self.assertEqual(authorized, 200)
+        self.assertIn("total_rewards", payload)
+
+    def test_stripe_webhook_rejects_invalid_content_length_header(self) -> None:
+        body = json.dumps(
+            {"id": "evt_ignored", "type": "invoice.paid", "data": {"object": {}}}
+        ).encode("utf-8")
+
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/stripe/webhook",
+            body=body,
+            headers={
+                **self._stripe_headers(body),
+                "Content-Length": "not-an-int",
+            },
+        )
+
+        self.assertEqual(status, 400)
+        self.assertEqual(payload["error"], "Invalid Content-Length header")
 
     def test_operator_routes_return_429_after_authenticated_limit(self) -> None:
         os.environ["XCHANGE_RATE_LIMIT_REQUESTS"] = "1"
@@ -140,21 +174,25 @@ class HttpBoundaryTests(unittest.TestCase):
     def test_stripe_webhook_is_not_operator_rate_limited(self) -> None:
         os.environ["XCHANGE_RATE_LIMIT_REQUESTS"] = "1"
         _reset_rate_limit_for_tests()
-        body = json.dumps(
-            {"id": "evt_ignored", "type": "invoice.paid", "data": {"object": {}}}
+        # Use distinct event IDs to avoid idempotency dedup catching the second call.
+        body1 = json.dumps(
+            {"id": "evt_rate_limit_1", "type": "invoice.paid", "data": {"object": {}}}
+        ).encode("utf-8")
+        body2 = json.dumps(
+            {"id": "evt_rate_limit_2", "type": "invoice.paid", "data": {"object": {}}}
         ).encode("utf-8")
 
         first, first_payload, _ = self._request(
             "POST",
             "/v0/stripe/webhook",
-            body=body,
-            headers=self._stripe_headers(body),
+            body=body1,
+            headers=self._stripe_headers(body1),
         )
         second, second_payload, _ = self._request(
             "POST",
             "/v0/stripe/webhook",
-            body=body,
-            headers=self._stripe_headers(body),
+            body=body2,
+            headers=self._stripe_headers(body2),
         )
 
         self.assertEqual(first, 200)
@@ -229,6 +267,151 @@ class HttpBoundaryTests(unittest.TestCase):
         assert row is not None
         evidence_payload = json.loads(row["payload_json"])
         self.assertEqual(evidence_payload["_glass_bridge"]["agent_state"], "idle")
+
+    def test_glass_bridge_http_ingest_records_grid_substantiation(self) -> None:
+        grid = {
+            "version": "v1",
+            "captured_at": "2026-05-06T18:00:00+00:00",
+            "workspace_roots": [
+                "/mnt/arch_data/home/caraxes/CascadeProjects/Projects/GRID-main"
+            ],
+            "summary": {
+                "composite_score": 62.3,
+                "verdict_tier": "WATCH",
+                "dimensions": {
+                    "health": 94,
+                    "trust": 95,
+                    "drift": 90,
+                    "fail": 100,
+                    "momentum": 80,
+                },
+            },
+            "repo_fingerprints": [
+                {
+                    "name": "GRID",
+                    "health_score": 100,
+                    "branch": "main",
+                    "last_commit": "20 hours ago",
+                    "stack": "Python",
+                    "uncommitted": 0,
+                    "noisy": "drop me",
+                }
+            ],
+            "source": "grid-lumos-orchestrator",
+        }
+        body = json.dumps(
+            {
+                "student_id": "s1",
+                "bridge": {"session_id": "glass-grid", "agent_state": "idle"},
+                "grid_substantiation": grid,
+            }
+        ).encode("utf-8")
+
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/ingest/glass-bridge",
+            body=body,
+            headers={"Content-Type": "application/json", **self._auth_headers()},
+        )
+
+        self.assertEqual(status, 200)
+        self.assertTrue(payload["evidence_recorded"])
+        with open_db(self._path) as conn:
+            row = conn.execute(
+                "SELECT payload_json FROM evidence_ledger WHERE session_id='glass-grid'"
+            ).fetchone()
+        self.assertIsNotNone(row)
+        assert row is not None
+        evidence_payload = json.loads(row["payload_json"])
+        self.assertEqual(
+            evidence_payload["_grid_substantiation"]["summary"]["verdict_tier"],
+            "WATCH",
+        )
+        self.assertNotIn(
+            "noisy",
+            evidence_payload["_grid_substantiation"]["repo_fingerprints"][0],
+        )
+
+    def test_glass_bridge_rejects_malformed_grid_substantiation(self) -> None:
+        body = json.dumps(
+            {
+                "student_id": "s1",
+                "bridge": {"session_id": "glass-grid-bad"},
+                "grid_substantiation": {
+                    "version": "v1",
+                    "captured_at": "2026-05-06T18:00:00+00:00",
+                    "summary": {"composite_score": 500, "verdict_tier": "WATCH"},
+                    "source": "grid-lumos-orchestrator",
+                },
+            }
+        ).encode("utf-8")
+
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/ingest/glass-bridge",
+            body=body,
+            headers={"Content-Type": "application/json", **self._auth_headers()},
+        )
+
+        self.assertEqual(status, 400)
+        self.assertIn("grid_substantiation", payload["error"])
+
+    def test_glass_bridge_rejects_grid_substantiation_wrong_type(self) -> None:
+        body = json.dumps(
+            {
+                "student_id": "s1",
+                "bridge": {"session_id": "glass-grid-type"},
+                "grid_substantiation": [],
+            }
+        ).encode("utf-8")
+
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/ingest/glass-bridge",
+            body=body,
+            headers={"Content-Type": "application/json", **self._auth_headers()},
+        )
+
+        self.assertEqual(status, 400)
+        self.assertEqual(payload["error"], "grid_substantiation must be an object")
+
+    def test_glass_bridge_rejects_oversized_grid_substantiation(self) -> None:
+        os.environ["XCHANGE_GRID_SUB_MAX_BYTES"] = "1024"
+        grid = {
+            "version": "v1",
+            "captured_at": "2026-05-06T18:00:00+00:00",
+            "workspace_roots": [f"/workspace/{i}" for i in range(32)],
+            "summary": {"composite_score": 90, "verdict_tier": "FAST_CLEAR"},
+            "repo_fingerprints": [
+                {
+                    "name": f"repo-{i}",
+                    "health_score": 90,
+                    "branch": "main",
+                    "last_commit": "now",
+                    "stack": "Python",
+                    "uncommitted": 0,
+                }
+                for i in range(50)
+            ],
+            "source": "grid-lumos-orchestrator",
+        }
+        body = json.dumps(
+            {
+                "student_id": "s1",
+                "bridge": {"session_id": "glass-grid-large"},
+                "grid_substantiation": grid,
+            }
+        ).encode("utf-8")
+
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/ingest/glass-bridge",
+            body=body,
+            headers={"Content-Type": "application/json", **self._auth_headers()},
+        )
+
+        self.assertEqual(status, 400)
+        self.assertIn("exceeds size limit", payload["error"])
 
 
 class StripeLivemodeTests(unittest.TestCase):
@@ -316,8 +499,11 @@ class StripeLivemodeTests(unittest.TestCase):
 
     def test_livemode_check_skipped_when_env_not_set(self) -> None:
         """Without XCHANGE_LIVE_MODE any livemode value is accepted."""
-        for livemode in (True, False):
-            status, payload = self._post_webhook(self._ignored_event(livemode))
+        for i, livemode in enumerate((True, False)):
+            # Use distinct event IDs — same ID would be caught as a duplicate
+            # by the idempotency dedup layer and return {duplicate: True}.
+            event = {**self._ignored_event(livemode), "id": f"evt_livemode_skip_{i}"}
+            status, payload = self._post_webhook(event)
             self.assertEqual(status, 200, f"livemode={livemode} should be accepted")
             self.assertTrue(payload.get("ignored"))
             self.assertNotEqual(payload.get("reason"), "livemode_mismatch")

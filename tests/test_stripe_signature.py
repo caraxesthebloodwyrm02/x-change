@@ -67,7 +67,7 @@ class StripeSignatureTests(unittest.TestCase):
         self.assertFalse(ok)
 
     def test_missing_v1_key(self) -> None:
-        """Signature with only v0 key (no v1) is accepted by current implementation."""
+        """Signature with only v0 key (no v1) is rejected."""
         secret = "whsec_test_secret"
         payload_body = b'{"foo":"bar"}'
         t = str(int(time.time()))
@@ -75,7 +75,6 @@ class StripeSignatureTests(unittest.TestCase):
         digest = hmac.new(
             secret.encode("utf-8"), signed_payload, hashlib.sha256
         ).hexdigest()
-        # Only v0, no v1 - implementation accepts both v1 and v0
         sig_header = f"t={t}, v0={digest}"
 
         ok = verify_stripe_signature(
@@ -84,8 +83,7 @@ class StripeSignatureTests(unittest.TestCase):
             stripe_secret=secret,
             tolerance_seconds=300,
         )
-        # Current implementation accepts v0 (line 61-64 in stripe_sig.py)
-        self.assertTrue(ok)
+        self.assertFalse(ok)
 
     def test_malformed_header_empty_string(self) -> None:
         """Empty signature header should fail."""

@@ -270,18 +270,27 @@ The Stripe webhook secret (`STRIPE_WEBHOOK_SECRET`) is rotated independently thr
 | Failure path: wrong token → 401 | Shipped (test in `test_http_boundaries.py`) |
 | Failure path: missing `reward_id` documented as evidence-only | Shipped (this doc) |
 | Failure path: Stripe mismatch → support signal | Existing test `test_validation_gate.py:test_support_path_on_missing_metadata` |
-| Signal population from real git metrics | Deferred — `signals-pipeline.md` spec inline above; Phase 4 ticket |
+| Signal population from real git metrics | Shipped — `glass-signals-update.sh` hook updates `bridge/signals.git_diff_lines` on every Write/Edit tool call |
 | Operator dev loop script | Shipped (`scripts/glass-session-init.sh`) |
 | Token rotation procedure | Shipped (this doc) |
-| Glass-side automation (PostToolUse hook → `glass_emit_turn`) | Deferred — passive decision documented; Phase 4 |
+| Glass-side automation (PostToolUse hook → `glass_emit_turn`) | Shipped — `~/.claude/hooks/glass-signals-update.sh` writes bridge file signals atomically after every Write/Edit; ModulationEngine reads on next poll |
 | Bidirectional x-change → Glass write | Out of scope (one-directional per `glass-contract-v0.md`) |
+| Graceful token rotation (`XCHANGE_INGEST_TOKEN_PREV`) | Shipped — `main.py:_require_ingest_token`; 8 tests in `test_token_rotation.py` |
+| Evidence → reward retroactive linking | Shipped — `PATCH /v0/evidence/<id>`; 8 tests in `test_evidence_patch.py` |
+| Stripe webhook idempotency dedup | Shipped — `webhook_events` table + `storage.py:record_webhook_event`; 10 tests in `test_webhook_dedup.py` |
 
 ---
 
 ## Phase 4 tickets (file-level pointers)
 
 1. **Signal automation hook** — Add `PostToolUse` hook in `~/.claude/hooks/` that reads `git diff --stat` and calls `glass_emit_turn({signals: {git_diff_lines: N, iteration_count: N+1}})`. Acceptance: `bridge/schema.ts:BridgeSignals.git_diff_lines` updates within 500 ms of a file edit.
+   **Status: SHIPPED** — `~/.claude/hooks/glass-signals-update.sh` + 14 tests in `~/.claude/hooks/tests/test_glass_signals_update.sh`. Registered as `PostToolUse` (matcher: `Write|Edit`) in `~/.claude/settings.json`.
 
 2. **Graceful token rotation** — `main.py:_require_ingest_token` to support two accepted tokens during overlap window. Config: `XCHANGE_INGEST_TOKEN_PREV` env var checked for 5 minutes after `XCHANGE_INGEST_TOKEN` changes.
+   **Status: SHIPPED** — `main.py:_require_ingest_token`; `XCHANGE_INGEST_TOKEN_PREV` env var; 8 tests in `tests/test_token_rotation.py`.
 
 3. **Evidence → reward linking** — Retroactive `reward_id` association for evidence rows recorded without a reward. Endpoint: `PATCH /v0/evidence/<id>` with `reward_id`. Required before team-scale use where session evidence arrives before reward is drafted.
+   **Status: SHIPPED** — `storage.py:patch_evidence_reward_id`; `PATCH /v0/evidence/<id>` in `main.py`; 8 tests in `tests/test_evidence_patch.py`.
+
+4. **Stripe webhook idempotency dedup** — `webhook_events` table records every verified event; duplicate event_id returns 200 immediately without reprocessing. Fixes: missing-metadata retries producing duplicate support signals.
+   **Status: SHIPPED** — `storage.py:record_webhook_event` + `webhook_events` schema; wired into `main.py:_handle_stripe_webhook`; 10 tests in `tests/test_webhook_dedup.py`.

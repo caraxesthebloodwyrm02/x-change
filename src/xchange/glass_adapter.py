@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from xchange.grid_substantiation import normalize_grid_substantiation_evidence
+
 
 def map_glass_bridge_to_ingest(
     bridge: dict[str, Any],
@@ -13,6 +15,7 @@ def map_glass_bridge_to_ingest(
     student_ack: bool = False,
     request_review: bool = False,
     failure: dict[str, Any] | None = None,
+    grid_substantiation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     session_id = bridge.get("session_id")
     if not session_id:
@@ -39,4 +42,8 @@ def map_glass_bridge_to_ingest(
         result["request_review"] = True
     if failure is not None:
         result["failure"] = failure
+    if grid_substantiation is not None:
+        result["_grid_substantiation"] = normalize_grid_substantiation_evidence(
+            grid_substantiation
+        )
     return result
