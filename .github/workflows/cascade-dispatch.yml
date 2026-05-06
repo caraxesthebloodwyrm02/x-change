@@ -9,7 +9,12 @@ jobs:
   dispatch:
     runs-on: ubuntu-latest
     steps:
+      - name: Skip when dispatch bridge is not configured
+        if: ${{ secrets.DISPATCH_TOKEN == '' }}
+        run: echo "DISPATCH_TOKEN is not configured; skipping Apiguard dispatch."
+
       - name: Dispatch to Apiguard
+        if: ${{ secrets.DISPATCH_TOKEN != '' }}
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.DISPATCH_TOKEN }}
