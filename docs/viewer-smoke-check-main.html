@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>x-change Read-Only Viewer</title>
+    <style>
+        :root { --bg: #f6f8f9; --card: #ffffff; --ink: #17212b; --mute: #607080; --line: #d7e0e8; --accent: #0b6b88; }
+        body { margin: 0; font-family: "Source Sans 3", "IBM Plex Sans", sans-serif; background: linear-gradient(135deg, #eef4f7, #f7fafc); color: var(--ink); }
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
+        h1 { margin: 0 0 8px; font-size: 32px; letter-spacing: 0.2px; }
+        p { margin: 0; color: var(--mute); }
+        .badge { display: inline-block; margin-left: 8px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; background: var(--accent); }
+        .grid { display: grid; gap: 14px; margin-top: 18px; }
+        .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+        .panel h2 { margin: 0 0 10px; font-size: 18px; }
+        dl { display: grid; grid-template-columns: 180px 1fr; gap: 6px 10px; margin: 0; }
+        dt { color: var(--mute); }
+        dd { margin: 0; font-weight: 600; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { border: 1px solid var(--line); background: #f2f6f8; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; color: #264253; }
+        .highlight { border-left: 4px solid var(--accent); background: #f6fbfd; }
+        .micro { color: var(--mute); font-size: 12px; line-height: 1.5; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; border-top: 1px solid var(--line); padding: 8px 6px; font-size: 14px; }
+        th { color: var(--mute); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <h1>x-change Trust Surface Viewer <span class="badge">READ-ONLY</span></h1>
+        <p>Server-rendered operator view. This interface does not submit write requests.</p>
+        <div class="grid">
+            <section class="panel highlight">
+                <h2>Trust Signal</h2>
+                <dl>
+                    <dt>Current Lifecycle</dt><dd>drafted</dd>
+                    <dt>Current Outcome</dt><dd>unknown</dd>
+                    <dt>Last Transition Reason</dt><dd>No transition log available</dd>
+                    <dt>Last Transition Time</dt><dd>n/a</dd>
+                    <dt>Evidence Count</dt><dd>0</dd>
+                </dl>
+            </section>
+            
+        <section class="panel">
+          <h2>Reward Details</h2>
+          <dl>
+            <dt>Reward ID</dt><dd>smoke-reward-001</dd>
+            <dt>Student ID</dt><dd>alice</dd>
+            <dt>Current Lifecycle</dt><dd>drafted</dd>
+            <dt>Current Outcome</dt><dd>unknown</dd>
+            <dt>Last Updated</dt><dd>2026-05-06T07:03:03.765397+00:00</dd>
+          </dl>
+        </section>
+        
+            <section class="panel">
+                <h2>Outcomes Snapshot</h2>
+                <dl>
+                    <dt>Total Rewards</dt><dd>1</dd>
+                    <dt>Unique Students</dt><dd>1</dd>
+                    <dt>Rewards by Lifecycle</dt><dd><div class="chips"><span class="chip">drafted: 1</span></div></dd>
+                </dl>
+            </section>
+            <section class="panel">
+                <h2>Exchange Requests</h2>
+                <table>
+                    <thead>
+                        <tr><th>Request ID</th><th>Reward ID</th><th>Student ID</th><th>Approved</th><th>Created At</th></tr>
+                    </thead>
+                    <tbody><tr><td colspan="5">No exchange requests found for this scope.</td></tr></tbody>
+                </table>
+            </section>
+            <section class="panel micro">
+                <h2>Field Guide</h2>
+                <p><strong>Current Lifecycle</strong>: where the reward sits in the policy progression.</p>
+                <p><strong>Current Outcome</strong>: student-side completion/acknowledgement state.</p>
+                <p><strong>Approved</strong>: request passed configured exchange constraints.</p>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
