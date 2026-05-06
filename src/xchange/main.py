@@ -5,6 +5,7 @@ import json
 import math
 import os
 import time
+from html import escape
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Lock
@@ -60,6 +61,23 @@ def _json_response(
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     handler.send_response(status)
     handler.send_header("Content-Type", "application/json; charset=utf-8")
+    handler.send_header("Content-Length", str(len(body)))
+    for name, value in (headers or {}).items():
+        handler.send_header(name, value)
+    handler.end_headers()
+    handler.wfile.write(body)
+
+
+def _html_response(
+    handler: BaseHTTPRequestHandler,
+    *,
+    status: int,
+    html: str,
+    headers: dict[str, str] | None = None,
+) -> None:
+    body = html.encode("utf-8")
+    handler.send_response(status)
+    handler.send_header("Content-Type", "text/html; charset=utf-8")
     handler.send_header("Content-Length", str(len(body)))
     for name, value in (headers or {}).items():
         handler.send_header(name, value)
@@ -216,11 +234,135 @@ def _get_db_path() -> str:
     return os.environ.get("XCHANGE_DB_PATH", "xchange.sqlite")
 
 
+def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
+        """Serve the read-only trust surface viewer HTML.
+
+        Requires operator access and supports optional ?reward_id=<id> filtering.
+        """
+        if not _require_operator_access(handler):
+                return
+
+        parsed = urlparse(handler.path)
+        from urllib.parse import parse_qs
+
+        qs = parse_qs(parsed.query)
+        reward_id = (qs.get("reward_id", [""])[0] or "").strip()
+
+        with open_db(_get_db_path()) as conn:
+                reward_state = None
+                if reward_id:
+                        reward_state = get_reward_state(conn, reward_id=reward_id)
+                        if not reward_state:
+                                _json_response(
+                                        handler,
+                                        status=HTTPStatus.NOT_FOUND,
+                                        payload={"error": "reward_not_found"},
+                                )
+                                return
+                summary = get_outcome_summary(conn)
+                exchange_rows = list_exchange_requests(
+                        conn=conn,
+                        reward_id=reward_id or None,
+                        limit=20,
+                )
+
+        badge = '<span class="badge">READ-ONLY</span>'
+        reward_panel = ""
+        if reward_state:
+                reward_panel = f"""
+                <section class="panel">
+                    <h2>Reward State Timeline</h2>
+                    <dl>
+                        <dt>reward_id</dt><dd>{escape(str(reward_state.get("reward_id", "")))}</dd>
+                        <dt>state</dt><dd>{escape(str(reward_state.get("state", "")))}</dd>
+                        <dt>student_id</dt><dd>{escape(str(reward_state.get("student_id", "")))}</dd>
+                        <dt>outcome_state</dt><dd>{escape(str(reward_state.get("outcome_state", "")))}</dd>
+                        <dt>updated_at</dt><dd>{escape(str(reward_state.get("updated_at", "")))}</dd>
+                    </dl>
+                </section>
+                """
+
+        exchange_items = "".join(
+                (
+                        "<tr>"
+                        f"<td>{escape(str(row.get('request_id', '')))}</td>"
+                        f"<td>{escape(str(row.get('reward_id', '')))}</td>"
+                        f"<td>{escape(str(row.get('student_id', '')))}</td>"
+                        f"<td>{'yes' if bool(row.get('approved')) else 'no'}</td>"
+                        f"<td>{escape(str(row.get('created_at', '')))}</td>"
+                        "</tr>"
+                )
+                for row in exchange_rows
+        )
+        if not exchange_items:
+                exchange_items = (
+                        '<tr><td colspan="5">No exchange requests found for this scope.</td></tr>'
+                )
+
+        html = f"""<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>x-change Read-Only Viewer</title>
+    <style>
+        :root {{ --bg: #f6f8f9; --card: #ffffff; --ink: #17212b; --mute: #607080; --line: #d7e0e8; --accent: #0b6b88; }}
+        body {{ margin: 0; font-family: "Source Sans 3", "IBM Plex Sans", sans-serif; background: linear-gradient(135deg, #eef4f7, #f7fafc); color: var(--ink); }}
+        .wrap {{ max-width: 1080px; margin: 0 auto; padding: 24px; }}
+        h1 {{ margin: 0 0 8px; font-size: 32px; letter-spacing: 0.2px; }}
+        p {{ margin: 0; color: var(--mute); }}
+        .badge {{ display: inline-block; margin-left: 8px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; background: var(--accent); }}
+        .grid {{ display: grid; gap: 14px; margin-top: 18px; }}
+        .panel {{ background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }}
+        .panel h2 {{ margin: 0 0 10px; font-size: 18px; }}
+        dl {{ display: grid; grid-template-columns: 180px 1fr; gap: 6px 10px; margin: 0; }}
+        dt {{ color: var(--mute); }}
+        dd {{ margin: 0; font-weight: 600; }}
+        table {{ width: 100%; border-collapse: collapse; }}
+        th, td {{ text-align: left; border-top: 1px solid var(--line); padding: 8px 6px; font-size: 14px; }}
+        th {{ color: var(--mute); font-weight: 600; }}
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <h1>x-change Trust Surface Viewer {badge}</h1>
+        <p>Server-rendered operator view. This interface does not submit write requests.</p>
+        <div class="grid">
+            {reward_panel}
+            <section class="panel">
+                <h2>Outcomes Snapshot</h2>
+                <dl>
+                    <dt>total_rewards</dt><dd>{escape(str(summary.get("total_rewards", 0)))}</dd>
+                    <dt>student_count</dt><dd>{escape(str(summary.get("student_count", 0)))}</dd>
+                    <dt>by_state</dt><dd>{escape(json.dumps(summary.get("by_state", {}), ensure_ascii=False))}</dd>
+                </dl>
+            </section>
+            <section class="panel">
+                <h2>Exchange Requests</h2>
+                <table>
+                    <thead>
+                        <tr><th>request_id</th><th>reward_id</th><th>student_id</th><th>approved</th><th>created_at</th></tr>
+                    </thead>
+                    <tbody>{exchange_items}</tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
+"""
+        _html_response(handler, status=HTTPStatus.OK, html=html)
+
+
 class AppHandler(BaseHTTPRequestHandler):
     server_version = "x-change/0"
 
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
+        if parsed.path == "/v0/viewer":
+            _handle_readonly_viewer_route(self)
+            return
+
         if parsed.path.startswith("/v0/state/reward/"):
             if not _require_operator_access(self):
                 return
@@ -253,6 +395,126 @@ class AppHandler(BaseHTTPRequestHandler):
         _json_response(
             self, status=HTTPStatus.NOT_FOUND, payload={"error": "not_found"}
         )
+
+        def _handle_readonly_viewer(self) -> None:
+                """GET /v0/viewer — server-rendered read-only trust surface.
+
+                Query param:
+                    reward_id (optional) — when present, includes reward timeline panel.
+                """
+                if not _require_operator_access(self):
+                        return
+
+                parsed = urlparse(self.path)
+                from urllib.parse import parse_qs
+
+                qs = parse_qs(parsed.query)
+                reward_id = (qs.get("reward_id", [""])[0] or "").strip()
+
+                with open_db(_get_db_path()) as conn:
+                        reward_state = None
+                        if reward_id:
+                                reward_state = get_reward_state(conn, reward_id=reward_id)
+                                if not reward_state:
+                                        _json_response(
+                                                self,
+                                                status=HTTPStatus.NOT_FOUND,
+                                                payload={"error": "reward_not_found"},
+                                        )
+                                        return
+                        summary = get_outcome_summary(conn)
+                        exchange_rows = list_exchange_requests(
+                                conn=conn,
+                                reward_id=reward_id or None,
+                                limit=20,
+                        )
+
+                badge = '<span class="badge">READ-ONLY</span>'
+                reward_panel = ""
+                if reward_state:
+                        reward_panel = f"""
+                        <section class="panel">
+                            <h2>Reward State Timeline</h2>
+                            <dl>
+                                <dt>reward_id</dt><dd>{escape(str(reward_state.get("reward_id", "")))}</dd>
+                                <dt>state</dt><dd>{escape(str(reward_state.get("state", "")))}</dd>
+                                <dt>student_id</dt><dd>{escape(str(reward_state.get("student_id", "")))}</dd>
+                                <dt>outcome_state</dt><dd>{escape(str(reward_state.get("outcome_state", "")))}</dd>
+                                <dt>updated_at</dt><dd>{escape(str(reward_state.get("updated_at", "")))}</dd>
+                            </dl>
+                        </section>
+                        """
+
+                exchange_items = "".join(
+                        (
+                                "<tr>"
+                                f"<td>{escape(str(row.get('request_id', '')))}</td>"
+                                f"<td>{escape(str(row.get('reward_id', '')))}</td>"
+                                f"<td>{escape(str(row.get('student_id', '')))}</td>"
+                                f"<td>{'yes' if bool(row.get('approved')) else 'no'}</td>"
+                                f"<td>{escape(str(row.get('created_at', '')))}</td>"
+                                "</tr>"
+                        )
+                        for row in exchange_rows
+                )
+                if not exchange_items:
+                        exchange_items = (
+                                '<tr><td colspan="5">No exchange requests found for this scope.</td></tr>'
+                        )
+
+                html = f"""<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>x-change Read-Only Viewer</title>
+    <style>
+        :root {{ --bg: #f6f8f9; --card: #ffffff; --ink: #17212b; --mute: #607080; --line: #d7e0e8; --accent: #0b6b88; }}
+        body {{ margin: 0; font-family: "Source Sans 3", "IBM Plex Sans", sans-serif; background: linear-gradient(135deg, #eef4f7, #f7fafc); color: var(--ink); }}
+        .wrap {{ max-width: 1080px; margin: 0 auto; padding: 24px; }}
+        h1 {{ margin: 0 0 8px; font-size: 32px; letter-spacing: 0.2px; }}
+        p {{ margin: 0; color: var(--mute); }}
+        .badge {{ display: inline-block; margin-left: 8px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; background: var(--accent); }}
+        .grid {{ display: grid; gap: 14px; margin-top: 18px; }}
+        .panel {{ background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }}
+        .panel h2 {{ margin: 0 0 10px; font-size: 18px; }}
+        dl {{ display: grid; grid-template-columns: 180px 1fr; gap: 6px 10px; margin: 0; }}
+        dt {{ color: var(--mute); }}
+        dd {{ margin: 0; font-weight: 600; }}
+        table {{ width: 100%; border-collapse: collapse; }}
+        th, td {{ text-align: left; border-top: 1px solid var(--line); padding: 8px 6px; font-size: 14px; }}
+        th {{ color: var(--mute); font-weight: 600; }}
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <h1>x-change Trust Surface Viewer {badge}</h1>
+        <p>Server-rendered operator view. This interface does not submit write requests.</p>
+        <div class="grid">
+            {reward_panel}
+            <section class="panel">
+                <h2>Outcomes Snapshot</h2>
+                <dl>
+                    <dt>total_rewards</dt><dd>{escape(str(summary.get("total_rewards", 0)))}</dd>
+                    <dt>student_count</dt><dd>{escape(str(summary.get("student_count", 0)))}</dd>
+                    <dt>by_state</dt><dd>{escape(json.dumps(summary.get("by_state", {}), ensure_ascii=False))}</dd>
+                </dl>
+            </section>
+            <section class="panel">
+                <h2>Exchange Requests</h2>
+                <table>
+                    <thead>
+                        <tr><th>request_id</th><th>reward_id</th><th>student_id</th><th>approved</th><th>created_at</th></tr>
+                    </thead>
+                    <tbody>{exchange_items}</tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
+"""
+                _html_response(self, status=HTTPStatus.OK, html=html)
 
     def do_POST(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
@@ -287,6 +549,126 @@ class AppHandler(BaseHTTPRequestHandler):
         _json_response(
             self, status=HTTPStatus.NOT_FOUND, payload={"error": "not_found"}
         )
+
+        def _handle_readonly_viewer_v1(self) -> None:
+                """GET /v0/viewer — server-rendered read-only trust surface.
+
+                Query param:
+                    reward_id (optional) — when present, includes reward timeline panel.
+                """
+                if not _require_operator_access(self):
+                        return
+
+                parsed = urlparse(self.path)
+                from urllib.parse import parse_qs
+
+                qs = parse_qs(parsed.query)
+                reward_id = (qs.get("reward_id", [""])[0] or "").strip()
+
+                with open_db(_get_db_path()) as conn:
+                        reward_state = None
+                        if reward_id:
+                                reward_state = get_reward_state(conn, reward_id=reward_id)
+                                if not reward_state:
+                                        _json_response(
+                                                self,
+                                                status=HTTPStatus.NOT_FOUND,
+                                                payload={"error": "reward_not_found"},
+                                        )
+                                        return
+                        summary = get_outcome_summary(conn)
+                        exchange_rows = list_exchange_requests(
+                                conn=conn,
+                                reward_id=reward_id or None,
+                                limit=20,
+                        )
+
+                badge = '<span class="badge">READ-ONLY</span>'
+                reward_panel = ""
+                if reward_state:
+                        reward_panel = f"""
+                        <section class="panel">
+                            <h2>Reward State Timeline</h2>
+                            <dl>
+                                <dt>reward_id</dt><dd>{escape(str(reward_state.get("reward_id", "")))}</dd>
+                                <dt>state</dt><dd>{escape(str(reward_state.get("state", "")))}</dd>
+                                <dt>student_id</dt><dd>{escape(str(reward_state.get("student_id", "")))}</dd>
+                                <dt>outcome_state</dt><dd>{escape(str(reward_state.get("outcome_state", "")))}</dd>
+                                <dt>updated_at</dt><dd>{escape(str(reward_state.get("updated_at", "")))}</dd>
+                            </dl>
+                        </section>
+                        """
+
+                exchange_items = "".join(
+                        (
+                                "<tr>"
+                                f"<td>{escape(str(row.get('request_id', '')))}</td>"
+                                f"<td>{escape(str(row.get('reward_id', '')))}</td>"
+                                f"<td>{escape(str(row.get('student_id', '')))}</td>"
+                                f"<td>{'yes' if bool(row.get('approved')) else 'no'}</td>"
+                                f"<td>{escape(str(row.get('created_at', '')))}</td>"
+                                "</tr>"
+                        )
+                        for row in exchange_rows
+                )
+                if not exchange_items:
+                        exchange_items = (
+                                '<tr><td colspan="5">No exchange requests found for this scope.</td></tr>'
+                        )
+
+                html = f"""<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>x-change Read-Only Viewer</title>
+    <style>
+        :root {{ --bg: #f6f8f9; --card: #ffffff; --ink: #17212b; --mute: #607080; --line: #d7e0e8; --accent: #0b6b88; }}
+        body {{ margin: 0; font-family: "Source Sans 3", "IBM Plex Sans", sans-serif; background: linear-gradient(135deg, #eef4f7, #f7fafc); color: var(--ink); }}
+        .wrap {{ max-width: 1080px; margin: 0 auto; padding: 24px; }}
+        h1 {{ margin: 0 0 8px; font-size: 32px; letter-spacing: 0.2px; }}
+        p {{ margin: 0; color: var(--mute); }}
+        .badge {{ display: inline-block; margin-left: 8px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; background: var(--accent); }}
+        .grid {{ display: grid; gap: 14px; margin-top: 18px; }}
+        .panel {{ background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }}
+        .panel h2 {{ margin: 0 0 10px; font-size: 18px; }}
+        dl {{ display: grid; grid-template-columns: 180px 1fr; gap: 6px 10px; margin: 0; }}
+        dt {{ color: var(--mute); }}
+        dd {{ margin: 0; font-weight: 600; }}
+        table {{ width: 100%; border-collapse: collapse; }}
+        th, td {{ text-align: left; border-top: 1px solid var(--line); padding: 8px 6px; font-size: 14px; }}
+        th {{ color: var(--mute); font-weight: 600; }}
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <h1>x-change Trust Surface Viewer {badge}</h1>
+        <p>Server-rendered operator view. This interface does not submit write requests.</p>
+        <div class="grid">
+            {reward_panel}
+            <section class="panel">
+                <h2>Outcomes Snapshot</h2>
+                <dl>
+                    <dt>total_rewards</dt><dd>{escape(str(summary.get("total_rewards", 0)))}</dd>
+                    <dt>student_count</dt><dd>{escape(str(summary.get("student_count", 0)))}</dd>
+                    <dt>by_state</dt><dd>{escape(json.dumps(summary.get("by_state", {}), ensure_ascii=False))}</dd>
+                </dl>
+            </section>
+            <section class="panel">
+                <h2>Exchange Requests</h2>
+                <table>
+                    <thead>
+                        <tr><th>request_id</th><th>reward_id</th><th>student_id</th><th>approved</th><th>created_at</th></tr>
+                    </thead>
+                    <tbody>{exchange_items}</tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
+"""
+                _html_response(self, status=HTTPStatus.OK, html=html)
 
     def _handle_list_support_signals(self) -> None:
         """GET /v0/support-signals - list support signals with filters."""
