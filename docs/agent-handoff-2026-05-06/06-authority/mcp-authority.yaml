@@ -1,0 +1,49 @@
+version: "1.0"
+canonical_servers:
+  - afloat-server
+  - code-analysis
+  - craft-server
+  - echoes-server
+  - eligibility-server
+  - glass-server
+  - glimpse-server
+  - grid-enhanced-tools
+  - grid-intelligence
+  - grid-rag
+  - grid-rag-enhanced
+  - grid-server
+  - harness-server
+  - lots-server
+  # maintain-server formally retired (failed in Copilot session)
+  - mangrove-server
+  - nexus-server
+  - ori-server
+  - overview-server
+  - personal-rag
+  - portfolio-safety-lens
+  - pulse-server
+  - school-server
+  - seeds-server
+  - test-runner
+
+retired_servers:
+  - maintain-server
+
+client_profiles:
+  cursor:
+    status: full
+    command_policy: "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx"
+  windsurf:
+    status: full
+    command_policy: "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx"
+  cascadeprojects:
+    status: "full, needs command policy repair"
+    command_policy: "bare npx"
+  copilot:
+    status: "minimal unless explicitly promoted"
+  generic_mcp:
+    status: "minimal or disabled"
+  antigravity:
+    status: "disabled or regenerate from profile"
+  caraxes_side:
+    status: "archive unless confirmed active"

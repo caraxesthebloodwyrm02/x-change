@@ -1,0 +1,22 @@
+version: "1.0"
+sources:
+  codex:
+    path: "/home/irfankabir/.codex/memories"
+    status: "active"
+    purpose: "Codex memory, rollout summaries, prior decisions."
+  claude_knowledge:
+    path: "/home/irfankabir/.claude/knowledge"
+    status: "active_candidate"
+    purpose: "Knowledge scripts, decisions, state files."
+  caraxes_mirrored:
+    path: "/mnt/arch_data/home/caraxes/.claude/knowledge"
+    status: "preserved_candidate"
+    purpose: "Mirrored or historical knowledge assets."
+  claude_memory:
+    path: "/home/irfankabir/.claude/memory"
+    status: "active_candidate"
+    purpose: "Human-readable memory notes and operational references."
+  project_registry:
+    path: "/home/irfankabir/PROJECT_REGISTRY.yaml"
+    status: "workspace_authority"
+    purpose: "Project provenance and registry source."

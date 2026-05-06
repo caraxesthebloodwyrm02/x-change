@@ -11,6 +11,14 @@ Unified Session Evidence Bundle is a session-close evidence package. It records 
 - USEB does not infer student acknowledgement.
 - USEB does not replace policy attestation.
 
+## Operator Ingest Checklist
+
+Before executing `useb_bundle.py --submit`, an operator **must** verify:
+
+1. [ ] **Bridge Freshness**: Confirm `~/.caraxes/field-bridge.json` is recent. Run with `--max-bridge-age-seconds 300` to enforce freshness.
+2. [ ] **Explicit Booleans**: Ensure `--contract-satisfied` or `--ready-for-payment` are explicitly passed **only** if the reward lifecycle policy warrants it. (Never assume these from bridge state).
+3. [ ] **GRID Substantiation**: Attach `--grid-lumos-path` or `--seeds-snapshot-path` as `_grid_substantiation` for evidence-only archival. (This does *not* auto-advance state).
+
 ## Prerequisites
 
 - x-change checkout at `/home/irfankabir/x-change`
