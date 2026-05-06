@@ -112,9 +112,14 @@ class ReadonlyViewerTests(unittest.TestCase):
         self.assertIn("text/html", headers.get("Content-Type", ""))
         self.assertIn("x-change Trust Surface Viewer", html)
         self.assertIn("READ-ONLY", html)
-        self.assertIn("Reward State Timeline", html)
+        self.assertIn("Trust Signal", html)
+        self.assertIn("Current Lifecycle", html)
+        self.assertIn("Last Transition Reason", html)
+        self.assertIn("Reward Details", html)
         self.assertIn("Outcomes Snapshot", html)
+        self.assertIn("Rewards by Lifecycle", html)
         self.assertIn("Exchange Requests", html)
+        self.assertIn("Field Guide", html)
         self.assertIn("r-view", html)
 
     def test_viewer_reward_not_found(self) -> None:
