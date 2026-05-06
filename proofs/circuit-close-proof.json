@@ -1,0 +1,70 @@
+{
+  "proof_type": "circuit_close_gate2",
+  "generated_at": "2026-05-06T05:59:54.048847+00:00",
+  "reward": {
+    "reward_id": "reward-circuit-close-001",
+    "student_id": "prince",
+    "contract_id": "psc-circuit-close-001",
+    "state": "earned",
+    "reward_token_amount": 1,
+    "outcome_state": "unknown",
+    "updated_at": "2026-05-06T05:59:53.998908+00:00",
+    "transition_log": [
+      {
+        "at": "2026-05-06T05:59:53.998903+00:00",
+        "notes": [
+          "contract_satisfied: drafted -> earned"
+        ]
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "id": 1,
+      "evidence_type": "glass_session_event",
+      "provenance": "glass_ingest",
+      "session_id": "circuit-close-20260506T0559-383e53fa",
+      "created_at": "2026-05-06T05:59:53.935333+00:00",
+      "contract_satisfied": false,
+      "bridge_timestamp": "2026-05-06T05:59:30.960338+00:00",
+      "bridge_agent_state": "writing",
+      "bridge_threshold_state": "ground",
+      "bridge_signals": {
+        "git_diff_lines": 350,
+        "iteration_count": 12,
+        "session_age_minutes": 45
+      }
+    },
+    {
+      "id": 2,
+      "evidence_type": "glass_session_event",
+      "provenance": "glass_ingest",
+      "session_id": "circuit-close-20260506T0559-383e53fa",
+      "created_at": "2026-05-06T05:59:53.997929+00:00",
+      "contract_satisfied": true,
+      "bridge_timestamp": "2026-05-06T05:59:30.960338+00:00",
+      "bridge_agent_state": "writing",
+      "bridge_threshold_state": "ground",
+      "bridge_signals": {
+        "git_diff_lines": 350,
+        "iteration_count": 12,
+        "session_age_minutes": 45
+      }
+    }
+  ],
+  "outcomes_summary": {
+    "total_rewards": 1,
+    "by_state": {
+      "earned": 1
+    },
+    "student_count": 1
+  },
+  "verification": {
+    "live_evidence": true,
+    "staleness_bypassed": false,
+    "policy_transition": true,
+    "transition_reason": [
+      "contract_satisfied: drafted -> earned"
+    ]
+  }
+}

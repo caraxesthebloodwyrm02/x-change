@@ -61,6 +61,29 @@ Rate limit defaults: `XCHANGE_RATE_LIMIT_REQUESTS=60`, `XCHANGE_RATE_LIMIT_WINDO
 | `request_review` | → `review_requested` |
 | `failure` | Optional failure snapshot (evidence + legacy `failures` row). |
 
+## Circuit Close — Proof of Concept (v1)
+
+**Thesis:** A spatial development environment (Glass) generates session evidence that a principled reward service (x-change) processes into auditable, policy-valid state transitions. The builder and the student are the same person. The evidence trail is inspectable by a third party.
+
+**Gate definitions:**
+
+| Gate | Criterion | Status |
+|------|-----------|--------|
+| 1 — Live Wire | Glass bridge payload ingested into `evidence_ledger` without staleness bypass | Pass |
+| 2 — State Advance | Deliberate attestation transitions reward `drafted` -> `earned` with traceable reason | Pass |
+| 3 — Visible Surface | Shareable proof artifact verifiable by a non-operator | Pass |
+
+**First real run (2026-05-06):**
+
+- Session: `circuit-close-20260506T0559-383e53fa`
+- Bridge freshness: 23 seconds at ingest (no override)
+- Transition: `contract_satisfied: drafted -> earned` at `2026-05-06T05:59:53Z`
+- Evidence: 2 rows (pre-attestation + attestation), both linked to `reward-circuit-close-001`
+
+**Proof artifacts:** [`proofs/circuit-close-proof.md`](proofs/circuit-close-proof.md) (human narrative) | [`proofs/circuit-close-proof.json`](proofs/circuit-close-proof.json) (machine-verifiable)
+
+**Reproduce in <10 minutes:** see [`docs/circuit-close-runbook.md`](docs/circuit-close-runbook.md)
+
 ## Token boundary
 
 x-change **`RewardToken`** is the integer `reward_token_amount` on the ledger — **not** signal/EQ tokens from other Cascade packages; see policy doc **Token reference boundary**.
