@@ -234,6 +234,51 @@ def _get_db_path() -> str:
     return os.environ.get("XCHANGE_DB_PATH", "xchange.sqlite")
 
 
+def _stable_json_sha256(value: Any) -> str:
+    try:
+        raw = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    except TypeError:
+        raw = json.dumps(str(value), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def _redact_evidence_payload(payload: Any) -> dict[str, Any]:
+    """Summarize evidence payloads for collaborator-safe read exposure."""
+    if payload is None:
+        return {"redacted": True, "sha256": _stable_json_sha256(None), "keys": []}
+    if isinstance(payload, dict):
+        keys = sorted(str(k) for k in payload.keys())
+        return {"redacted": True, "sha256": _stable_json_sha256(payload), "keys": keys}
+    if isinstance(payload, list):
+        return {
+            "redacted": True,
+            "sha256": _stable_json_sha256(payload),
+            "keys": [],
+            "list_len": len(payload),
+        }
+    return {"redacted": True, "sha256": _stable_json_sha256(payload), "keys": []}
+
+
+def _sanitize_reward_state_for_readonly_view(state: dict[str, Any]) -> dict[str, Any]:
+    """Remove sensitive raw payloads from reward state JSON responses."""
+    safe = dict(state)
+
+    evidence = safe.get("evidence")
+    if isinstance(evidence, list):
+        sanitized: list[dict[str, Any]] = []
+        for item in evidence:
+            if not isinstance(item, dict):
+                continue
+            sanitized_item = dict(item)
+            sanitized_item["payload"] = _redact_evidence_payload(item.get("payload"))
+            sanitized.append(sanitized_item)
+        safe["evidence"] = sanitized
+
+    # Legacy mirror includes last_payload_json (full Stripe payload / ingest payload) — never expose.
+    safe.pop("legacy_rewards_row", None)
+    return safe
+
+
 def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
         """Serve the read-only trust surface viewer HTML.
 
@@ -377,7 +422,11 @@ class AppHandler(BaseHTTPRequestHandler):
                     payload={"error": "reward_not_found"},
                 )
                 return
-            _json_response(self, status=HTTPStatus.OK, payload=state)
+            _json_response(
+                self,
+                status=HTTPStatus.OK,
+                payload=_sanitize_reward_state_for_readonly_view(state),
+            )
             return
 
         if parsed.path == "/v0/support-signals":

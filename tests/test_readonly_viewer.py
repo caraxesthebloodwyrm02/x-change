@@ -10,7 +10,8 @@ from http.server import HTTPServer
 from typing import Any
 
 from xchange.main import AppHandler, _reset_rate_limit_for_tests
-from xchange.storage import create_reward_draft, open_db
+from xchange.domain import EvidenceType
+from xchange.storage import append_evidence, create_reward_draft, open_db
 
 
 class QuietAppHandler(AppHandler):
@@ -124,6 +125,45 @@ class ReadonlyViewerTests(unittest.TestCase):
         )
         self.assertEqual(status, 404)
         self.assertEqual(payload["error"], "reward_not_found")
+
+    def test_reward_state_is_sanitized_for_collaborator_read(self) -> None:
+        with open_db(self._path) as conn:
+            create_reward_draft(conn=conn, reward_id="r-state", student_id="s-state")
+            append_evidence(
+                conn=conn,
+                student_id="s-state",
+                session_id="sess-1",
+                reward_id="r-state",
+                evidence_type=EvidenceType.GLASS_SESSION_EVENT,
+                payload={
+                    "bridge_conversation": "super-sensitive",
+                    "blocks": [{"type": "code", "content": "do not leak"}],
+                    "failure": {"stdout": "secret-stdout", "stderr": "secret-stderr"},
+                },
+                provenance="test",
+            )
+
+        status, payload, _ = self._request_json(
+            "GET",
+            "/v0/state/reward/r-state",
+            headers=self._auth_headers(),
+        )
+
+        self.assertEqual(status, 200)
+        raw = json.dumps(payload, ensure_ascii=False)
+        self.assertNotIn("super-sensitive", raw)
+        self.assertNotIn("do not leak", raw)
+        self.assertNotIn("secret-stdout", raw)
+        self.assertNotIn("secret-stderr", raw)
+
+        evidence = payload.get("evidence")
+        self.assertIsInstance(evidence, list)
+        self.assertGreaterEqual(len(evidence), 1)
+        ev0 = evidence[0]
+        self.assertIsInstance(ev0, dict)
+        self.assertIn("payload", ev0)
+        self.assertIsInstance(ev0["payload"], dict)
+        self.assertTrue(bool(ev0["payload"].get("redacted")))
 
 
 if __name__ == "__main__":
