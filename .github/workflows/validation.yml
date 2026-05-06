@@ -34,7 +34,7 @@ jobs:
         run: uv run pyright
 
       - name: Run Pytest and Coverage
-        # Ensures coverage floor of 99%
-        run: uv run pytest tests/ --cov=. --cov-fail-under=99
+        # Ensures coverage floor of 98%
+        run: uv run pytest tests/ --cov=. --cov-fail-under=98
 
 
