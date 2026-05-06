@@ -8,15 +8,17 @@ on:
 jobs:
   dispatch:
     runs-on: ubuntu-latest
+    env:
+      DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
     steps:
       - name: Skip when dispatch bridge is not configured
-        if: ${{ secrets.DISPATCH_TOKEN == '' }}
+        if: ${{ env.DISPATCH_TOKEN == '' }}
         run: echo "DISPATCH_TOKEN is not configured; skipping Apiguard dispatch."
 
       - name: Dispatch to Apiguard
-        if: ${{ secrets.DISPATCH_TOKEN != '' }}
+        if: ${{ env.DISPATCH_TOKEN != '' }}
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.DISPATCH_TOKEN }}
+          token: ${{ env.DISPATCH_TOKEN }}
           repository: caraxesthebloodwyrm02/apiguard
           event-type: cascade-sync
