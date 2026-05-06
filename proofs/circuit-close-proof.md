@@ -1,46 +1,66 @@
-# Circuit Close — Gate 2 Proof Artifact
+# Circuit Close — Proof Artifact
 
-Generated: 2026-05-06T05:59:54.048847+00:00
+Generated: 2026-05-06T06:49:24.971419+00:00
 
-## Reward State
+## Trust Signal
+
+**Lifecycle stage:** `EARNED` — Evidence satisfies the service contract; awaiting payment.
+**Last transition:** contract_satisfied: drafted -> earned
+**Transition time:** 2026-05-06T05:59:53.998903+00:00
+**Evidence on record:** 2 items
+
+## Reward Details
 
 | Field | Value |
 |-------|-------|
-| reward_id | `reward-circuit-close-001` |
-| student_id | `prince` |
-| contract_id | `psc-circuit-close-001` |
-| state | **earned** |
-| reward_token_amount | 1 |
-| outcome_state | unknown |
-| updated_at | 2026-05-06T05:59:53.998908+00:00 |
+| Reward ID | `reward-circuit-close-001` |
+| Recipient | `prince` |
+| Service contract | `psc-circuit-close-001` |
+| Token amount | 1 |
+| Delivery outcome | No outcome determined yet. |
+| Last updated | 2026-05-06T05:59:53.998908+00:00 |
 
-## Transition Log
+## Transition History
 
-- **2026-05-06T05:59:53.998903+00:00**: contract_satisfied: drafted -> earned
+- **2026-05-06T05:59:53.998903+00:00** — contract_satisfied: drafted -> earned
 
 ## Evidence Trail
 
-| # | Type | Provenance | Session | Ingested | Attested | Bridge Timestamp |
-|---|------|-----------|---------|----------|----------|-----------------|
-| 1 | glass_session_event | glass_ingest | `circuit-close-20260506T0559-383e53fa` | 2026-05-06T05:59:53.935333+00:00 | no | 2026-05-06T05:59:30.960338+00:00 |
-| 2 | glass_session_event | glass_ingest | `circuit-close-20260506T0559-383e53fa` | 2026-05-06T05:59:53.997929+00:00 | yes | 2026-05-06T05:59:30.960338+00:00 |
+| # | Kind | Source | Session | Recorded at | Attestation | Bridge captured at |
+|---|------|--------|---------|-------------|-------------|-------------------|
+| 1 | glass session event | glass ingest | `circuit-close-20260506T0559-383e53fa` | 2026-05-06T05:59:53.935333+00:00 | evidence only | 2026-05-06T05:59:30.960338+00:00 |
+| 2 | glass session event | glass ingest | `circuit-close-20260506T0559-383e53fa` | 2026-05-06T05:59:53.997929+00:00 | `ATTESTED` | 2026-05-06T05:59:30.960338+00:00 |
 
-## Bridge Signals (from evidence)
+## Work Signals
 
-- Evidence #1: {"git_diff_lines": 350, "iteration_count": 12, "session_age_minutes": 45}
-- Evidence #2: {"git_diff_lines": 350, "iteration_count": 12, "session_age_minutes": 45}
+Captured from the Glass bridge at ingest time.
 
-## Outcomes Summary
+- Evidence #1: git diff lines: 350, iteration count: 12, session age minutes: 45
+- Evidence #2: git diff lines: 350, iteration count: 12, session age minutes: 45
 
-- Total rewards: 1
-- earned: 1
+## Reward Distribution
+
+Total rewards: 1
+
+- `EARNED`: 1
 
 ## Verification Checklist
 
 - [x] Live evidence (non-demo session)
-- [x] No staleness bypass
-- [x] Policy transition occurred (drafted -> earned)
+- [x] No staleness bypass (default 6h freshness gate)
+- [x] Policy transition occurred
 - Transition reason: contract_satisfied: drafted -> earned
 
+## Lifecycle Reference
+
+| Stage | Meaning |
+|-------|---------|
+| `DRAFTED` | Reward created; evidence collection open, not yet earned. |
+| `EARNED` | Evidence satisfies the service contract; awaiting payment. |
+| `PAYMENT PENDING` | Marked ready for payment; awaiting Stripe confirmation. |
+| `PAYMENT CONFIRMED` | Stripe reports successful payment; awaiting student acknowledgement. |
+| `ACKNOWLEDGED` | Student confirmed receipt of reward. |
+| `REVIEW REQUESTED` | Flagged for manual review (mismatch or escalation). |
+
 ---
-*This artifact was generated from x-change API endpoints. Credentials redacted.*
+*Generated from x-change API endpoints. Credentials and code content redacted.*

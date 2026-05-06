@@ -234,72 +234,152 @@ def _get_db_path() -> str:
     return os.environ.get("XCHANGE_DB_PATH", "xchange.sqlite")
 
 
+def _stable_json_sha256(value: Any) -> str:
+    try:
+        raw = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    except TypeError:
+        raw = json.dumps(str(value), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def _redact_evidence_payload(payload: Any) -> dict[str, Any]:
+    """Summarize evidence payloads for collaborator-safe read exposure."""
+    if payload is None:
+        return {"redacted": True, "sha256": _stable_json_sha256(None), "keys": []}
+    if isinstance(payload, dict):
+        keys = sorted(str(k) for k in payload.keys())
+        return {"redacted": True, "sha256": _stable_json_sha256(payload), "keys": keys}
+    if isinstance(payload, list):
+        return {
+            "redacted": True,
+            "sha256": _stable_json_sha256(payload),
+            "keys": [],
+            "list_len": len(payload),
+        }
+    return {"redacted": True, "sha256": _stable_json_sha256(payload), "keys": []}
+
+
+def _sanitize_reward_state_for_readonly_view(state: dict[str, Any]) -> dict[str, Any]:
+    """Remove sensitive raw payloads from reward state JSON responses."""
+    safe = dict(state)
+
+    evidence = safe.get("evidence")
+    if isinstance(evidence, list):
+        sanitized: list[dict[str, Any]] = []
+        for item in evidence:
+            if not isinstance(item, dict):
+                continue
+            sanitized_item = dict(item)
+            sanitized_item["payload"] = _redact_evidence_payload(item.get("payload"))
+            sanitized.append(sanitized_item)
+        safe["evidence"] = sanitized
+
+    # Legacy mirror includes last_payload_json (full Stripe payload / ingest payload) — never expose.
+    safe.pop("legacy_rewards_row", None)
+    return safe
+
+
 def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
-        """Serve the read-only trust surface viewer HTML.
+    """Serve the read-only trust surface viewer HTML.
 
-        Requires operator access and supports optional ?reward_id=<id> filtering.
-        """
-        if not _require_operator_access(handler):
+    Requires operator access and supports optional ?reward_id=<id> filtering.
+    """
+    if not _require_operator_access(handler):
+        return
+
+    parsed = urlparse(handler.path)
+    from urllib.parse import parse_qs
+
+    qs = parse_qs(parsed.query)
+    reward_id = (qs.get("reward_id", [""])[0] or "").strip()
+
+    with open_db(_get_db_path()) as conn:
+        reward_state = None
+        if reward_id:
+            reward_state = get_reward_state(conn, reward_id=reward_id)
+            if not reward_state:
+                _json_response(
+                    handler,
+                    status=HTTPStatus.NOT_FOUND,
+                    payload={"error": "reward_not_found"},
+                )
                 return
-
-        parsed = urlparse(handler.path)
-        from urllib.parse import parse_qs
-
-        qs = parse_qs(parsed.query)
-        reward_id = (qs.get("reward_id", [""])[0] or "").strip()
-
-        with open_db(_get_db_path()) as conn:
-                reward_state = None
-                if reward_id:
-                        reward_state = get_reward_state(conn, reward_id=reward_id)
-                        if not reward_state:
-                                _json_response(
-                                        handler,
-                                        status=HTTPStatus.NOT_FOUND,
-                                        payload={"error": "reward_not_found"},
-                                )
-                                return
-                summary = get_outcome_summary(conn)
-                exchange_rows = list_exchange_requests(
-                        conn=conn,
-                        reward_id=reward_id or None,
-                        limit=20,
-                )
-
-        badge = '<span class="badge">READ-ONLY</span>'
-        reward_panel = ""
-        if reward_state:
-                reward_panel = f"""
-                <section class="panel">
-                    <h2>Reward State Timeline</h2>
-                    <dl>
-                        <dt>reward_id</dt><dd>{escape(str(reward_state.get("reward_id", "")))}</dd>
-                        <dt>state</dt><dd>{escape(str(reward_state.get("state", "")))}</dd>
-                        <dt>student_id</dt><dd>{escape(str(reward_state.get("student_id", "")))}</dd>
-                        <dt>outcome_state</dt><dd>{escape(str(reward_state.get("outcome_state", "")))}</dd>
-                        <dt>updated_at</dt><dd>{escape(str(reward_state.get("updated_at", "")))}</dd>
-                    </dl>
-                </section>
-                """
-
-        exchange_items = "".join(
-                (
-                        "<tr>"
-                        f"<td>{escape(str(row.get('request_id', '')))}</td>"
-                        f"<td>{escape(str(row.get('reward_id', '')))}</td>"
-                        f"<td>{escape(str(row.get('student_id', '')))}</td>"
-                        f"<td>{'yes' if bool(row.get('approved')) else 'no'}</td>"
-                        f"<td>{escape(str(row.get('created_at', '')))}</td>"
-                        "</tr>"
-                )
-                for row in exchange_rows
+        summary = get_outcome_summary(conn)
+        exchange_rows = list_exchange_requests(
+            conn=conn,
+            reward_id=reward_id or None,
+            limit=20,
         )
-        if not exchange_items:
-                exchange_items = (
-                        '<tr><td colspan="5">No exchange requests found for this scope.</td></tr>'
-                )
 
-        html = f"""<!doctype html>
+    badge = '<span class="badge">READ-ONLY</span>'
+
+    last_transition_reason = "No transition log available"
+    last_transition_at = "n/a"
+    evidence_count = 0
+    current_lifecycle = "n/a"
+    current_outcome = "n/a"
+
+    reward_panel = ""
+    if reward_state:
+        notes_obj = reward_state.get("notes")
+        if isinstance(notes_obj, dict):
+            log = notes_obj.get("transition_log")
+            if isinstance(log, list) and log:
+                last = log[-1]
+                if isinstance(last, dict):
+                    last_transition_at = str(last.get("at", "n/a"))
+                    note_items = last.get("notes")
+                    if isinstance(note_items, list) and note_items:
+                        last_transition_reason = "; ".join(str(n) for n in note_items)
+
+        evidence = reward_state.get("evidence")
+        if isinstance(evidence, list):
+            evidence_count = len(evidence)
+
+        current_lifecycle = str(reward_state.get("state", "n/a"))
+        current_outcome = str(reward_state.get("outcome_state", "n/a"))
+
+        reward_panel = f"""
+        <section class="panel">
+          <h2>Reward Details</h2>
+          <dl>
+            <dt>Reward ID</dt><dd>{escape(str(reward_state.get("reward_id", "")))}</dd>
+            <dt>Student ID</dt><dd>{escape(str(reward_state.get("student_id", "")))}</dd>
+            <dt>Current Lifecycle</dt><dd>{escape(current_lifecycle)}</dd>
+            <dt>Current Outcome</dt><dd>{escape(current_outcome)}</dd>
+            <dt>Last Updated</dt><dd>{escape(str(reward_state.get("updated_at", "")))}</dd>
+          </dl>
+        </section>
+        """
+
+    summary_states = summary.get("by_state", {})
+    state_chips = ""
+    if isinstance(summary_states, dict) and summary_states:
+        state_chips = "".join(
+            f'<span class="chip">{escape(str(name))}: {escape(str(count))}</span>'
+            for name, count in sorted(summary_states.items())
+        )
+    else:
+        state_chips = '<span class="chip">No rewards yet</span>'
+
+    exchange_items = "".join(
+        (
+            "<tr>"
+            f"<td>{escape(str(row.get('request_id', '')))}</td>"
+            f"<td>{escape(str(row.get('reward_id', '')))}</td>"
+            f"<td>{escape(str(row.get('student_id', '')))}</td>"
+            f"<td>{'yes' if bool(row.get('approved')) else 'no'}</td>"
+            f"<td>{escape(str(row.get('created_at', '')))}</td>"
+            "</tr>"
+        )
+        for row in exchange_rows
+    )
+    if not exchange_items:
+        exchange_items = (
+            '<tr><td colspan="5">No exchange requests found for this scope.</td></tr>'
+        )
+
+    html = f"""<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -318,6 +398,10 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
         dl {{ display: grid; grid-template-columns: 180px 1fr; gap: 6px 10px; margin: 0; }}
         dt {{ color: var(--mute); }}
         dd {{ margin: 0; font-weight: 600; }}
+        .chips {{ display: flex; flex-wrap: wrap; gap: 8px; }}
+        .chip {{ border: 1px solid var(--line); background: #f2f6f8; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; color: #264253; }}
+        .highlight {{ border-left: 4px solid var(--accent); background: #f6fbfd; }}
+        .micro {{ color: var(--mute); font-size: 12px; line-height: 1.5; }}
         table {{ width: 100%; border-collapse: collapse; }}
         th, td {{ text-align: left; border-top: 1px solid var(--line); padding: 8px 6px; font-size: 14px; }}
         th {{ color: var(--mute); font-weight: 600; }}
@@ -328,30 +412,46 @@ def _handle_readonly_viewer_route(handler: BaseHTTPRequestHandler) -> None:
         <h1>x-change Trust Surface Viewer {badge}</h1>
         <p>Server-rendered operator view. This interface does not submit write requests.</p>
         <div class="grid">
+            <section class="panel highlight">
+                <h2>Trust Signal</h2>
+                <dl>
+                    <dt>Current Lifecycle</dt><dd>{escape(current_lifecycle)}</dd>
+                    <dt>Current Outcome</dt><dd>{escape(current_outcome)}</dd>
+                    <dt>Last Transition Reason</dt><dd>{escape(last_transition_reason)}</dd>
+                    <dt>Last Transition Time</dt><dd>{escape(last_transition_at)}</dd>
+                    <dt>Evidence Count</dt><dd>{escape(str(evidence_count))}</dd>
+                </dl>
+            </section>
             {reward_panel}
             <section class="panel">
                 <h2>Outcomes Snapshot</h2>
                 <dl>
-                    <dt>total_rewards</dt><dd>{escape(str(summary.get("total_rewards", 0)))}</dd>
-                    <dt>student_count</dt><dd>{escape(str(summary.get("student_count", 0)))}</dd>
-                    <dt>by_state</dt><dd>{escape(json.dumps(summary.get("by_state", {}), ensure_ascii=False))}</dd>
+                    <dt>Total Rewards</dt><dd>{escape(str(summary.get("total_rewards", 0)))}</dd>
+                    <dt>Unique Students</dt><dd>{escape(str(summary.get("student_count", 0)))}</dd>
+                    <dt>Rewards by Lifecycle</dt><dd><div class="chips">{state_chips}</div></dd>
                 </dl>
             </section>
             <section class="panel">
                 <h2>Exchange Requests</h2>
                 <table>
                     <thead>
-                        <tr><th>request_id</th><th>reward_id</th><th>student_id</th><th>approved</th><th>created_at</th></tr>
+                        <tr><th>Request ID</th><th>Reward ID</th><th>Student ID</th><th>Approved</th><th>Created At</th></tr>
                     </thead>
                     <tbody>{exchange_items}</tbody>
                 </table>
+            </section>
+            <section class="panel micro">
+                <h2>Field Guide</h2>
+                <p><strong>Current Lifecycle</strong>: where the reward sits in the policy progression.</p>
+                <p><strong>Current Outcome</strong>: student-side completion/acknowledgement state.</p>
+                <p><strong>Approved</strong>: request passed configured exchange constraints.</p>
             </section>
         </div>
     </main>
 </body>
 </html>
 """
-        _html_response(handler, status=HTTPStatus.OK, html=html)
+    _html_response(handler, status=HTTPStatus.OK, html=html)
 
 
 class AppHandler(BaseHTTPRequestHandler):
@@ -377,7 +477,11 @@ class AppHandler(BaseHTTPRequestHandler):
                     payload={"error": "reward_not_found"},
                 )
                 return
-            _json_response(self, status=HTTPStatus.OK, payload=state)
+            _json_response(
+                self,
+                status=HTTPStatus.OK,
+                payload=_sanitize_reward_state_for_readonly_view(state),
+            )
             return
 
         if parsed.path == "/v0/support-signals":
