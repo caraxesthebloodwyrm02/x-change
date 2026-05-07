@@ -1,40 +1,61 @@
 {
   "schema": "toolchain-authority.v1",
+  "audit_date": "2026-05-07",
   "objective": "Make development tool availability explicit before repairs or automation.",
-  "records": [
-    {
-      "tool": "python",
-      "status": "available",
-      "policy": "Use uv for Python project work.",
-      "commands": ["python3", "uv"]
-    },
-    {
-      "tool": "node",
-      "status": "partial",
-      "policy": "Expose npm and npx through controlled PATH or user symlinks before MCP repair.",
-      "commands": ["node", "npm", "npx"],
-      "known_gap": "node present, npm/npx missing from PATH"
-    },
-    {
-      "tool": "docker",
-      "status": "available",
-      "policy": "Use docker compose, not standalone docker-compose.",
-      "commands": ["docker", "docker compose"]
-    },
-    {
-      "tool": "go-rust-code",
-      "status": "degraded",
-      "policy": "Classify snap-backed command failures as environment-level until repaired.",
-      "commands": ["go", "rustc", "cargo", "code"],
-      "known_gap": "snap-confine/AppArmor error"
-    },
-    {
-      "tool": "ollama",
-      "status": "client-present-daemon-unverified",
-      "policy": "Run daemon health check before local model workflows.",
-      "commands": ["ollama"]
-    }
-  ],
-  "completion_gate": "Toolchain authority records distinguish available, missing, partial, and degraded tools with validation commands."
+  "source_map": "01-source-maps/development-toolchain-wiring-maintenance-audit.md",
+  "records": {
+    "healthy": [
+      {"tool": "git", "path": "/usr/bin/git", "version": "2.51.0", "category": "vcs"},
+      {"tool": "gh", "path": "/usr/bin/gh", "version": "2.46.0", "category": "vcs"},
+      {"tool": "uv", "path": "/home/irfankabir/.local/bin/uv", "version": "0.11.7", "category": "python"},
+      {"tool": "python3", "path": "/usr/bin/python3", "version": "3.13.7", "category": "python"},
+      {"tool": "node", "path": "/home/irfankabir/.local/bin/node", "version": "v24.15.0", "category": "node", "note": "via nvm symlink"},
+      {"tool": "docker", "path": "/usr/bin/docker", "version": "29.4.2", "category": "container"},
+      {"tool": "docker-compose", "path": "Docker CLI plugin", "version": "v5.1.3", "category": "container", "note": "use docker compose, not standalone docker-compose"},
+      {"tool": "make", "path": "/usr/bin/make", "version": "4.4.1", "category": "build"},
+      {"tool": "gcc", "path": "/usr/bin/gcc", "version": "15.2.0", "category": "compiler"},
+      {"tool": "g++", "path": "/usr/bin/g++", "version": "15.2.0", "category": "compiler"},
+      {"tool": "sqlite3", "path": "/usr/bin/sqlite3", "version": "3.46.1", "category": "database"},
+      {"tool": "redis-server", "path": "/usr/bin/redis-server", "version": "8.0.2", "category": "database"},
+      {"tool": "jq", "path": "/usr/bin/jq", "version": "1.8.1", "category": "util"},
+      {"tool": "rg", "path": "/home/irfankabir/.cargo/bin/rg", "version": "15.1.0", "category": "util"},
+      {"tool": "fd", "path": "/home/irfankabir/.cargo/bin/fd", "version": "10.4.2", "category": "util"},
+      {"tool": "bat", "path": "/home/irfankabir/.cargo/bin/bat", "version": "0.26.1", "category": "util"},
+      {"tool": "eza", "path": "/home/irfankabir/.cargo/bin/eza", "version": "0.23.4", "category": "util"},
+      {"tool": "pytest", "path": "/home/irfankabir/.local/bin/pytest", "version": "9.0.3", "category": "python"},
+      {"tool": "cursor", "path": "/usr/bin/cursor", "version": "3.2.21", "category": "editor"},
+      {"tool": "windsurf", "path": "/usr/bin/windsurf", "version": "1.110.1", "category": "editor"},
+      {"tool": "zed", "path": "/home/irfankabir/.local/bin/zed", "version": "1.1.5", "category": "editor"},
+      {"tool": "claude", "path": "/home/irfankabir/.local/bin/claude", "version": "2.1.131", "category": "agent"},
+      {"tool": "google-chrome", "path": "/usr/bin/google-chrome", "version": "148.0.7778.96", "category": "browser"}
+    ],
+    "degraded": [
+      {"tool": "npm", "path": "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npm", "version": "11.13.0", "failure": "missing_from_path", "fix": "DEVTOOL-P0-001", "category": "node"},
+      {"tool": "npx", "path": "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx", "version": "11.13.0", "failure": "missing_from_path", "fix": "DEVTOOL-P0-001", "category": "node"},
+      {"tool": "go", "path": "/snap/bin/go", "failure": "snap_confine_apparmor", "fix": "DEVTOOL-P1-001", "category": "compiler"},
+      {"tool": "rustc", "path": "/snap/bin/rustc", "failure": "snap_confine_apparmor", "fix": "DEVTOOL-P1-001", "category": "compiler"},
+      {"tool": "cargo", "path": "/snap/bin/cargo", "failure": "snap_confine_apparmor", "fix": "DEVTOOL-P1-001", "category": "compiler"},
+      {"tool": "code", "path": "/snap/bin/code", "failure": "snap_confine_apparmor", "fix": "DEVTOOL-P1-001", "category": "editor"}
+    ],
+    "unverified": [
+      {"tool": "ollama", "path": "/usr/local/bin/ollama", "issue": "client present, daemon health not verified", "validation": "ollama list"},
+      {"tool": "docker-daemon", "path": "/usr/bin/docker", "issue": "client visible, daemon health not fully verified from sandbox", "validation": "docker info"}
+    ]
+  },
+  "command_policy": {
+    "canonical_npx": "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx",
+    "rule": "Use absolute nvm npx path for deterministic MCP command resolution. Do not mix bare npx and absolute npx without recording the choice in the client profile.",
+    "python": "Always use uv run, never bare python or pip.",
+    "container": "Use docker compose (plugin), not standalone docker-compose."
+  },
+  "manifest_gaps": {
+    "node_no_lockfile": 52,
+    "python_no_lockfile": 16,
+    "dockerfile_without_compose": 5,
+    "total_projects_scanned": 173,
+    "total_manifest_records": 337,
+    "policy": "Classify each directory before requiring lockfiles. Do not auto-generate.",
+    "fix": "DEVTOOL-P1-002"
+  },
+  "completion_gate": "Toolchain authority records distinguish healthy, degraded, and unverified tools with exact paths, versions, failure classes, and fix-candidate references."
 }
-

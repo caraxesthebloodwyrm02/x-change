@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>06 — Stripe & evidence</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="05-glass-boundary.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="07-token-scope.html">Next →</a>
+    </nav>
+    <main class="slide slide--wide">
+      <p class="kicker">policy-core-v0</p>
+      <h1>Stripe &amp; EvidenceLedger</h1>
+
+      <h2>StripePaymentConfirmation</h2>
+      <ul class="compact">
+        <li>Primary event: <code>payment_intent.succeeded</code>.</li>
+        <li>Idempotency: <code>stripe_event_id</code> unique; duplicates acknowledged without double-apply.</li>
+        <li>Link keys: <code>metadata.reward_id</code>, <code>metadata.student_id</code>.</li>
+        <li>Missing metadata → <code>support_signals.kind = stripe_missing_metadata</code>, HTTP 200 to Stripe, <strong>no</strong> reward state mutation.</li>
+        <li>Mismatch → support signal; do not apply payment to ledger state.</li>
+      </ul>
+
+      <h2>Evidence types (v0)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Typical source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>glass_session_event</code></td>
+            <td><code>POST /v0/ingest/glass-session</code></td>
+          </tr>
+          <tr>
+            <td><code>failure_snapshot</code></td>
+            <td>Optional <code>failure</code> on ingest</td>
+          </tr>
+          <tr>
+            <td><code>return_attempt</code></td>
+            <td>Future</td>
+          </tr>
+          <tr>
+            <td><code>success_after_support</code></td>
+            <td>Declared progress in ingest</td>
+          </tr>
+          <tr>
+            <td><code>agent_interpretation</code></td>
+            <td>Future</td>
+          </tr>
+          <tr>
+            <td><code>student_confirmation</code></td>
+            <td>Ack payload</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Provenance examples: <code>glass_ingest</code>, <code>stripe_webhook</code>, <code>api_ack</code>.</p>
+      <footer class="book-foot">Source: <a href="../policy-core-v0.md">policy-core-v0.md</a></footer>
+    </main>
+  </body>
+</html>

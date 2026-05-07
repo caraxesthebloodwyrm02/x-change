@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>13 — Complement matrix</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="12-executive-assessment.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="14-agent-handoff.html">Next →</a>
+    </nav>
+    <main class="slide slide--wide">
+      <p class="kicker">complement-matrix.md</p>
+      <h1>x-change gaps vs FSI assets</h1>
+      <p class="lead">
+        Legend: <strong>Fill</strong> = low stretch improvement; <strong>Adjacent</strong> = needs glue;
+        <strong>Misfit</strong> = wrong domain or conflicts with constraints.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Surface / gap</th>
+            <th>Type</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>support_signals</code> queue + human resolve</td>
+            <td>Adjacent</td>
+            <td>Workflow homology with GL reconciler; data is not GL/subledger.</td>
+          </tr>
+          <tr>
+            <td>Operator “close pack” narrative</td>
+            <td>Adjacent</td>
+            <td>Inspire Markdown digest from outcomes API — not accrual schedules.</td>
+          </tr>
+          <tr>
+            <td>Read-only governance docs</td>
+            <td>Fill</td>
+            <td>Process guardrail alignment; no runtime code.</td>
+          </tr>
+          <tr>
+            <td>Market / Excel modeling plugins</td>
+            <td>Misfit</td>
+            <td>x-change is not a valuation product; plugin load issues noted.</td>
+          </tr>
+          <tr>
+            <td>Exported CSV + <code>audit-xls</code></td>
+            <td>Adjacent</td>
+            <td>Medium activation — export step + disciplined schema use.</td>
+          </tr>
+          <tr>
+            <td>Glass evidence bridge</td>
+            <td>Misfit</td>
+            <td>No FSI coverage; already defined in glass contract.</td>
+          </tr>
+          <tr>
+            <td>Stripe HMAC + idempotency</td>
+            <td>Misfit</td>
+            <td>Correctly out of scope for FSI verticals.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card card--warn">
+        <strong>Anti-pattern:</strong> Do not infer <code>contract_satisfied</code> from Glass
+        <code>threshold_state</code>; no FSI asset overrides the glass contract.
+      </div>
+      <footer class="book-foot">Source: <a href="../evaluation/complement-matrix.md">evaluation/complement-matrix.md</a></footer>
+    </main>
+  </body>
+</html>

@@ -38,9 +38,13 @@ from xchange.storage import (
     issue_reward_token,
     latest_failure_for_student,
     list_exchange_requests,
+    mark_stale_memory,
     open_db,
     process_stripe_payment_intent_succeeded,
     record_failure,
+    retrieve_session_memory,
+    get_memory_freshness_report,
+    store_session_memory,
     store_exchange_request,
 )
 
@@ -584,6 +588,46 @@ class TestListExchangeRequestsFiltering(_TempDbCase):
         self.assertEqual(len(rejected_list), 1)
         self.assertEqual(rejected_list[0]["request_id"], "req-rejected-1")
         self.assertFalse(rejected_list[0]["approved"])
+
+
+# ---------------------------------------------------------------------------
+# 18. session_memory helpers
+# ---------------------------------------------------------------------------
+
+
+class TestSessionMemoryHelpers(_TempDbCase):
+    def test_empty_freshness_report_returns_zeroes(self) -> None:
+        with open_db(self._path) as conn:
+            report = get_memory_freshness_report(conn=conn, scope="x-change")
+        self.assertEqual(report["total"], 0)
+        self.assertEqual(report["fresh"], 0)
+        self.assertEqual(report["stale"], 0)
+
+    def test_mark_stale_by_missing_key_returns_false(self) -> None:
+        with open_db(self._path) as conn:
+            result = mark_stale_memory(conn=conn, memory_key="missing-key")
+        self.assertFalse(result)
+
+    def test_store_and_retrieve_session_memory_round_trip(self) -> None:
+        with open_db(self._path) as conn:
+            memory_id = store_session_memory(
+                conn=conn,
+                memory_key="active-branch",
+                memory_value="main",
+                source_path="/home/irfankabir/x-change/CLAUDE.md",
+                scope="x-change",
+                session_id="session-1",
+            )
+            rows = retrieve_session_memory(
+                conn=conn,
+                memory_key="active-branch",
+                scope="x-change",
+            )
+
+        self.assertGreater(memory_id, 0)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["memory_value"], "main")
+        self.assertEqual(rows[0]["source_path"], "/home/irfankabir/x-change/CLAUDE.md")
 
 
 if __name__ == "__main__":

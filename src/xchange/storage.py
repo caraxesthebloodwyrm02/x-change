@@ -367,6 +367,26 @@ CREATE TABLE IF NOT EXISTS inbox_entries (
 CREATE INDEX IF NOT EXISTS idx_inbox_entries_created_at ON inbox_entries(created_at);
 """,
     )
+    _run_migration(
+        conn,
+        "v003_session_memory",
+        """
+CREATE TABLE IF NOT EXISTS session_memory (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  memory_key TEXT NOT NULL,
+  memory_value TEXT NOT NULL,
+  source_path TEXT NOT NULL,
+  scope TEXT NOT NULL DEFAULT 'x-change',
+  session_id TEXT,
+  is_stale INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  stale_checked_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_session_memory_key ON session_memory(memory_key);
+CREATE INDEX IF NOT EXISTS idx_session_memory_scope ON session_memory(scope);
+CREATE INDEX IF NOT EXISTS idx_session_memory_stale ON session_memory(is_stale);
+""",
+    )
     _seed_orchestrator_inbox_memos(conn)
 
 
@@ -1601,3 +1621,165 @@ def list_exchange_requests(
         }
         for row in rows
     ]
+
+
+# ---------------------------------------------------------------------------
+# Session memory — persistent cross-session context carryover
+# ---------------------------------------------------------------------------
+
+
+def store_session_memory(
+    *,
+    conn: sqlite3.Connection,
+    memory_key: str,
+    memory_value: str,
+    source_path: str,
+    scope: str = "x-change",
+    session_id: str | None = None,
+) -> int:
+    """Persist a non-secret context note for cross-session retrieval.
+
+    Stores key-value metadata with source path provenance and freshness
+    tracking.  Do not store secrets, raw event payloads, or large blobs.
+
+    Returns the new row id.
+    """
+    cur = conn.execute(
+        """
+        INSERT INTO session_memory
+          (memory_key, memory_value, source_path, scope, session_id, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            memory_key,
+            memory_value,
+            source_path,
+            scope,
+            session_id,
+            _utc_now_iso(),
+        ),
+    )
+    conn.commit()
+    return int(cur.lastrowid or 0)
+
+
+def retrieve_session_memory(
+    *,
+    conn: sqlite3.Connection,
+    memory_key: str | None = None,
+    scope: str | None = None,
+    include_stale: bool = False,
+    limit: int = 50,
+) -> list[dict[str, Any]]:
+    """Retrieve session memory entries with freshness metadata.
+
+    Excludes stale entries by default.  Every returned row carries
+    source_path and created_at so callers can verify provenance and age.
+    """
+    where_clauses: list[str] = []
+    params: list[Any] = []
+
+    if not include_stale:
+        where_clauses.append("is_stale = 0")
+
+    if memory_key is not None:
+        where_clauses.append("memory_key = ?")
+        params.append(memory_key)
+
+    if scope is not None:
+        where_clauses.append("scope = ?")
+        params.append(scope)
+
+    where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
+    params.append(limit)
+
+    rows = conn.execute(
+        f"""
+        SELECT id, memory_key, memory_value, source_path, scope,
+               session_id, is_stale, created_at, stale_checked_at
+        FROM session_memory
+        WHERE {where_sql}
+        ORDER BY created_at DESC
+        LIMIT ?
+        """,
+        params,
+    ).fetchall()
+
+    return [dict(r) for r in rows]
+
+
+def mark_stale_memory(
+    *,
+    conn: sqlite3.Connection,
+    memory_id: int | None = None,
+    memory_key: str | None = None,
+) -> bool:
+    """Flag a memory entry as stale with a timestamp check.
+
+    Requires at least one of memory_id or memory_key.  If memory_key is
+    given and memory_id is not, flags the most recent matching row.
+
+    Returns True if a row was updated, False otherwise.
+    """
+    if memory_id is None and memory_key is None:
+        return False
+
+    now = _utc_now_iso()
+    if memory_id is not None:
+        cur = conn.execute(
+            """
+            UPDATE session_memory
+            SET is_stale = 1, stale_checked_at = ?
+            WHERE id = ?
+            """,
+            (now, memory_id),
+        )
+    else:
+        # Flags most-recent matching row by key
+        cur = conn.execute(
+            """
+            UPDATE session_memory
+            SET is_stale = 1, stale_checked_at = ?
+            WHERE id = (
+              SELECT id FROM session_memory
+              WHERE memory_key = ?
+              ORDER BY created_at DESC
+              LIMIT 1
+            )
+            """,
+            (now, memory_key),
+        )
+    conn.commit()
+    return cur.rowcount > 0
+
+
+def get_memory_freshness_report(
+    *,
+    conn: sqlite3.Connection,
+    scope: str | None = None,
+) -> dict[str, Any]:
+    """Return a count of fresh vs. stale entries, optionally scoped."""
+    scope_filter = ""
+    params: list[Any] = []
+    if scope is not None:
+        scope_filter = "WHERE scope = ?"
+        params.append(scope)
+
+    cur = conn.execute(
+        f"""
+        SELECT
+          COUNT(*) AS total,
+          SUM(CASE WHEN is_stale = 0 THEN 1 ELSE 0 END) AS fresh,
+          SUM(CASE WHEN is_stale = 1 THEN 1 ELSE 0 END) AS stale
+        FROM session_memory
+        {scope_filter}
+        """,
+        params,
+    )
+    row = cur.fetchone()
+    return {
+        "total": row["total"],
+        "fresh": row["fresh"] or 0,
+        "stale": row["stale"] or 0,
+        "scope": scope,
+    }

@@ -22,7 +22,11 @@ from xchange.domain import (
     compute_rarity_score,
     evaluate_exchange_request,
 )
-from xchange.glass_adapter import map_glass_bridge_to_ingest
+from xchange.glass_adapter import (
+    map_glass_bridge_to_ingest,
+    PluginManifestError,
+    validate_plugin_manifest,
+)
 from xchange.nudge import suggest_path_semantics
 from xchange.storage import (
     FailureSnapshot,
@@ -886,6 +890,35 @@ class AppHandler(BaseHTTPRequestHandler):
             )
             return
 
+        # Plugin manifest validation (claude-plugins-official #1751)
+        plugin_manifest = payload.get("plugin_manifest")
+        if plugin_manifest is not None:
+            try:
+                validate_plugin_manifest(plugin_manifest)
+            except PluginManifestError as e:
+                with open_db(_get_db_path()) as conn:
+                    insert_support_signal(
+                        conn=conn,
+                        kind="plugin_manifest_invalid",
+                        payload={
+                            "student_id": str(student_id),
+                            "reward_id": str(payload.get("reward_id", "")),
+                            "reason": e.reason,
+                            "field": e.field,
+                            "manifest_keys": list(plugin_manifest.keys()) if isinstance(plugin_manifest, dict) else None,
+                        },
+                    )
+                _json_response(
+                    self,
+                    status=HTTPStatus.BAD_REQUEST,
+                    payload={
+                        "error": "plugin_manifest_invalid",
+                        "reason": e.reason,
+                        "field": e.field,
+                    },
+                )
+                return
+
         with open_db(_get_db_path()) as conn:
             summary = ingest_glass_session(
                 conn=conn,
@@ -920,6 +953,35 @@ class AppHandler(BaseHTTPRequestHandler):
                 payload={"error": "missing_required_fields", "need": ["student_id"]},
             )
             return
+
+        # Plugin manifest validation (claude-plugins-official #1751)
+        plugin_manifest = payload.get("plugin_manifest")
+        if plugin_manifest is not None:
+            try:
+                validate_plugin_manifest(plugin_manifest)
+            except PluginManifestError as e:
+                with open_db(_get_db_path()) as conn:
+                    insert_support_signal(
+                        conn=conn,
+                        kind="plugin_manifest_invalid",
+                        payload={
+                            "student_id": str(student_id),
+                            "reward_id": str(payload.get("reward_id", "")),
+                            "reason": e.reason,
+                            "field": e.field,
+                            "manifest_keys": list(plugin_manifest.keys()) if isinstance(plugin_manifest, dict) else None,
+                        },
+                    )
+                _json_response(
+                    self,
+                    status=HTTPStatus.BAD_REQUEST,
+                    payload={
+                        "error": "plugin_manifest_invalid",
+                        "reason": e.reason,
+                        "field": e.field,
+                    },
+                )
+                return
 
         grid_payload: dict[str, Any] | None = None
         if "grid_substantiation" in payload:

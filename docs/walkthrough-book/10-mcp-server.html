@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>10 — MCP server</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="09-scope-integration.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="11-evaluation-pack.html">Next →</a>
+    </nav>
+    <main class="slide slide--wide">
+      <p class="kicker">mcp-server.md</p>
+      <h1>Read-only MCP (phase 1)</h1>
+      <p class="lead">
+        stdio MCP over SQLite: operators inspect signals, outcomes, rewards, exchanges, and payments
+        without hand-running SQL. HTTP server stays stdlib-only; MCP lives in the <code>mcp</code> uv group.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tool prefix <code>xchange_*</code></th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>xchange_list_support_signals</code></td>
+            <td>Exception queue, filters, pagination (limit ≤ 100).</td>
+          </tr>
+          <tr>
+            <td><code>xchange_get_outcome_summary</code></td>
+            <td>Counts by reward state; optional <code>student_id</code>.</td>
+          </tr>
+          <tr>
+            <td><code>xchange_get_reward_state</code></td>
+            <td>Ledger + evidence list + payment summaries for one reward.</td>
+          </tr>
+          <tr>
+            <td><code>xchange_list_exchange_requests</code></td>
+            <td>Token exchange requests with filters.</td>
+          </tr>
+          <tr>
+            <td><code>xchange_list_payment_confirmations</code></td>
+            <td>Payment rows without raw Stripe JSON (operator-safe).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card card--warn">
+        <strong>Non-goals (v0):</strong> No MCP write tools (resolve, ingest, Stripe). HMAC webhook remains
+        HTTP-only.
+      </div>
+      <footer class="book-foot">Source: <a href="../mcp-server.md">mcp-server.md</a> · helpers in <code>src/xchange/mcp_read.py</code></footer>
+    </main>
+  </body>
+</html>

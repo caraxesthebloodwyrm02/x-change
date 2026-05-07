@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>09 — Scope integration</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="08-tool-scope.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="10-mcp-server.html">Next →</a>
+    </nav>
+    <main class="slide slide--wide">
+      <p class="kicker">scope-integration.md</p>
+      <h1>Token + tool + evidence</h1>
+      <p class="lead">Integration is emergent: shared <code>reward_id</code> on the ledger, no pre-declared tool↔token map.</p>
+
+      <pre class="ascii">Tool Sources (Glass, GRID, Calculator)
+        |
+  Ingest / Adapter Layer
+        |
+  Evidence Ledger (evidence_ledger)
+        |
+  Reward Ledger (reward_ledger)
+        |
+  Token Scope (InsightTier, RarityScore, Exchange)</pre>
+
+      <h2>Linkage rules</h2>
+      <ul class="compact">
+        <li><strong>Token → reward:</strong> issued at approval; attributes include tier, rarity, amount, <code>issued_at</code>.</li>
+        <li><strong>Reward → evidence:</strong> optional <code>reward_id</code>; PATCH can link later.</li>
+        <li><strong>Tool → reward:</strong> no auto-inference; explicit booleans drive transitions.</li>
+        <li><strong>Tool → token:</strong> indirect via rewards only.</li>
+      </ul>
+
+      <h2>Validation anchors</h2>
+      <p>
+        EvidenceType enum, InsightTier, rarity clamp, <code>ingest_bool()</code>, exchange three-layer evaluation,
+        <code>XCHANGE_GRID_SUB_MAX_BYTES</code> for substantiation payload size.
+      </p>
+      <footer class="book-foot">Source: <a href="../scope-integration.md">scope-integration.md</a></footer>
+    </main>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 {
   "schema": "memory-authority.v1",
-  "objective": "Make persistent context carryover real through canonical memory sources, stale-context rules, and session handoff.",
+  "objective": "Make persistent context carryover real through canonical memory sources, stale-context rules, session handoff, and a working reference implementation.",
   "canonical_sources": [
     {
       "id": "codex.memories",
@@ -36,8 +36,37 @@
       "status": "workspace-authority",
       "purpose": "Project provenance and registry source",
       "validation": ["path_exists", "registry_schema_check"]
+    },
+    {
+      "id": "xchange.session_memory",
+      "path": "/home/irfankabir/x-change/src/xchange/storage.py",
+      "status": "active",
+      "purpose": "Reference implementation — SQLite session memory with freshness tracking",
+      "validation": ["table_exists", "ingest_and_retrieve_works", "stale_exclusion_works"]
     }
   ],
+  "staleness_policy": {
+    "bands": [
+      {"label": "fresh", "threshold_hours": 24, "action": "trust directly, cite source"},
+      {"label": "lingering", "threshold_days": 7, "action": "trust but re-verify source path"},
+      {"label": "stale", "threshold_days_inf": true, "action": "flag stale, do not act without re-validation"},
+      {"label": "unverifiable", "condition": "source_path missing", "action": "mark stale immediately"}
+    ],
+    "default_retrieval": "excludes is_stale=1; pass include_stale=True to override"
+  },
+  "ingestion_policy": {
+    "store": [
+      "non-secret cross-session facts (project paths, active branches, open decisions, blockers, contract versions)",
+      "batch execution state (which batch ran, passed/failed, next recommended)",
+      "session handoff records (changed files, validation results, stale assumptions)"
+    ],
+    "reject": [
+      "secret values, credentials, tokens, API keys, OAuth state",
+      "raw event payloads (use evidence_ledger)",
+      "transient runtime state (PIDs, ports, temp readings)",
+      "large blobs > 4 KB (store pointer to source file instead)"
+    ]
+  },
   "known_gaps": [
     "No operational .rag_db was found at expected locations during the audit.",
     "Some scheduler or knowledge-loop paths may still reference stale /home/caraxes paths.",
@@ -48,6 +77,18 @@
     "during_work": ["verify memory-derived paths", "mark stale facts", "record source path and freshness"],
     "end": ["record changed files", "record validation", "record blockers", "record next batch", "record stale assumptions"]
   },
+  "retrieval_validation": [
+    {"condition": 1, "description": "ingest non-secret note with memory_key, memory_value, source_path, scope"},
+    {"condition": 2, "description": "retrieve by memory_key and scope"},
+    {"condition": 3, "description": "every row includes source_path + created_at"},
+    {"condition": 4, "description": "stale entries excluded by default"},
+    {"condition": 5, "description": "mark_stale_memory flags entries and sets stale_checked_at"}
+  ],
+  "reference_implementation": {
+    "file": "src/xchange/storage.py",
+    "table": "session_memory",
+    "functions": ["store_session_memory", "retrieve_session_memory", "mark_stale_memory", "get_memory_freshness_report"],
+    "validation_script": "scripts/validate_memory_authority.py"
+  },
   "completion_gate": "A memory implementation can ingest and retrieve a non-secret note with source path and freshness metadata."
 }
-

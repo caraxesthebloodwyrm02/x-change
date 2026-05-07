@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>08 — Tool scope</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="07-token-scope.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="09-scope-integration.html">Next →</a>
+    </nav>
+    <main class="slide slide--wide">
+      <p class="kicker">tool-scope.md</p>
+      <h1>Tools as evidence sources</h1>
+      <p class="lead">A tool is an observable operation: stateful, traceable, auditable, and non-inferable for policy booleans.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Evidence</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Glass</strong></td>
+            <td><code>glass_session_event</code>, <code>failure_snapshot</code></td>
+            <td>Provenance <code>glass_ingest</code>; no automatic transition without explicit flags.</td>
+          </tr>
+          <tr>
+            <td><strong>GRID</strong></td>
+            <td><code>agent_interpretation</code> (provisional)</td>
+            <td>Substantiation payload; provenance <code>grid_substantiation</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Calculator</strong></td>
+            <td>—</td>
+            <td>Consumer of RewardToken data, not an evidence source.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Tools propose transitions via <code>ingest_bool()</code> fields such as <code>contract_satisfied</code> and
+        <code>ready_for_payment</code>; tool state alone must not imply reward state.
+      </p>
+      <footer class="book-foot">Source: <a href="../tool-scope.md">tool-scope.md</a></footer>
+    </main>
+  </body>
+</html>

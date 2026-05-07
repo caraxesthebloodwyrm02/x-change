@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>03 — Principled service contract</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="02-service-loop.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="04-reward-lifecycle.html">Next →</a>
+    </nav>
+    <main class="slide slide--wide">
+      <p class="kicker">PSC</p>
+      <h1>PrincipledServiceContract</h1>
+      <p class="lead">Before a reward is interpreted, a service promise exists that students and support can read.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>What may be rewarded</td>
+            <td>Observable progress (declared in contract JSON for v0).</td>
+          </tr>
+          <tr>
+            <td>Required evidence</td>
+            <td>Minimum types — e.g. Glass session plus optional failure snapshot.</td>
+          </tr>
+          <tr>
+            <td>Post-success expectation</td>
+            <td>Narrative in <code>promise_json</code>.</td>
+          </tr>
+          <tr>
+            <td>Stripe linkage</td>
+            <td><code>payment_intent.succeeded</code> with reward + student metadata confirms payment, not satisfaction.</td>
+          </tr>
+          <tr>
+            <td>Support path</td>
+            <td>Mismatches emit <code>support_signals</code>; no silent drops.</td>
+          </tr>
+          <tr>
+            <td>Fulfillment confirmation</td>
+            <td>Student acknowledgement is separate from Stripe.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Default contract id:</strong> <code>psc-v0-default</code> (seeded on first init).</p>
+      <footer class="book-foot">Source: <a href="../policy-core-v0.md">policy-core-v0.md</a></footer>
+    </main>
+  </body>
+</html>

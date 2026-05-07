@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>04 — Reward lifecycle</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="03-principled-contract.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="05-glass-boundary.html">Next →</a>
+    </nav>
+    <main class="slide slide--wide">
+      <p class="kicker">RewardModel</p>
+      <h1>Lifecycle states (v0)</h1>
+      <p class="lead">
+        Only the policy layer advances state. Raw evidence and Stripe JSON propose transitions;
+        they never bypass validation.
+      </p>
+
+      <div class="flow" style="flex-wrap: nowrap; overflow-x: auto">
+        <div class="flow__step"><strong>drafted</strong> Intention; not yet earned.</div>
+        <span class="flow__arrow">→</span>
+        <div class="flow__step"><strong>earned</strong> Evidence satisfies PSC.</div>
+        <span class="flow__arrow">→</span>
+        <div class="flow__step"><strong>payment_pending</strong> Awaiting Stripe match.</div>
+        <span class="flow__arrow">→</span>
+        <div class="flow__step"><strong>payment_confirmed</strong> Webhook + metadata OK.</div>
+        <span class="flow__arrow">→</span>
+        <div class="flow__step"><strong>student_acknowledged</strong> Explicit ack recorded.</div>
+      </div>
+
+      <div class="card card--warn">
+        <strong>review_requested</strong> — May be entered from any state when student or agent flags a mismatch.
+      </div>
+
+      <h2>RewardToken</h2>
+      <p>
+        Governance unit on the ledger (<code>reward_token_amount</code>); <em>not</em> ecosystem signal-rate
+        tokens. Prior Cascade token work stays <strong>reference_only</strong> unless promoted here.
+      </p>
+
+      <h2>Student outcome</h2>
+      <p>
+        <code>outcome_state</code>: <code>unknown</code> → <code>delivered_pending_ack</code> →
+        <code>acknowledged</code> / <code>review_open</code>. Stripe proves funds movement, not learning outcome.
+      </p>
+      <footer class="book-foot">Source: <a href="../policy-core-v0.md">policy-core-v0.md</a></footer>
+    </main>
+  </body>
+</html>

@@ -1,89 +1,72 @@
 {
   "schema": "mcp-authority.v1",
+  "audit_date": "2026-05-07",
   "objective": "Stop editor and agent wiring drift through canonical MCP server set, client profiles, command policy, and parity checks.",
-  "canonical_servers": [
-    "afloat-server",
-    "code-analysis",
-    "craft-server",
-    "echoes-server",
-    "eligibility-server",
-    "glass-server",
-    "glimpse-server",
-    "grid-enhanced-tools",
-    "grid-intelligence",
-    "grid-rag",
-    "grid-rag-enhanced",
-    "grid-server",
-    "harness-server",
-    "lots-server",
-    "maintain-server",
-    "mangrove-server",
-    "nexus-server",
-    "ori-server",
-    "overview-server",
-    "personal-rag",
-    "portfolio-safety-lens",
-    "pulse-server",
-    "school-server",
-    "seeds-server",
-    "test-runner"
-  ],
+  "canonical_servers": 25,
+  "servers": {
+    "active": [
+      {"name": "personal-rag", "language": "python", "depth": "full-federated", "reason": "Prince personal intelligence core"},
+      {"name": "eligibility-server", "language": "ts", "depth": "full", "reason": "Structural audit + Lumos fast-lane dependency"},
+      {"name": "echoes-server", "language": "ts", "depth": "full", "reason": "Cross-server audit trail"},
+      {"name": "glimpse-server", "language": "ts", "depth": "growing", "reason": "Cognitive pipeline"}
+    ],
+    "intentionally_disabled": [
+      {"name": "grid-server", "reason": "Full Mothership; not needed for current focus", "reenable": "When GRID port 8080 is needed"},
+      {"name": "afloat-server", "reason": "Workflow engine; not needed for current focus", "reenable": "When maintenance workflows are active"},
+      {"name": "lots-server", "reason": "Experiment catalog; not needed", "reenable": "When experiment-driven dev is active"},
+      {"name": "pulse-server", "reason": "Human-facing briefings; not agent-facing", "reenable": "When operator wants daily digest"}
+    ],
+    "dormant": [
+      "code-analysis", "craft-server", "glass-server", "grid-enhanced-tools",
+      "grid-intelligence", "grid-rag", "grid-rag-enhanced", "harness-server",
+      "maintain-server", "mangrove-server", "nexus-server", "ori-server",
+      "overview-server", "portfolio-safety-lens", "school-server",
+      "seeds-server", "test-runner"
+    ],
+    "plugin_unauthenticated": [
+      "plugin:financial-analysis:aiera", "plugin:financial-analysis:chronograph",
+      "plugin:financial-analysis:daloopa", "plugin:financial-analysis:egnyte",
+      "plugin:financial-analysis:factset", "plugin:financial-analysis:lseg",
+      "plugin:financial-analysis:moodys", "plugin:financial-analysis:morningstar",
+      "plugin:financial-analysis:pitchbook", "plugin:financial-analysis:sp-global"
+    ]
+  },
   "command_policy": {
     "typescript_mcp_preferred_command": "/home/irfankabir/.nvm/versions/node/v24.15.0/bin/npx",
     "alternative": "controlled agent PATH exposing npm and npx",
     "rule": "Do not mix command policies without recording the client profile."
   },
   "client_profiles": [
-    {
-      "client": "cursor-current-home",
-      "config_path": "/home/irfankabir/.cursor/mcp.json",
-      "profile": "full",
-      "current_read": "25-server set with absolute nvm npx"
-    },
-    {
-      "client": "windsurf-current-home",
-      "config_path": "/home/irfankabir/.codeium/windsurf/mcp_config.json",
-      "profile": "full",
-      "current_read": "25-server set with absolute nvm npx"
-    },
-    {
-      "client": "cascadeprojects-canonical",
-      "config_path": "/mnt/arch_data/home/caraxes/CascadeProjects/mcp_config.json",
-      "profile": "full-needs-command-policy-repair",
-      "current_read": "25-server set with bare npx"
-    },
-    {
-      "client": "copilot",
-      "config_path": "/home/irfankabir/.copilot/mcp-config.json",
-      "profile": "minimal",
-      "current_read": "5-server subset"
-    },
-    {
-      "client": "generic-mcp",
-      "config_path": "/home/irfankabir/.mcp.json",
-      "profile": "minimal-or-disabled",
-      "current_read": "1-server subset"
-    },
-    {
-      "client": "antigravity-current-home",
-      "config_path": "/home/irfankabir/.gemini/antigravity/mcp_config.json",
-      "profile": "disabled-or-regenerate",
-      "current_read": "empty config found"
-    },
-    {
-      "client": "caraxes-side-user-configs",
-      "config_path": "/mnt/arch_data/home/caraxes/.config",
-      "profile": "archive-unless-confirmed-active",
-      "current_read": "partial 19-21 server sets"
-    }
+    {"client": "claude-code-global", "profile": "active", "servers_enabled": 4, "servers_disabled": 4, "enable_all_project": true},
+    {"client": "x-change-project", "profile": "minimal", "servers_enabled": 0, "servers_disabled": 1, "enable_all_project": false, "note": "Disables glimpse; activates per Glass/x-change rail"},
+    {"client": "cursor-current-home", "profile": "full", "servers": 25, "command": "absolute-nvm-npx"},
+    {"client": "windsurf-current-home", "profile": "full", "servers": 25, "command": "absolute-nvm-npx"},
+    {"client": "cascadeprojects-canonical", "profile": "full-needs-repair", "servers": 25, "command": "bare-npx", "fix": "WIRE-P0-001"},
+    {"client": "copilot", "profile": "minimal", "servers": 5},
+    {"client": "generic-mcp", "profile": "minimal-or-disabled", "servers": 1},
+    {"client": "antigravity", "profile": "disabled", "servers": 0},
+    {"client": "caraxes-side-user-configs", "profile": "archive", "servers": "19-21"}
   ],
-  "parity_checks": [
-    "server_count_matches_profile",
-    "command_path_exists",
-    "cwd_exists_after_expansion",
-    "no_active_stale_home_caraxes_paths",
-    "env_key_names_only_no_values"
+  "fix_candidates": [
+    {"id": "WIRE-P0-001", "priority": "P0", "description": "CascadeProjects mcp_config.json uses bare npx; switch to absolute nvm path"},
+    {"id": "WIRE-P1-002", "priority": "P1", "description": "17 dormant servers need explicit enable/disable/archive classification"},
+    {"id": "WIRE-P1-003", "priority": "P1", "description": "10 financial plugin servers installed but unauthenticated; document auth procedure"},
+    {"id": "WIRE-P2-004", "priority": "P2", "description": "x-change project could enable glass-server when Glass rail is active"}
   ],
+  "parity_report": {
+    "date": "2026-05-07",
+    "checks": [
+      {"check": "canonical_set_declared", "status": "pass"},
+      {"check": "active_set_matches_profile", "status": "pass"},
+      {"check": "intentionally_disabled_documented", "status": "pass"},
+      {"check": "dormant_servers_classified", "status": "pass"},
+      {"check": "plugin_servers_accounted", "status": "pass"},
+      {"check": "command_policy_declared", "status": "pass"},
+      {"check": "cascadeprojects_bare_npx", "status": "fail", "fix": "WIRE-P0-001"},
+      {"check": "xchange_glimpse_disabled_intentional", "status": "pass"},
+      {"check": "no_stale_caraxes_active_paths", "status": "pass"},
+      {"check": "client_profiles_classified", "status": "pass"}
+    ]
+  },
   "completion_gate": "Every client is classified as full, minimal, archive, or disabled, and every mismatch has a fix-candidate record."
 }
-

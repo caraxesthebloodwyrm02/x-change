@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>05 — Glass boundary</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="04-reward-lifecycle.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="06-stripe-evidence.html">Next →</a>
+    </nav>
+    <main class="slide slide--wide">
+      <p class="kicker">glass-contract-v0</p>
+      <h1>Glass ↔ x-change</h1>
+      <p class="lead">
+        Glass sessions name evidence for the EvidenceLedger, but schemas are disjoint. The contract
+        states what Glass supplies — and what x-change will never infer from tool state alone.
+      </p>
+
+      <h2>In Glass bridge, not present</h2>
+      <p class="lead" style="margin-top: 0">
+        <code>student_id</code>, <code>reward_id</code>, <code>contract_satisfied</code>,
+        <code>ready_for_payment</code>, <code>student_ack</code>, <code>request_review</code>.
+      </p>
+
+      <h2>Caller-supplied on ingest</h2>
+      <ul class="compact">
+        <li><code>session_id</code> from Glass; <code>student_id</code> required from caller.</li>
+        <li>Booleans such as <code>contract_satisfied</code> and <code>ready_for_payment</code> are explicit — no inference from <code>threshold_state</code>.</li>
+        <li><code>POST /v0/ingest/glass-bridge</code> maps bridge JSON + enrichment to the ingest schema.</li>
+      </ul>
+
+      <div class="card">
+        <strong>Spike status</strong> — Typed payload trace, failure paths, and Phase 4 tickets live in
+        <a href="../INTEGRATION-SPIKE.md">INTEGRATION-SPIKE.md</a>. Passive Glass signal updates are documented there.
+      </div>
+      <footer class="book-foot">Source: <a href="../glass-contract-v0.md">glass-contract-v0.md</a></footer>
+    </main>
+  </body>
+</html>

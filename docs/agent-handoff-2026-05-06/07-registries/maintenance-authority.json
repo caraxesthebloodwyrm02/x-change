@@ -1,23 +1,279 @@
 {
   "schema": "maintenance-authority.v1",
+  "audit_date": "2026-05-07",
   "objective": "Make routine maintenance governed, scheduled, and safe.",
+  "verification_method": "offline (unit file parsing + ExecStart target existence). Live systemctl --user state could not be queried from sandbox (MAINT-P2-001).",
+  "source_map": "01-source-maps/development-toolchain-wiring-maintenance-audit.md",
   "safety_policy": [
-    "No sudo from agents.",
-    "No package upgrades from routine report scripts.",
-    "No destructive cleanup without operator-approved apply step.",
-    "Separate live systemd checks from offline unit-file validation."
+    "No sudo from agents. Collect privileged steps into one copyable block for the operator.",
+    "No package upgrades from routine report scripts. Report only.",
+    "No destructive cleanup without operator-approved apply step. Generate cleanup plans with exact paths and size estimates.",
+    "Separate live systemd checks from offline unit-file validation.",
+    "Fail closed: if ExecStart target missing, mark job degraded and skip — do not guess a replacement path."
   ],
-  "jobs": [
-    { "id": "runtime-health-pass", "status": "target-exists", "policy": "daily read-only health report" },
-    { "id": "stay-current", "status": "target-exists", "policy": "weekly package/toolchain report, no upgrades" },
-    { "id": "weekly-security-check", "status": "target-exists", "policy": "weekly non-privileged security report" },
-    { "id": "git-hygiene", "status": "target-exists", "policy": "fetch/prune/gc as configured, no branch deletion" },
-    { "id": "integrity-monitor", "status": "target-exists", "policy": "config drift reporting" },
-    { "id": "network-watchdog", "status": "target-exists", "policy": "outbound connection reporting" },
-    { "id": "process-sentinel", "status": "target-exists", "policy": "process drift reporting" },
-    { "id": "hogsmade-harness", "status": "target-missing-in-audit", "policy": "repair or disable before relying on timer" },
-    { "id": "hogsmade-scan", "status": "target-missing-in-audit", "policy": "repair or disable before relying on timer" }
-  ],
-  "completion_gate": "Every known timer has an authority record with schedule, target, safety mode, and broken-target handling."
+  "jobs": {
+    "healthy": [
+      {
+        "id": "git-hygiene",
+        "class": "hygiene",
+        "timer": "/home/irfankabir/.config/systemd/user/git-hygiene.timer",
+        "service": "/home/irfankabir/.config/systemd/user/git-hygiene.service",
+        "schedule": "daily 04:00",
+        "execstart": "/home/irfankabir/scripts/git-hygiene.sh",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "gruff-diagnostic",
+        "class": "health",
+        "timer": "/home/irfankabir/.config/systemd/user/gruff-diagnostic.timer",
+        "service": "/home/irfankabir/.config/systemd/user/gruff-diagnostic.service",
+        "schedule": "Monday 09:00",
+        "execstart": "%h/.local/bin/node %h/gruff/workspace/scripts/route_config_smoke.mjs",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "gruff-ingester",
+        "class": "ingestion",
+        "timer": "/home/irfankabir/.config/systemd/user/gruff-ingester.timer",
+        "service": "/home/irfankabir/.config/systemd/user/gruff-ingester.service",
+        "schedule": "every 1 min",
+        "execstart": "%h/.local/bin/node %h/gruff/dist/trust/ingester.cjs",
+        "execstart_exists": true,
+        "mode": "write",
+        "writes_to": "gruff trust database",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "integrity-monitor",
+        "class": "security",
+        "timer": "/home/irfankabir/.config/systemd/user/integrity-monitor.timer",
+        "service": "/home/irfankabir/.config/systemd/user/integrity-monitor.service",
+        "schedule": "every 30 min",
+        "execstart": "/home/irfankabir/scripts/integrity-monitor.sh check",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "network-watchdog",
+        "class": "security",
+        "timer": "/home/irfankabir/.config/systemd/user/network-watchdog.timer",
+        "service": "/home/irfankabir/.config/systemd/user/network-watchdog.service",
+        "schedule": "every 5 min",
+        "execstart": "/home/irfankabir/scripts/network-watchdog.sh",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "node-refresh",
+        "class": "maintenance",
+        "timer": "/home/irfankabir/.config/systemd/user/node-refresh.timer",
+        "service": "/home/irfankabir/.config/systemd/user/node-refresh.service",
+        "schedule": "Sunday 03:30",
+        "execstart": "%h/.local/bin/node-weekly-refresh.sh",
+        "execstart_exists": true,
+        "mode": "write",
+        "writes_to": "npm cache, node toolchain",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "personal-rag-morning-brief",
+        "class": "health",
+        "timer": "/home/irfankabir/.config/systemd/user/personal-rag-morning-brief.timer",
+        "service": "/home/irfankabir/.config/systemd/user/personal-rag-morning-brief.service",
+        "schedule": "daily 06:00 Asia/Dhaka",
+        "execstart": "%h/personal-rag/.venv/bin/python %h/personal-rag/scripts/morning-brief.py --no-render",
+        "execstart_exists": true,
+        "mode": "write",
+        "writes_to": "personal-rag digest",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "prince-toolchain-bootstrap",
+        "class": "maintenance",
+        "timer": "/home/irfankabir/.config/systemd/user/prince-toolchain-bootstrap.timer",
+        "service": "/home/irfankabir/.config/systemd/user/prince-toolchain-bootstrap.service",
+        "schedule": "weekly",
+        "execstart": "%h/scripts/toolchain-change-bootstrap.sh",
+        "execstart_exists": true,
+        "mode": "write",
+        "writes_to": "~/.claude/agent-context/",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "process-sentinel",
+        "class": "security",
+        "timer": "/home/irfankabir/.config/systemd/user/process-sentinel.timer",
+        "service": "/home/irfankabir/.config/systemd/user/process-sentinel.service",
+        "schedule": "every 15 min",
+        "execstart": "/home/irfankabir/scripts/process-sentinel.sh diff",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "runtime-health-pass",
+        "class": "health",
+        "timer": "/home/irfankabir/.config/systemd/user/runtime-health-pass.timer",
+        "service": "/home/irfankabir/.config/systemd/user/runtime-health-pass.service",
+        "schedule": "daily 06:15",
+        "execstart": "/usr/bin/bash /home/irfankabir/scripts/runtime-health-pass.sh",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "runtime-health-pass-deps",
+        "class": "health",
+        "timer": "/home/irfankabir/.config/systemd/user/runtime-health-pass-deps.timer",
+        "service": "/home/irfankabir/.config/systemd/user/runtime-health-pass-deps.service",
+        "schedule": "Monday 07:30",
+        "execstart": "/usr/bin/bash /home/irfankabir/scripts/runtime-health-pass.sh --deps --quiet",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "stay-current",
+        "class": "maintenance",
+        "timer": "/home/irfankabir/.config/systemd/user/stay-current.timer",
+        "service": "/home/irfankabir/.config/systemd/user/stay-current.service",
+        "schedule": "Wednesday 03:00",
+        "execstart": "/home/irfankabir/scripts/stay-current.sh --quiet",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "notes": "Ubuntu 25.10 package/toolchain report. Replaces legacy toolchain-maintain.sh (MAINT-P1-001).",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "validate-registry",
+        "class": "health",
+        "timer": "/home/irfankabir/.config/systemd/user/validate-registry.timer",
+        "service": "/home/irfankabir/.config/systemd/user/validate-registry.service",
+        "schedule": "Friday 05:00",
+        "execstart": "/home/irfankabir/scripts/validate-registry.sh",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "weekly-security-check",
+        "class": "security",
+        "timer": "/home/irfankabir/.config/systemd/user/weekly-security-check.timer",
+        "service": "/home/irfankabir/.config/systemd/user/weekly-security-check.service",
+        "schedule": "Monday 03:00",
+        "execstart": "/home/irfankabir/scripts/weekly-security-check.sh --quiet",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "workspace-maintenance-daily",
+        "class": "maintenance",
+        "timer": "/home/irfankabir/.config/systemd/user/workspace-maintenance-daily.timer",
+        "service": "/home/irfankabir/.config/systemd/user/workspace-maintenance-daily.service",
+        "schedule": "daily 07:00",
+        "execstart": "/home/irfankabir/scripts/workspace-maintenance.sh --daily",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "workspace-maintenance-weekly",
+        "class": "maintenance",
+        "timer": "/home/irfankabir/.config/systemd/user/workspace-maintenance-weekly.timer",
+        "service": "/home/irfankabir/.config/systemd/user/workspace-maintenance-weekly.service",
+        "schedule": "Sunday 07:30",
+        "execstart": "/home/irfankabir/scripts/workspace-maintenance.sh --weekly",
+        "execstart_exists": true,
+        "mode": "read-only",
+        "repair_policy": "report-only",
+        "parallel_lane": "C"
+      }
+    ],
+    "broken": [
+      {
+        "id": "hogsmade-harness",
+        "class": "harness",
+        "timer": "/home/irfankabir/.config/systemd/user/hogsmade-harness.timer",
+        "service": "/home/irfankabir/.config/systemd/user/hogsmade-harness.service",
+        "schedule": "daily 03:00",
+        "execstart": "%h/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh",
+        "execstart_exists": false,
+        "mode": "unknown",
+        "fix": "MAINT-P0-001",
+        "action": "Find or create hogsmade-driver.sh, or disable both timers.",
+        "parallel_lane": "C"
+      },
+      {
+        "id": "hogsmade-scan",
+        "class": "health",
+        "timer": "/home/irfankabir/.config/systemd/user/hogsmade-scan.timer",
+        "service": "/home/irfankabir/.config/systemd/user/hogsmade-scan.service",
+        "schedule": "daily 02:00, 14:00",
+        "execstart": "%h/gruff/workspace/CascadeProjects/scripts/hogsmade-driver.sh",
+        "execstart_exists": false,
+        "mode": "unknown",
+        "fix": "MAINT-P0-001",
+        "action": "Find or create hogsmade-driver.sh, or disable both timers.",
+        "parallel_lane": "C"
+      }
+    ],
+    "manual_only": [
+      {
+        "id": "grid-api",
+        "class": "service",
+        "service": "/home/irfankabir/.config/systemd/user/grid-api.service",
+        "execstart": "uv run uvicorn application.mothership.main:app --host 127.0.0.1 --port 8080",
+        "execstart_exists": true,
+        "mode": "write",
+        "note": "No timer; started manually or via alias. GRID Mothership on port 8080."
+      }
+    ]
+  },
+  "script_classifications": {
+    "active": [
+      {"path": "/home/irfankabir/scripts/stay-current.sh", "os": "ubuntu-25.10", "mode": "read-only"},
+      {"path": "/home/irfankabir/scripts/runtime-health-pass.sh", "os": "ubuntu-25.10", "mode": "read-only", "flags": ["--refresh", "--deps", "--json", "--quiet"]},
+      {"path": "/home/irfankabir/scripts/workspace-maintenance.sh", "os": "ubuntu-25.10", "mode": "read-only"},
+      {"path": "/home/irfankabir/scripts/git-hygiene.sh", "os": "ubuntu-25.10", "mode": "read-only"},
+      {"path": "/home/irfankabir/scripts/weekly-security-check.sh", "os": "ubuntu-25.10", "mode": "read-only"},
+      {"path": "/home/irfankabir/scripts/integrity-monitor.sh", "os": "ubuntu-25.10", "mode": "read-only"},
+      {"path": "/home/irfankabir/scripts/network-watchdog.sh", "os": "ubuntu-25.10", "mode": "read-only"},
+      {"path": "/home/irfankabir/scripts/process-sentinel.sh", "os": "ubuntu-25.10", "mode": "read-only"},
+      {"path": "/home/irfankabir/scripts/mcp-probe.sh", "os": "ubuntu-25.10", "mode": "read-only"}
+    ],
+    "legacy": [
+      {
+        "path": "/home/irfankabir/scripts/toolchain-maintain.sh",
+        "os": "arch-linux",
+        "status": "legacy-arch",
+        "replacement": "/home/irfankabir/scripts/stay-current.sh",
+        "fix": "MAINT-P1-001",
+        "action": "Add OS guard: exit on non-Arch unless --force-legacy passed"
+      }
+    ]
+  },
+  "fix_candidates_covered": ["MAINT-P0-001", "MAINT-P0-002", "MAINT-P1-001", "MAINT-P2-001"],
+  "completion_gate": "Every known timer has an authority record with schedule, ExecStart target, existence verification, safety mode, and broken-target handling."
 }
-

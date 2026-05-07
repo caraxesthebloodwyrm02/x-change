@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>02 — Service loop</title>
+    <link rel="stylesheet" href="assets/book.css" />
+  </head>
+  <body>
+    <nav class="book-nav">
+      <a href="01-cover.html">← Prev</a>
+      <a class="toc-link" href="index.html">Index</a>
+      <a href="03-principled-contract.html">Next →</a>
+    </nav>
+    <main class="slide">
+      <p class="kicker">policy-core-v0</p>
+      <h1>Single-student service loop</h1>
+      <p class="lead">
+        v0 scope: one principled contract, evidence, reward state, Stripe confirmation, and explicit
+        student outcome. Teams, geo withdrawal, and marketplace payouts are explicitly deferred.
+      </p>
+
+      <div class="flow">
+        <div class="flow__step"><strong>1</strong> PSC defines what may be rewarded and required evidence.</div>
+        <span class="flow__arrow">→</span>
+        <div class="flow__step"><strong>2</strong> Glass / ingest proposes evidence rows only.</div>
+        <span class="flow__arrow">→</span>
+        <div class="flow__step"><strong>3</strong> Policy layer validates transitions on <code>reward_ledger</code>.</div>
+        <span class="flow__arrow">→</span>
+        <div class="flow__step"><strong>4</strong> Stripe confirms payment metadata; ack is separate.</div>
+      </div>
+
+      <div class="card">
+        <strong>Canonical split</strong>
+        <ul class="compact">
+          <li><code>PrincipledServiceContract</code> constrains interpretation.</li>
+          <li><code>RewardModel</code> is canonical for financing and reward state.</li>
+          <li>Glass → EvidenceLedger inputs only; Stripe → payment confirmation only.</li>
+        </ul>
+      </div>
+      <footer class="book-foot">Source: <a href="../policy-core-v0.md">policy-core-v0.md</a></footer>
+    </main>
+  </body>
+</html>

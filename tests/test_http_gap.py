@@ -860,6 +860,36 @@ class GlassSessionSuccessTests(_BaseHttpCase):
         self.assertTrue(payload["ok"])
         self.assertTrue(payload["evidence_recorded"])
 
+    def test_glass_session_invalid_plugin_manifest_returns_400_and_support_signal(self) -> None:
+        body = json.dumps(
+            {
+                "session_id": "sess-plugin-invalid",
+                "student_id": "stu1",
+                "reward_id": "reward-plugin-invalid",
+                "plugin_manifest": {"name": "bad-plugin"},
+            }
+        ).encode()
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/ingest/glass-session",
+            body=body,
+            headers={"Content-Type": "application/json", **self._auth_headers()},
+        )
+        self.assertEqual(status, 400)
+        self.assertEqual(payload["error"], "plugin_manifest_invalid")
+        self.assertEqual(payload["field"], "skills")
+
+        with open_db(self._path) as conn:
+            row = conn.execute(
+                "SELECT kind, payload_json FROM support_signals WHERE kind='plugin_manifest_invalid'"
+            ).fetchone()
+        self.assertIsNotNone(row)
+        assert row is not None
+        signal_payload = json.loads(row["payload_json"])
+        self.assertEqual(signal_payload["student_id"], "stu1")
+        self.assertEqual(signal_payload["reward_id"], "reward-plugin-invalid")
+        self.assertEqual(signal_payload["field"], "skills")
+
 
 # ---------------------------------------------------------------------------
 # Group 16: glass-bridge payload=None (L512)
@@ -880,6 +910,36 @@ class GlassBridgeInvalidBodyTests(_BaseHttpCase):
             },
         )
         self.assertEqual(status, 400)
+
+    def test_invalid_plugin_manifest_returns_400_and_support_signal(self) -> None:
+        body = json.dumps(
+            {
+                "student_id": "stu1",
+                "reward_id": "reward-bridge-plugin-invalid",
+                "bridge": {"session_id": "bridge-plugin-invalid", "agent_state": "idle"},
+                "plugin_manifest": {"name": "bad-plugin"},
+            }
+        ).encode()
+        status, payload, _ = self._request(
+            "POST",
+            "/v0/ingest/glass-bridge",
+            body=body,
+            headers={"Content-Type": "application/json", **self._auth_headers()},
+        )
+        self.assertEqual(status, 400)
+        self.assertEqual(payload["error"], "plugin_manifest_invalid")
+        self.assertEqual(payload["field"], "skills")
+
+        with open_db(self._path) as conn:
+            row = conn.execute(
+                "SELECT kind, payload_json FROM support_signals WHERE kind='plugin_manifest_invalid'"
+            ).fetchone()
+        self.assertIsNotNone(row)
+        assert row is not None
+        signal_payload = json.loads(row["payload_json"])
+        self.assertEqual(signal_payload["student_id"], "stu1")
+        self.assertEqual(signal_payload["reward_id"], "reward-bridge-plugin-invalid")
+        self.assertEqual(signal_payload["field"], "skills")
 
 
 # ---------------------------------------------------------------------------
