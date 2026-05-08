@@ -2,13 +2,180 @@
   "schema": "batch-execution-tracker.v1",
   "objective": "Track execution status of every batch so agents can resume without re-reading all batch docs.",
   "records": [
-    { "batch_id": "BATCH-00", "status": "pass", "timestamp": "2026-05-07T00:00:00+00:00", "executed_by": "cursor-agent", "changed_files": ["03-batches/BATCH-00-ORIENTATION.md", "00-master/PREPAREDNESS-CHECK.md", "README.md", "07-registries/preparedness-record.json", "07-registries/batch-execution-tracker.json"], "validation": { "acceptance_criteria_met": ["all source maps present and non-empty", "all 04-schemas and 07-registries JSON parse", "all batch docs exist", "README entrypoint + EXECUTION-ORDER cross-link", "no placeholder markers in pack", "north_star goal 2 handoff governance"], "acceptance_criteria_failed": [], "commands_run": ["python3 -m json.tool on 04-schemas/*.json 07-registries/*.json 01-source-maps/*.json", "wc -c on source maps", "rg TODO|TBD|PLACEHOLDER scan"] }, "blockers": [], "next_step": "BATCH-01-KNOWLEDGEBASE-MEMORY per EXECUTION-ORDER.md" },
-    { "batch_id": "BATCH-01", "status": "pass", "timestamp": "2026-05-07T04:46:51+06:00", "executed_by": "antigravity", "changed_files": ["06-authority/memory-authority.yaml", "../../tools/memory_check.py"], "validation": {"acceptance_criteria_met": ["memory-authority.yaml created", "read-only hydration check built"]}, "blockers": [], "next_step": "Complete BATCH-03" },
-    { "batch_id": "BATCH-02", "status": "partial", "timestamp": "2026-05-07T06:30:00+06:00", "executed_by": "claude-opus", "changed_files": ["07-registries/custom-assets-seed.json"], "validation": { "acceptance_criteria_met": ["every high-signal asset class has registry representation", "status values normalized", "duplicate/mirror assets flagged", "active vs archive vs vendor explicit", "resurfacing candidates flagged"], "acceptance_criteria_failed": ["full 882-file scan not yet converted — 50 entries from named high-signal assets"], "commands_run": ["python3 -m json.tool on custom-assets-seed.json"] }, "blockers": ["remaining ~830 assets need filesystem scan to populate; scan is allowed but deferred to keep this pass scoped"], "next_step": "Run filesystem scan of high-confidence roots to populate remaining entries, or proceed to BATCH-04" },
-    { "batch_id": "BATCH-03", "status": "pass", "timestamp": "2026-05-07T04:46:51+06:00", "executed_by": "antigravity", "changed_files": ["06-authority/mcp-authority.yaml"], "validation": {"acceptance_criteria_met": ["mcp-authority.yaml created", "maintain-server formally retired"]}, "blockers": [], "next_step": "BATCH-04-TOOLCHAIN-MAINTENANCE" },
-    { "batch_id": "BATCH-04", "status": "pass", "timestamp": "2026-05-07T07:27:00+06:00", "executed_by": "claude-opencode", "changed_files": ["07-registries/maintenance-authority.json", "07-registries/toolchain-authority.json"], "validation": {"acceptance_criteria_met": ["every known timer has an authority record shape", "broken hogsmade timer targets are recorded", "legacy Arch maintenance script is classified", "degraded snap toolchain state is documented"], "commands_run": ["python3 -m json.tool on modified authorities"]}, "blockers": [], "next_step": "BATCH-05-DIRECTORY-CONSOLIDATION" },
-    { "batch_id": "BATCH-05", "status": "pass", "timestamp": "2026-05-07T10:30:00+06:00", "executed_by": "claude-opencode", "changed_files": ["/home/irfankabir/workspace-trust-auditor/PROJECT_REGISTRY.yaml", "/home/irfankabir/workspace-trust-auditor/schemas/project-registry.schema.json"], "validation": {"acceptance_criteria_met": ["registry created in target location", "classification mapped per playbook"]}, "blockers": [], "next_step": "BATCH-06-DOMAIN-DISTRIBUTION" },
-    { "batch_id": "BATCH-06", "status": "pending", "timestamp": null, "executed_by": null, "changed_files": [], "validation": {}, "blockers": [], "next_step": "Read BATCH-06-DOMAIN-DISTRIBUTION.md" },
-    { "batch_id": "BATCH-07", "status": "pending", "timestamp": null, "executed_by": null, "changed_files": [], "validation": {}, "blockers": [], "next_step": "Read BATCH-07-BURIED-ASSET-RESURFACING.md" }
+    {
+      "batch_id": "BATCH-00",
+      "status": "pass",
+      "timestamp": "2026-05-07T00:00:00+00:00",
+      "executed_by": "cursor-agent",
+      "changed_files": [
+        "03-batches/BATCH-00-ORIENTATION.md",
+        "00-master/PREPAREDNESS-CHECK.md",
+        "README.md",
+        "07-registries/preparedness-record.json",
+        "07-registries/batch-execution-tracker.json"
+      ],
+      "validation": {
+        "acceptance_criteria_met": [
+          "all source maps present and non-empty",
+          "all 04-schemas and 07-registries JSON parse",
+          "all batch docs exist",
+          "README entrypoint + EXECUTION-ORDER cross-link",
+          "no placeholder markers in pack",
+          "north_star goal 2 handoff governance"
+        ],
+        "acceptance_criteria_failed": [],
+        "commands_run": [
+          "python3 -m json.tool on 04-schemas/*.json 07-registries/*.json 01-source-maps/*.json",
+          "wc -c on source maps",
+          "rg TODO|TBD|PLACEHOLDER scan"
+        ]
+      },
+      "blockers": [],
+      "next_step": "BATCH-01-KNOWLEDGEBASE-MEMORY per EXECUTION-ORDER.md"
+    },
+    {
+      "batch_id": "BATCH-01",
+      "status": "pass",
+      "timestamp": "2026-05-07T04:46:51+06:00",
+      "executed_by": "antigravity",
+      "changed_files": [
+        "06-authority/memory-authority.yaml",
+        "../../tools/memory_check.py"
+      ],
+      "validation": {
+        "acceptance_criteria_met": [
+          "memory-authority.yaml created",
+          "read-only hydration check built"
+        ]
+      },
+      "blockers": [],
+      "next_step": "Complete BATCH-03"
+    },
+    {
+      "batch_id": "BATCH-02",
+      "status": "partial",
+      "timestamp": "2026-05-07T06:30:00+06:00",
+      "executed_by": "claude-opus",
+      "changed_files": [
+        "07-registries/custom-assets-seed.json"
+      ],
+      "validation": {
+        "acceptance_criteria_met": [
+          "every high-signal asset class has registry representation",
+          "status values normalized",
+          "duplicate/mirror assets flagged",
+          "active vs archive vs vendor explicit",
+          "resurfacing candidates flagged"
+        ],
+        "acceptance_criteria_failed": [
+          "full 882-file scan not yet converted \u2014 50 entries from named high-signal assets"
+        ],
+        "commands_run": [
+          "python3 -m json.tool on custom-assets-seed.json"
+        ]
+      },
+      "blockers": [
+        "remaining ~830 assets need filesystem scan to populate; scan is allowed but deferred to keep this pass scoped"
+      ],
+      "next_step": "Run filesystem scan of high-confidence roots to populate remaining entries, or proceed to BATCH-04"
+    },
+    {
+      "batch_id": "BATCH-03",
+      "status": "pass",
+      "timestamp": "2026-05-07T04:46:51+06:00",
+      "executed_by": "antigravity",
+      "changed_files": [
+        "06-authority/mcp-authority.yaml"
+      ],
+      "validation": {
+        "acceptance_criteria_met": [
+          "mcp-authority.yaml created",
+          "maintain-server formally retired"
+        ]
+      },
+      "blockers": [],
+      "next_step": "BATCH-04-TOOLCHAIN-MAINTENANCE"
+    },
+    {
+      "batch_id": "BATCH-04",
+      "status": "pass",
+      "timestamp": "2026-05-07T07:27:00+06:00",
+      "executed_by": "claude-opencode",
+      "changed_files": [
+        "07-registries/maintenance-authority.json",
+        "07-registries/toolchain-authority.json"
+      ],
+      "validation": {
+        "acceptance_criteria_met": [
+          "every known timer has an authority record shape",
+          "broken hogsmade timer targets are recorded",
+          "legacy Arch maintenance script is classified",
+          "degraded snap toolchain state is documented"
+        ],
+        "commands_run": [
+          "python3 -m json.tool on modified authorities"
+        ]
+      },
+      "blockers": [],
+      "next_step": "BATCH-05-DIRECTORY-CONSOLIDATION"
+    },
+    {
+      "batch_id": "BATCH-05",
+      "status": "pass",
+      "timestamp": "2026-05-07T10:30:00+06:00",
+      "executed_by": "claude-opencode",
+      "changed_files": [
+        "/home/irfankabir/workspace-trust-auditor/PROJECT_REGISTRY.yaml",
+        "/home/irfankabir/workspace-trust-auditor/schemas/project-registry.schema.json"
+      ],
+      "validation": {
+        "acceptance_criteria_met": [
+          "registry created in target location",
+          "classification mapped per playbook"
+        ]
+      },
+      "blockers": [],
+      "next_step": "BATCH-06-DOMAIN-DISTRIBUTION"
+    },
+    {
+      "batch_id": "BATCH-06",
+      "status": "pass",
+      "timestamp": "2026-05-07T10:30:47.847426",
+      "executed_by": "claude-opencode",
+      "changed_files": [
+        "/home/irfankabir/workspace-trust-auditor/DOMAIN_REGISTRY.yaml",
+        "/home/irfankabir/workspace-trust-auditor/reports/domain-graph.json"
+      ],
+      "validation": {
+        "acceptance_criteria_met": [
+          "each domain has assets, gaps, and diagram candidates mapped",
+          "multi-domain projects preserve secondary tags",
+          "visual data requirements met via JSON graph generation"
+        ],
+        "commands_run": []
+      },
+      "blockers": [],
+      "next_step": "BATCH-07-BURIED-ASSET-RESURFACING"
+    },
+    {
+      "batch_id": "BATCH-07",
+      "status": "pass",
+      "timestamp": "2026-05-07T10:31:14.322446",
+      "executed_by": "claude-opencode",
+      "changed_files": [
+        "/home/irfankabir/workspace-trust-auditor/RESURFACING_REGISTRY.yaml"
+      ],
+      "validation": {
+        "acceptance_criteria_met": [
+          "resurfacing registry created",
+          "candidate-to-domain mapping complete",
+          "validation checklist per candidate added",
+          "promotion plans designed without moving files"
+        ],
+        "commands_run": []
+      },
+      "blockers": [],
+      "next_step": "HANDOFF-COMPLETE"
+    }
   ]
 }
