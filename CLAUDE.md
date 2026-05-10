@@ -53,18 +53,64 @@ src/xchange/
 - Stripe payment confirms funds movement, not educational outcome. Student acknowledgement is separate.
 - Missing Stripe metadata or mismatches must emit support signals, never silently discard.
 - Fail closed: missing `XCHANGE_INGEST_TOKEN` or `STRIPE_WEBHOOK_SECRET` rejects requests.
+- **No `anthropic` SDK dependency.** References to `anthropic` in `docs/` are marketplace integration guidance only (XC-003, `docs/evaluation/runtime-contract-audit-2026-05-09.md`). The runtime has zero outbound calls to Anthropic APIs.
 
 ## API Endpoints (v0)
 
+_Last audited 2026-05-11 against `main.py`. "Operator auth" = Bearer token or X-Ingest-Token header._
+
+### Ingest (write, ingest token)
+
 | Method | Path | Auth | Purpose |
 |--------|------|------|---------|
-| POST | `/v0/ingest/glass-session` | Bearer token or X-Ingest-Token | Store session + optional failure snapshot |
-| POST | `/v0/ingest/glass-bridge` | Bearer token or X-Ingest-Token | Map caller-enriched Glass bridge telemetry into ingest |
-| POST | `/v0/stripe/webhook` | Stripe-Signature header | Process payment webhooks |
-| GET | `/v0/state/reward/<reward_id>` | Bearer token or X-Ingest-Token | Query reward delivery state |
-| GET | `/v0/outcomes/summary` | Bearer token or X-Ingest-Token | Aggregate reward counts by state; optional `student_id` |
-| GET | `/v0/support-signals` | Bearer token or X-Ingest-Token | List support signals |
-| POST | `/v0/support-signals/<id>/resolve` | Bearer token or X-Ingest-Token | Resolve support signal |
+| POST | `/v0/ingest/glass-session` | Ingest token | Store Glass session + optional failure snapshot |
+| POST | `/v0/ingest/glass-bridge` | Ingest token | Map Glass bridge telemetry into evidence ingest |
+
+### Stripe (write, Stripe-Signature)
+
+| Method | Path | Auth | Purpose |
+|--------|------|------|---------|
+| POST | `/v0/stripe/webhook` | Stripe-Signature | Process `payment_intent.succeeded` webhook |
+
+### Reward lifecycle (write, operator auth)
+
+| Method | Path | Auth | Purpose |
+|--------|------|------|---------|
+| POST | `/v0/rewards/draft` | Operator auth | Create a drafted reward record |
+| POST | `/v0/rewards/<id>/acknowledge` | Operator auth | Advance reward to `student_acknowledged` |
+| POST | `/v0/tokens/issue` | Operator auth | Issue a governance token |
+| POST | `/v0/exchange/request` | Operator auth | Submit a token exchange request |
+| PATCH | `/v0/evidence/<id>` | Operator auth | Retroactively link evidence to a reward |
+
+### Read / query (operator auth)
+
+| Method | Path | Auth | Purpose |
+|--------|------|------|---------|
+| GET | `/v0/viewer` | Operator auth | HTML dashboard: reward state + exchange requests |
+| GET | `/v0/state/reward/<reward_id>` | Operator auth | Query single reward delivery state |
+| GET | `/v0/outcomes/summary` | Operator auth | Aggregate reward counts by state; `?student_id=` filter |
+| GET | `/v0/support-signals` | Operator auth | List support signals |
+| GET | `/v0/exchange/requests` | Operator auth | List exchange requests; `?reward_id=` / `?state=` filters |
+| GET | `/v0/scope/token/<id>` | Operator auth | Get governance scope for a token |
+| GET | `/v0/scope/tool` | Operator auth | Get governance scope for a tool |
+
+### Support signal resolution (operator auth)
+
+| Method | Path | Auth | Purpose |
+|--------|------|------|---------|
+| POST | `/v0/support-signals/<id>/resolve` | Operator auth | Resolve a support signal |
+
+### MCP read-only tools (`xchange_mcp.py`, stdio)
+
+_Requires `uv run --group mcp python -m xchange.xchange_mcp`. All tools read SQLite only — no writes._
+
+| Tool | Purpose |
+|------|---------|
+| `xchange_list_support_signals` | Paginated support signals; `kind`, `resolved`, `limit`, `offset` |
+| `xchange_get_outcome_summary` | Aggregate reward counts by state; optional `student_id` |
+| `xchange_get_reward_state` | Single reward state by `reward_id` |
+| `xchange_list_exchange_requests` | Paginated exchange requests |
+| `xchange_list_payment_confirmations` | Paginated payment confirmation records |
 
 ## SQLite Tables
 
