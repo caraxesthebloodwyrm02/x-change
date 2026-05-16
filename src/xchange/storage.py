@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -31,6 +32,25 @@ from xchange.domain import (
 
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+@dataclass(frozen=True)
+class RewardTokenAmount:
+    """Typed wrapper for reward token quantity (units).
+
+    Preserves semantic type information: a RewardTokenAmount is not just
+    any integer, but specifically a count of reward token units.
+    """
+    units: int
+
+    def __init__(self, units: int) -> None:
+        object.__setattr__(self, "units", max(0, int(units)))
+
+    def __str__(self) -> str:
+        return str(self.units)
+
+    def __repr__(self) -> str:
+        return f"RewardTokenAmount(units={self.units})"
 
 
 LEGACY_SCHEMA_SQL: Final[str] = """
@@ -249,12 +269,17 @@ def _ensure_default_contract(conn: sqlite3.Connection) -> None:
 
 
 def _migrate_legacy_rewards(conn: sqlite3.Connection) -> None:
+    """Migrate legacy rewards table to reward_ledger, tracked in schema_migrations.
+
+    Uses schema_migrations table as authoritative log, not row count heuristic.
+    """
+    migration_version = "v000_legacy_rewards_ingest"
     cur = conn.execute(
-        "SELECT COUNT(1) AS c FROM reward_ledger",
+        "SELECT version FROM schema_migrations WHERE version=?", (migration_version,)
     )
-    row = cur.fetchone()
-    if row and int(row["c"]) > 0:
-        return
+    if cur.fetchone():
+        return  # already migrated
+
     legacy = conn.execute(
         "SELECT reward_id, student_id, delivered FROM rewards"
     ).fetchall()
@@ -286,6 +311,11 @@ def _migrate_legacy_rewards(conn: sqlite3.Connection) -> None:
                 json.dumps({"migrated_from": "rewards"}, ensure_ascii=False),
             ),
         )
+    conn.execute(
+        "INSERT OR IGNORE INTO schema_migrations (version, applied_at) VALUES (?, ?)",
+        (migration_version, now),
+    )
+    conn.commit()
 
 
 def _run_migration(conn: sqlite3.Connection, version: str, sql: str) -> bool:
@@ -393,6 +423,13 @@ CREATE INDEX IF NOT EXISTS idx_session_memory_stale ON session_memory(is_stale);
 @contextmanager
 def open_db(db_path: str):
     conn = sqlite3.connect(db_path)
+    # Enforce strict permissions (0600: owner read/write only) on the database file
+    # to prevent local information disclosure.
+    try:
+        os.chmod(db_path, 0o600)
+    except OSError:
+        pass  # E.g., if we don't own the file or it's an in-memory DB
+
     conn.row_factory = sqlite3.Row
     try:
         init_db(conn)
@@ -1085,7 +1122,7 @@ def get_reward_state(
         "student_id": row["student_id"],
         "contract_id": row["contract_id"],
         "state": row["state"],
-        "reward_token_amount": int(row["reward_token_amount"]),
+        "reward_token_amount": RewardTokenAmount(int(row["reward_token_amount"])),
         "reward_token": json.loads(row["reward_token_json"])
         if row["reward_token_json"]
         else None,
@@ -1239,16 +1276,26 @@ def create_nudge(
     conn.commit()
 
 
+def _build_where_clause(
+    student_id: str | None,
+) -> tuple[str, list[Any]]:
+    """Return a safe (WHERE clause, params) pair for an optional student_id filter.
+
+    The clause is always one of two hardcoded strings — never interpolated from
+    user input — so f-string use below is safe.  Centralising the logic here
+    removes the fragile inline pattern and makes the intent explicit.
+    """
+    if student_id:
+        return "WHERE student_id=?", [student_id]
+    return "", []
+
+
 def get_outcome_summary(
     conn: sqlite3.Connection,
     *,
     student_id: str | None = None,
 ) -> dict[str, Any]:
-    where = ""
-    params: list[Any] = []
-    if student_id:
-        where = "WHERE student_id=?"
-        params.append(student_id)
+    where, params = _build_where_clause(student_id)
 
     cur = conn.execute(
         f"SELECT state, COUNT(*) as cnt FROM reward_ledger {where} GROUP BY state",
