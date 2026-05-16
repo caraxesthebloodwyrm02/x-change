@@ -10,6 +10,11 @@ import time
 from html import escape
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import uvicorn
+from fastapi import FastAPI
+from starlette.middleware.wsgi import WSGIMiddleware
+
+
 from threading import Lock
 from typing import Any
 from urllib.parse import parse_qs, urlparse
@@ -50,9 +55,18 @@ from xchange.storage import (
     resolve_tool_scope,
     store_exchange_request,
 )
+from xchange.storage import RewardTokenAmount
 from xchange.stripe_sig import verify_stripe_signature
 
 _useb_log = logging.getLogger("xchange.useb")
+
+
+class _XChangeJSONEncoder(json.JSONEncoder):
+    """Custom JSON encoder for x-change types."""
+    def default(self, obj: Any) -> Any:
+        if isinstance(obj, RewardTokenAmount):
+            return {"__type": "RewardTokenAmount", "units": obj.units}
+        return super().default(obj)
 
 
 class BodyTooLargeError(Exception):
@@ -70,7 +84,7 @@ def _json_response(
     payload: dict[str, Any],
     headers: dict[str, str] | None = None,
 ) -> None:
-    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    body = json.dumps(payload, ensure_ascii=False, cls=_XChangeJSONEncoder).encode("utf-8")
     handler.send_response(status)
     handler.send_header("Content-Type", "application/json; charset=utf-8")
     handler.send_header("Content-Length", str(len(body)))
@@ -1530,7 +1544,84 @@ def _default_constraint_config() -> ConstraintConfig:
     )
 
 
-def run_server(*, host: str, port: int) -> None:
-    httpd = HTTPServer((host, port), AppHandler)
-    print(f"x-change v0 listening on http://{host}:{port}")
-    httpd.serve_forever()
+
+app = FastAPI()
+
+# Create a WSGI app that can run the BaseHTTPRequestHandler
+def wsgi_app(environ, start_response):
+    class RequestHandler(AppHandler):
+        def __init__(self, *args, **kwargs):
+            self.environ = environ
+            self.start_response = start_response
+            super().__init__(*args, **kwargs)
+
+        def setup(self):
+            self.rfile = self.environ['wsgi.input']
+            self.raw_requestline = f"{self.environ['REQUEST_METHOD']} {self.environ['PATH_INFO']} {self.environ['SERVER_PROTOCOL']}".encode('latin-1')
+            self.command = self.environ['REQUEST_METHOD']
+            self.path = self.environ['PATH_INFO']
+            self.request_version = self.environ['SERVER_PROTOCOL']
+            # Add headers
+            self.headers = {}
+            for key, value in self.environ.items():
+                if key.startswith('HTTP_'):
+                    self.headers[key[5:].replace('_', '-').lower()] = value
+            if 'CONTENT_TYPE' in self.environ:
+                self.headers['content-type'] = self.environ['CONTENT_TYPE']
+            if 'CONTENT_LENGTH' in self.environ:
+                self.headers['content-length'] = self.environ['CONTENT_LENGTH']
+
+
+        def send_response(self, code, message=None):
+            self.start_response(f"{code} {message or ''}".strip(), list(self.headers_buffer))
+
+        def send_header(self, keyword, value):
+            self.headers_buffer.append((keyword, value))
+
+        def end_headers(self):
+            pass
+
+        def handle(self):
+            self.headers_buffer = []
+            super().handle()
+
+    # The server address is not important here because we are not actually listening on a socket.
+    server = HTTPServer(('', 0), RequestHandler)
+    server.handle_request()  # This will call the handler's handle() method
+    return []
+
+
+# Mount the WSGI app
+app.mount("/", WSGIMiddleware(wsgi_app))
+
+
+def run_server(host: str, port: int) -> None:
+    """Start the x-change core HTTP server (BaseHTTPRequestHandler)."""
+    server = HTTPServer((host, port), AppHandler)
+    print(f"x-change v0 listening on http://{host}:{port} (stdlib http.server)")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+
+
+if __name__ == "__main__":
+    host = os.environ.get("XCHANGE_HOST", "127.0.0.1")
+    port_str = os.environ.get("XCHANGE_PORT", "8777")
+    try:
+        port = int(port_str)
+    except (TypeError, ValueError):
+        port = 8777
+
+    # If the user has installed the 'server' extra, they might prefer uvicorn.
+    # Otherwise, fall back to the stdlib run_server().
+    use_uvicorn = os.environ.get("XCHANGE_USE_UVICORN", "0").lower() in ("true", "1", "yes")
+    
+    if use_uvicorn:
+        print(f"x-change v0 listening on http://{host}:{port} (uvicorn)")
+        uvicorn.run(app, host=host, port=port)
+    else:
+        run_server(host, port)
+

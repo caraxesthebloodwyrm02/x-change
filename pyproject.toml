@@ -11,7 +11,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
     "pyright>=1.1.409",
     "pytest>=9.0.3",
@@ -19,4 +19,8 @@ dev = [
 ]
 mcp = [
     "mcp>=1.10",
+]
+server = [
+    "fastapi>=0.111.1",
+    "uvicorn[standard]>=0.30.3",
 ]
