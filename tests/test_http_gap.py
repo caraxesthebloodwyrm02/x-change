@@ -556,12 +556,12 @@ class StripeWebhookTests(_BaseHttpCase):
             msg=f"Expected 'invalid_json...' but got: {payload['error']!r}",
         )
 
-    def test_stripe_webhook_payment_intent_succeeded_missing_metadata(self) -> None:
+    def test_stripe_webhook_checkout_session_completed_missing_metadata(self) -> None:
         # Valid event type, event_id present, but metadata has no reward_id/student_id.
         event = {
             "id": "evt_missing_meta",
-            "type": "payment_intent.succeeded",
-            "data": {"object": {"id": "pi_x", "metadata": {}}},
+            "type": "checkout.session.completed",
+            "data": {"object": {"payment_intent": "pi_x", "metadata": {}}},
         }
         body = json.dumps(event).encode("utf-8")
         status, payload, _ = self._request(
@@ -574,7 +574,7 @@ class StripeWebhookTests(_BaseHttpCase):
         self.assertTrue(payload["accepted"])
         self.assertEqual(payload["reason"], "missing_metadata")
 
-    def test_stripe_webhook_payment_intent_succeeded_applies_payment(self) -> None:
+    def test_stripe_webhook_checkout_session_completed_applies_payment(self) -> None:
         # Set up reward at payment_pending via storage helpers.
         with open_db(self._path) as conn:
             create_reward_draft(conn=conn, reward_id="r-apply", student_id="s-apply")
@@ -591,10 +591,10 @@ class StripeWebhookTests(_BaseHttpCase):
 
         event = {
             "id": "evt_apply_1",
-            "type": "payment_intent.succeeded",
+            "type": "checkout.session.completed",
             "data": {
                 "object": {
-                    "id": "pi_apply_1",
+                    "payment_intent": "pi_apply_1",
                     "metadata": {
                         "reward_id": "r-apply",
                         "student_id": "s-apply",
@@ -612,7 +612,7 @@ class StripeWebhookTests(_BaseHttpCase):
         self.assertEqual(status, 200)
         self.assertTrue(payload["applied"])
 
-    def test_stripe_webhook_payment_intent_succeeded_with_nudge(self) -> None:
+    def test_stripe_webhook_checkout_session_completed_with_nudge(self) -> None:
         # Set up reward at payment_pending and record a failure for the student.
         with open_db(self._path) as conn:
             create_reward_draft(conn=conn, reward_id="r-nudge", student_id="s-nudge")
@@ -635,10 +635,10 @@ class StripeWebhookTests(_BaseHttpCase):
 
         event = {
             "id": "evt_nudge_1",
-            "type": "payment_intent.succeeded",
+            "type": "checkout.session.completed",
             "data": {
                 "object": {
-                    "id": "pi_nudge_1",
+                    "payment_intent": "pi_nudge_1",
                     "metadata": {
                         "reward_id": "r-nudge",
                         "student_id": "s-nudge",

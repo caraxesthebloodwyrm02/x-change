@@ -1180,7 +1180,7 @@ class AppHandler(BaseHTTPRequestHandler):
                 )
                 return
 
-        if event_type != "payment_intent.succeeded":
+        if event_type != "checkout.session.completed":
             _json_response(
                 self,
                 status=HTTPStatus.OK,
@@ -1199,7 +1199,7 @@ class AppHandler(BaseHTTPRequestHandler):
         metadata = data_object.get("metadata") or {}
         reward_id = metadata.get("reward_id")
         student_id = metadata.get("student_id")
-        payment_intent_id = data_object.get("id")
+        payment_intent_id = data_object.get("payment_intent")
 
         if not reward_id or not student_id or not event_id:
             with open_db(_get_db_path()) as conn:

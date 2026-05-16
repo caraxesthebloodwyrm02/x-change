@@ -44,7 +44,7 @@ def _sign_payload(body: bytes, secret: str = _WEBHOOK_SECRET) -> str:
 
 def _make_event(
     event_id: str = "evt_test_001",
-    event_type: str = "payment_intent.succeeded",
+    event_type: str = "checkout.session.completed",
     reward_id: str = "rwd-test",
     student_id: str = "stu-test",
     livemode: bool = False,
@@ -55,7 +55,7 @@ def _make_event(
         "livemode": livemode,
         "data": {
             "object": {
-                "id": "pi_test_001",
+                "payment_intent": "pi_test_001",
                 "metadata": {"reward_id": reward_id, "student_id": student_id},
             }
         },
@@ -76,9 +76,9 @@ def _make_unsupported_event(event_id: str = "evt_unsupported_001") -> bytes:
 def _make_missing_meta_event(event_id: str = "evt_no_meta_001") -> bytes:
     evt = {
         "id": event_id,
-        "type": "payment_intent.succeeded",
+        "type": "checkout.session.completed",
         "livemode": False,
-        "data": {"object": {"id": "pi_test_no_meta", "metadata": {}}},
+        "data": {"object": {"payment_intent": "pi_test_no_meta", "metadata": {}}},
     }
     return json.dumps(evt).encode()
 
