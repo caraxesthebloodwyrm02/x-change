@@ -1,5 +1,9 @@
 # x-change v0 — Principled reward core
 
+> **Before you start:** read [`../DO-NOT.html`](../DO-NOT.html) — 9 payment hardlines that apply to every component in this package.
+
+**Prerequisites:** Python 3.11+, [uv](https://docs.astral.sh/uv/) (`pip install uv` or `curl -LsSf https://astral.sh/uv/install.sh | sh`).
+
 Canonical **policy**: [`docs/policy-core-v0.md`](docs/policy-core-v0.md) — `PrincipledServiceContract`, **`RewardModel`** (center), **EvidenceLedger** (Glass), **StripePaymentConfirmation**, **StudentOutcome**.
 
 **Anthropic Financial Services (Claude plugins / agents):** not a Python dependency — install via Claude Code or Cowork and wire MCP per upstream. See [`docs/anthropic-financial-services-integration.md`](docs/anthropic-financial-services-integration.md) and run `./scripts/bootstrap-financial-services-ref.sh` for a local reference clone.
@@ -23,6 +27,29 @@ Canonical **policy**: [`docs/policy-core-v0.md`](docs/policy-core-v0.md) — `Pr
 **Stripe `payment_intent.succeeded`**: requires `metadata.reward_id` and `metadata.student_id`. **Missing metadata → `support_signals`** + HTTP **200** (fail closed without dropping the event on Stripe retries). Payment confirmed ≠ student acknowledged.
 
 Operator endpoints require `Authorization: Bearer <XCHANGE_INGEST_TOKEN>` or `X-Ingest-Token: <token>` and share an in-process rate limit. The Stripe webhook is signed separately and is not subject to the operator bucket.
+
+## Full API surface (v0)
+
+Authoritative route map for [`src/xchange/main.py`](src/xchange/main.py) (`AppHandler`). **Operator** means ingest-token auth as above. **Stripe** means valid `Stripe-Signature` for the configured webhook secret (no ingest token).
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/v0/viewer` | Operator | HTML read-only trust viewer; optional query `reward_id` |
+| GET | `/v0/state/reward/<reward_id>` | Operator | Reward-oriented JSON (sanitized for read-only clients) |
+| GET | `/v0/support-signals` | Operator | List support signals (`kind`, `resolved`, `limit` query params) |
+| GET | `/v0/outcomes/summary` | Operator | Aggregate outcomes (`student_id` optional) |
+| GET | `/v0/exchange/requests` | Operator | List token exchange requests (`student_id`, `reward_id`, `approved`, `limit`) |
+| GET | `/v0/scope/token/<reward_id>` | Operator | Resolve token scope for a reward |
+| GET | `/v0/scope/tool` | Operator | Resolve tool scope (`provenance` query param required) |
+| POST | `/v0/ingest/glass-session` | Operator | Glass session ingest + proposed transitions |
+| POST | `/v0/ingest/glass-bridge` | Operator | Glass bridge / USEB ingest |
+| POST | `/v0/stripe/webhook` | Stripe | Stripe events (e.g. payment confirmations) |
+| POST | `/v0/tokens/issue` | Operator | Stamp epistemic RewardToken on a reward |
+| POST | `/v0/exchange/request` | Operator | Evaluate and persist a token exchange request |
+| POST | `/v0/rewards/draft` | Operator | Create drafted reward |
+| POST | `/v0/rewards/<reward_id>/acknowledge` | Operator | Student acknowledgement after payment |
+| POST | `/v0/support-signals/<id>/resolve` | Operator | Resolve a support signal |
+| PATCH | `/v0/evidence/<evidence_id>` | Operator | Link evidence row to `reward_id` (JSON body) |
 
 ## Acceptance / foundation tests
 
@@ -102,3 +129,7 @@ Unified Session Evidence Bundle combines a Glass bridge snapshot with optional G
 ## OpenCode Harvest
 
 An executive summary of harvested sessions from OpenCode (including goals, decisions, and open threads) is available at [`docs/opencode-harvest-summary.md`](docs/opencode-harvest-summary.md).
+
+## See also
+
+Finance-wide vocabulary (how x-change terms relate to invoice-quick and Afloat): [`../docs/UBIQUITOUS-LANGUAGE.md`](../docs/UBIQUITOUS-LANGUAGE.md).
